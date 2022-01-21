@@ -1,0 +1,135 @@
+import React from "react";
+import { Grid, AppBar, Toolbar, Typography, Box, useMediaQuery } from "@mui/material";
+import { styled, Theme } from "@mui/material/styles";
+import HomeButton from "assets/logos/homebase_lite_logo.svg";
+import { theme } from "theme";
+
+const Header = styled(Grid)({
+  padding: "28px 125px",
+});
+
+const StyledAppBar = styled(AppBar)(({ theme }: { theme: Theme }) => ({
+  boxShadow: "none",
+  background: theme.palette.primary.dark,
+}));
+
+const StyledToolbar = styled(Toolbar)({
+  width: "100%",
+  display: "flex",
+  padding: 0,
+  boxSizing: "border-box",
+  justifyContent: "space-between",
+  flexWrap: "wrap",
+});
+
+// const AddressContainer = styled(Grid)({
+//   cursor: "pointer",
+// });
+
+const LogoText = styled(Typography)({
+  fontWeight: "bold",
+  fontSize: "24px",
+  cursor: "pointer",
+});
+
+const LogoSecondText = styled(Typography)({
+  marginLeft: "2px",
+  marginTop: "1px",
+  fontSize: "24px",
+  cursor: "pointer",
+  fontFamily: "Roboto Condensed",
+});
+
+// const ConnectWallet = styled(Button)({
+//   maxHeight: 50,
+//   alignSelf: "baseline",
+// });
+
+// const AddressMenu = styled(Box)(() => ({
+//   width: 264,
+//   borderRadius: 4,
+//   backgroundColor: "#282B31",
+// }));
+
+// const AddressMenuItem = styled(Grid)(({ theme }) => ({
+//   cursor: "pointer",
+//   boxSizing: "border-box",
+//   color: theme.palette.text.secondary,
+//   padding: "20px 34px",
+//   "&:hover": {
+//     background: "rgba(129, 254, 183, 0.03)",
+//     borderLeft: `2px solid ${theme.palette.secondary.light}`,
+//     cursor: "pointer",
+//   },
+// }));
+
+// const AddressMenuIcon = styled(Grid)({
+//   paddingRight: "12px",
+//   marginBottom: "-4px",
+// });
+
+// const AddressBarWrapper = styled(Grid)({
+//   boxSizing: "border-box",
+//   padding: "8px 16px",
+//   borderRadius: 4,
+//   "&:hover": {
+//     background: "rgba(129, 254, 183, 0.03)",
+//   },
+// });
+
+const LogoItem = styled("img")({
+  height: "30px",
+  cursor: "pointer",
+  paddingTop: 8,
+});
+
+// const StyledPopover = styled(Popover)({
+//   ".MuiPaper-root": {
+//     borderRadius: 4,
+//   },
+// });
+
+const ToolbarContainer = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    display: "flex",
+    justifyContent: "center",
+    marginLeft: 16,
+  },
+  [theme.breakpoints.down("md")]: {
+    display: "flex",
+    justifyContent: "center",
+    marginLeft: 0,
+  },
+}));
+
+export const Navbar: React.FC = () => {
+  const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("xs"));
+  return (
+    <StyledAppBar position='sticky'>
+      <StyledToolbar>
+        <Header
+          container
+          direction={isMobileExtraSmall ? "column" : "row"}
+          alignItems='center'
+          wrap='wrap'
+          justifyContent='space-between'>
+          <Grid item>
+            <Box>
+              <ToolbarContainer container alignItems='center' wrap='nowrap'>
+                <Grid item>
+                  <LogoItem src={HomeButton} />
+                </Grid>
+                <Grid item>
+                  <Box paddingLeft='10px' display='flex'>
+                    <LogoText color='textPrimary'>Homebase</LogoText>
+                    <LogoSecondText color='textPrimary'>lite</LogoSecondText>
+                  </Box>
+                </Grid>
+              </ToolbarContainer>
+            </Box>
+          </Grid>
+        </Header>
+      </StyledToolbar>
+    </StyledAppBar>
+  );
+};
