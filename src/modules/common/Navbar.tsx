@@ -3,6 +3,7 @@ import { Grid, AppBar, Toolbar, Typography, Box, useMediaQuery } from "@mui/mate
 import { styled, Theme } from "@mui/material/styles";
 import HomeButton from "assets/logos/homebase_lite_logo.svg";
 import { theme } from "theme";
+import { useNavigate } from "react-router-dom";
 
 const Header = styled(Grid)({
   padding: "28px 125px",
@@ -22,10 +23,6 @@ const StyledToolbar = styled(Toolbar)({
   flexWrap: "wrap",
 });
 
-// const AddressContainer = styled(Grid)({
-//   cursor: "pointer",
-// });
-
 const LogoText = styled(Typography)({
   fontWeight: "bold",
   fontSize: "24px",
@@ -40,54 +37,11 @@ const LogoSecondText = styled(Typography)({
   fontFamily: "Roboto Condensed",
 });
 
-// const ConnectWallet = styled(Button)({
-//   maxHeight: 50,
-//   alignSelf: "baseline",
-// });
-
-// const AddressMenu = styled(Box)(() => ({
-//   width: 264,
-//   borderRadius: 4,
-//   backgroundColor: "#282B31",
-// }));
-
-// const AddressMenuItem = styled(Grid)(({ theme }) => ({
-//   cursor: "pointer",
-//   boxSizing: "border-box",
-//   color: theme.palette.text.secondary,
-//   padding: "20px 34px",
-//   "&:hover": {
-//     background: "rgba(129, 254, 183, 0.03)",
-//     borderLeft: `2px solid ${theme.palette.secondary.light}`,
-//     cursor: "pointer",
-//   },
-// }));
-
-// const AddressMenuIcon = styled(Grid)({
-//   paddingRight: "12px",
-//   marginBottom: "-4px",
-// });
-
-// const AddressBarWrapper = styled(Grid)({
-//   boxSizing: "border-box",
-//   padding: "8px 16px",
-//   borderRadius: 4,
-//   "&:hover": {
-//     background: "rgba(129, 254, 183, 0.03)",
-//   },
-// });
-
 const LogoItem = styled("img")({
   height: "30px",
   cursor: "pointer",
   paddingTop: 8,
 });
-
-// const StyledPopover = styled(Popover)({
-//   ".MuiPaper-root": {
-//     borderRadius: 4,
-//   },
-// });
 
 const ToolbarContainer = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
@@ -104,6 +58,7 @@ const ToolbarContainer = styled(Grid)(({ theme }) => ({
 
 export const Navbar: React.FC = () => {
   const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("xs"));
+  const navigate = useNavigate();
   return (
     <StyledAppBar position='sticky'>
       <StyledToolbar>
@@ -112,6 +67,7 @@ export const Navbar: React.FC = () => {
           direction={isMobileExtraSmall ? "column" : "row"}
           alignItems='center'
           wrap='wrap'
+          onClick={() => navigate('/explorer/communities')}
           justifyContent='space-between'>
           <Grid item>
             <Box>
