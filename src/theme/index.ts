@@ -7,7 +7,7 @@ export const theme = createTheme({
     primary: {
       main: "#2F3438",
       dark: "#1C1F23",
-      light: "#424242",
+      light: "#7d8c8b33",
     },
     secondary: {
       main: "#81FEB7",
@@ -27,6 +27,7 @@ export const theme = createTheme({
     warning: {
       main: "#FFC839",
     },
+  
   },
   breakpoints: {
     values: {
@@ -67,9 +68,9 @@ export const theme = createTheme({
       },
     },
     h5: {
-      fontSize: 35,
+      fontSize: 16,
       [breakpoints.down("xs")]: {
-        fontSize: 21,
+        fontSize: 14,
       },
     },
     body1: {

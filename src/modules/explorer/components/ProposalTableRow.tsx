@@ -9,6 +9,7 @@ import {
   PlayCircleOutlineOutlined,
   RemoveCircleOutline,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export interface ProposalTableRowData {
   daoId?: string;
@@ -35,11 +36,12 @@ const ArrowInfo = styled(Typography)(({ theme }) => ({
 }));
 
 export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ proposal }) => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <RowContainer item container alignItems='center'>
+    <RowContainer item container alignItems='center' onClick={() => navigate("/explorer/communities/1/proposal/1")}>
       <Grid container style={{ gap: 26 }} xs={12} md={9} justifyContent={isMobile ? "center" : "flex-start"}>
         <Typography variant='h4' color='textSecondary' align={isMobile ? "center" : "left"}>
           Contribute to the fund
