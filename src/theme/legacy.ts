@@ -192,6 +192,16 @@ export const legacyTheme = createTheme({
             borderBottom: "none",
           },
         },
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px !important',
+        },
       },
     },
     MuiButton: {
@@ -226,8 +236,7 @@ export const legacyTheme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: {
-          marginTop: 16,
-          marginBottom: 16,
+          background: "#7D8C8B",
         },
       },
     },

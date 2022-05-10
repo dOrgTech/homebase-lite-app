@@ -7,7 +7,7 @@ export const theme = createTheme({
     primary: {
       main: "#2F3438",
       dark: "#1C1F23",
-      light: "#424242",
+      light: "#7d8c8b33",
     },
     secondary: {
       main: "#81FEB7",
@@ -16,6 +16,7 @@ export const theme = createTheme({
     },
     text: {
       primary: "#FFFFFF",
+      secondary: "#DDDDDD",
     },
     error: {
       main: "#ED254E",
@@ -26,9 +27,19 @@ export const theme = createTheme({
     warning: {
       main: "#FFC839",
     },
-  },
   
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   typography: {
+    fontFamily: "Roboto Mono",
     h1: {
       fontSize: 30,
       [breakpoints.down("xs")]: {
@@ -57,9 +68,9 @@ export const theme = createTheme({
       },
     },
     h5: {
-      fontSize: 35,
+      fontSize: 16,
       [breakpoints.down("xs")]: {
-        fontSize: 21,
+        fontSize: 14,
       },
     },
     body1: {
@@ -180,6 +191,35 @@ export const theme = createTheme({
         },
       },
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    MuiCalendarPicker: {
+      styleOverrides: {
+        root: {
+          background: "#2F3438",
+        },
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          background: "#2F3438",
+          "&:hover fieldset": {
+            border: "none",
+          },
+        },
+      },
+    },
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          background: "#2F3438",
+          "&:Mui-selected": {
+            border: "1px solid #fff",
+          },
+        },
+      },
+    },
     MuiInput: {
       styleOverrides: {
         underline: {
@@ -231,16 +271,38 @@ export const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         input: {
-          textAlign: "center",
+          fontSize: 18,
+          lineHeight: "146.3%",
+          fontFamily: "Roboto Mono",
           color: "#fff",
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          background: "#2F3438",
+          borderRadius: 8,
+          "&:hover fieldset": {
+            border: "none",
+          },
         },
       },
     },
     MuiDivider: {
       styleOverrides: {
         root: {
-          marginTop: 16,
-          marginBottom: 16,
+          marginTop: 0,
+          marginBottom: 0,
+          border: "1px solid #7d8c8b33",
         },
       },
     },
