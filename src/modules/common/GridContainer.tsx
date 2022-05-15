@@ -1,4 +1,4 @@
-import { Grid, styled } from "@mui/material";
+import { Grid, styled } from "@mui/material"
 
 export const GridContainer = styled(Grid)(({ theme }) => ({
   minHeight: 145,
@@ -6,6 +6,6 @@ export const GridContainer = styled(Grid)(({ theme }) => ({
   cursor: "pointer",
   background: theme.palette.primary.main,
   [theme.breakpoints.down("sm")]: {
-    padding: "35px 0",
-  },
-}));
+    padding: "35px 0"
+  }
+}))

@@ -1,66 +1,66 @@
-import React from "react";
+import React from "react"
 
-import { SearchOutlined } from "@mui/icons-material";
-import { styled, Theme } from "@mui/material/styles";
-import { InputAdornment, TextField } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { SearchOutlined } from "@mui/icons-material"
+import { styled, Theme } from "@mui/material/styles"
+import { InputAdornment, TextField } from "@mui/material"
+import { withStyles } from "@mui/styles"
 
 const StyledInput = withStyles((theme: Theme) => ({
   root: {
     "& label.MuiInputLabel-root": {
-      display: "none",
+      display: "none"
     },
     "& div.MuiInputBase-root": {
-      height: 54,
-      boxSizing: "border-box",
-      background: theme.palette.primary.main,
-      padding: "18px 22px",
-      width: "100%",
-      borderRadius: 4,
-      marginTop: "0px !important",
-      maxWidth: 571,
+      "height": 54,
+      "boxSizing": "border-box",
+      "background": theme.palette.primary.main,
+      "padding": "18px 22px",
+      "width": "100%",
+      "borderRadius": 4,
+      "marginTop": "0px !important",
+      "maxWidth": 571,
       "& input": {
-        color: theme.palette.text.primary,
-        textAlign: "start",
+        "color": theme.palette.text.primary,
+        "textAlign": "start",
         "&:placeholder": {
-          opacity: 0.8,
-        },
+          opacity: 0.8
+        }
       },
       "&:focus-visible": {
-        outline: "none",
-      },
+        outline: "none"
+      }
     },
     "& .MuiInput-underline:before": {
-      borderBottomColor: "transparent",
+      borderBottomColor: "transparent"
     },
     "& .MuiInput-underline:hover:before": {
-      borderBottomColor: "transparent",
+      borderBottomColor: "transparent"
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "transparent",
-    },
+      borderBottomColor: "transparent"
+    }
   },
-  input: {},
-}))(TextField);
+  input: {}
+}))(TextField)
 
 const SearchIcon = styled(SearchOutlined)({
-  marginRight: 16,
-});
+  marginRight: 16
+})
 
 export const SearchInput: React.FC<{ search: any }> = ({ search }) => {
   return (
     <StyledInput
-      id='standard-search'
-      type='search'
-      placeholder='Search'
+      id="standard-search"
+      type="search"
+      placeholder="Search"
       onChange={(e: any) => search(e.target.value)}
       InputProps={{
         startAdornment: (
-          <InputAdornment position='start'>
-            <SearchIcon color='secondary' />
+          <InputAdornment position="start">
+            <SearchIcon color="secondary" />
           </InputAdornment>
-        ),
+        )
       }}
     />
-  );
-};
+  )
+}

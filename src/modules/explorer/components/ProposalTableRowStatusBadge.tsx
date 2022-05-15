@@ -1,8 +1,8 @@
-import React from "react";
-import { Grid, GridProps, Typography } from "@mui/material";
-import { styled, Theme } from "@mui/material/styles";
-import hexToRgba from "hex-to-rgba";
-import { theme } from "theme";
+import React from "react"
+import { Grid, GridProps, Typography } from "@mui/material"
+import { styled, Theme } from "@mui/material/styles"
+import hexToRgba from "hex-to-rgba"
+import { theme } from "theme"
 
 export enum ProposalStatus {
   PENDING = "pending",
@@ -13,7 +13,7 @@ export enum ProposalStatus {
   EXECUTABLE = "executable",
   DROPPED = "dropped",
   EXPIRED = "expired",
-  EXECUTED = "executed",
+  EXECUTED = "executed"
 }
 
 const getStatusColor = (status: ProposalStatus, theme: Theme): string => {
@@ -26,33 +26,33 @@ const getStatusColor = (status: ProposalStatus, theme: Theme): string => {
     [ProposalStatus.NO_QUORUM]: theme.palette.text.secondary,
     [ProposalStatus.EXPIRED]: theme.palette.text.secondary,
     [ProposalStatus.DROPPED]: theme.palette.error.main,
-    [ProposalStatus.EXECUTED]: theme.palette.secondary.main,
-  };
+    [ProposalStatus.EXECUTED]: theme.palette.secondary.main
+  }
 
-  return statusToColor[status];
-};
+  return statusToColor[status]
+}
 
 const Badge = styled(Grid)(({ status, theme }: { status: ProposalStatus; theme: Theme }) => ({
-  borderRadius: 4,
-  height: 27,
-  boxSizing: "border-box",
-  width: 105,
-  textAlign: "center",
-  padding: "0 7px",
+  "borderRadius": 4,
+  "height": 27,
+  "boxSizing": "border-box",
+  "width": 105,
+  "textAlign": "center",
+  "padding": "0 7px",
 
-  background: hexToRgba(getStatusColor(status, theme), 0.4),
-  color: getStatusColor(status, theme),
+  "background": hexToRgba(getStatusColor(status, theme), 0.4),
+  "color": getStatusColor(status, theme),
   "& > div": {
-    height: "100%",
-  },
-}));
+    height: "100%"
+  }
+}))
 
 export const TableStatusBadge: React.FC<{ status: ProposalStatus } & GridProps> = ({ status }) => (
   <Badge status={status} theme={theme}>
-    <Grid container alignItems='center' justifyContent='center'>
+    <Grid container alignItems="center" justifyContent="center">
       <Grid item>
         <Typography> {status.toUpperCase()} </Typography>
       </Grid>
     </Grid>
   </Badge>
-);
+)

@@ -1,6 +1,6 @@
-import React from "react";
-import { ProposalForm } from "./components/ProposalForm";
+import React from "react"
+import { ProposalForm } from "./components/ProposalForm"
 
 export const CreateProposal: React.FC = () => {
-  return <ProposalForm />;
-};
+  return <ProposalForm />
+}
