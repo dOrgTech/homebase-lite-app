@@ -1,9 +1,9 @@
-import styled from "@emotion/styled";
-import { Grid, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import React from "react";
+import styled from "@emotion/styled"
+import { Grid, Typography } from "@mui/material"
+import { Box } from "@mui/system"
+import React from "react"
 
-const chartColor = ["#FFC2CF", "#FFC839", "#62CEAE", "#DB6C6C", "#56CAE3", "#E99571", "#FF486E", "#3866F9", "#81FEB7"];
+const chartColor = ["#FFC2CF", "#FFC839", "#62CEAE", "#DB6C6C", "#56CAE3", "#E99571", "#FF486E", "#3866F9", "#81FEB7"]
 
 const LinearChartContainer = styled(Box)({
   position: "relative",
@@ -14,21 +14,21 @@ const LinearChartContainer = styled(Box)({
   justifyContent: "flex-start",
   borderRadius: 2,
   overflow: "hidden",
-  marginTop: 30,
-});
+  marginTop: 30
+})
 
 const Line = styled(Box)(({ width, color }: { width: number; color: string }) => ({
   width: `${width}%`,
-  backgroundColor: color,
-}));
+  backgroundColor: color
+}))
 
 const Dot = styled(Box)(({ color }: { color: string }) => ({
   width: 10,
   height: 10,
   backgroundColor: color,
   borderRadius: "50%",
-  display: "inline-block",
-}));
+  display: "inline-block"
+}))
 
 export const LinearChart: React.FC<{ items: { name: string; votes: number; percent: number }[] }> = ({ items }) => {
   return (
@@ -39,10 +39,10 @@ export const LinearChart: React.FC<{ items: { name: string; votes: number; perce
             <Grid item key={item.name}>
               <Grid container alignItems={"center"} style={{ gap: 10 }}>
                 <Dot color={chartColor[index]} />
-                <Typography variant='body2' color={"textSecondary"}>
+                <Typography variant="body2" color={"textSecondary"}>
                   {item.name}
                 </Typography>
-                <Typography variant='body2' color={"textSecondary"}>
+                <Typography variant="body2" color={"textSecondary"}>
                   {item.votes}
                 </Typography>
               </Grid>
@@ -57,5 +57,5 @@ export const LinearChart: React.FC<{ items: { name: string; votes: number; perce
         ))}
       </LinearChartContainer>
     </Grid>
-  );
-};
+  )
+}

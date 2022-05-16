@@ -1,15 +1,15 @@
-import React from "react";
-import { Container, Grid, styled } from "@mui/material";
-import { DaoCard } from "../../components/DaoCard";
-import { ProposalList } from "../../components/ProposalList";
+import React from "react"
+import { Container, Grid, styled } from "@mui/material"
+import { DaoCard } from "../../components/DaoCard"
+import { ProposalList } from "../../components/ProposalList"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
   [theme.breakpoints.down("md")]: {
-    marginTop: 30,
-  },
-}));
+    marginTop: 30
+  }
+}))
 
 export const CommunityDetails: React.FC = () => {
   return (
@@ -23,5 +23,5 @@ export const CommunityDetails: React.FC = () => {
         </CommunityDetailsContainer>
       </Grid>
     </Container>
-  );
-};
+  )
+}

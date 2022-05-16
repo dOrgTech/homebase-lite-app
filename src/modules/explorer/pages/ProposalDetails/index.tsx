@@ -1,10 +1,10 @@
-import React from "react";
-import { Button, Container, Grid } from "@mui/material";
-import { BackButton } from "modules/common/BackButton";
-import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard";
-import { GridContainer } from "modules/common/GridContainer";
-import { ChoiceItemSelected } from "modules/explorer/components/ChoiceItemSelected";
-import { VoteDetails } from "modules/explorer/components/VoteDetails";
+import React from "react"
+import { Button, Container, Grid } from "@mui/material"
+import { BackButton } from "modules/common/BackButton"
+import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard"
+import { GridContainer } from "modules/common/GridContainer"
+import { ChoiceItemSelected } from "modules/explorer/components/ChoiceItemSelected"
+import { VoteDetails } from "modules/explorer/components/VoteDetails"
 
 export const ProposalDetails: React.FC = () => {
   return (
@@ -15,10 +15,10 @@ export const ProposalDetails: React.FC = () => {
       <ProposalDetailCard />
       <Grid container spacing={3} my={2}>
         <Grid item xs={12} md={6}>
-          <GridContainer container style={{ gap: 25 }} px={6} py={5} justifyContent='center'>
-            <ChoiceItemSelected description='This is choice 1' />
-            <ChoiceItemSelected description='This is choice 2' />
-            <Button variant='contained' color='secondary'>
+          <GridContainer container style={{ gap: 25 }} px={6} py={5} justifyContent="center">
+            <ChoiceItemSelected description="This is choice 1" />
+            <ChoiceItemSelected description="This is choice 2" />
+            <Button variant="contained" color="secondary">
               Cast your vote
             </Button>
           </GridContainer>
@@ -28,5 +28,5 @@ export const ProposalDetails: React.FC = () => {
         </Grid>
       </Grid>
     </Container>
-  );
-};
+  )
+}

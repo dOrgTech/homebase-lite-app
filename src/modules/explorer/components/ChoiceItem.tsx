@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import { Grid, Typography, IconButton, Divider } from "@mui/material";
-import { theme } from "theme";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import React, { Fragment } from "react"
+import { Grid, Typography, IconButton, Divider } from "@mui/material"
+import { theme } from "theme"
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
 
 type ChoiceItemProps = {
-  index: number;
-  description: string;
-};
+  index: number
+  description: string
+}
 
 export const ChoiceItem: React.FC<ChoiceItemProps> = ({ index, description }) => {
   return (
@@ -24,12 +24,12 @@ export const ChoiceItem: React.FC<ChoiceItemProps> = ({ index, description }) =>
         </Grid>
 
         <Grid item>
-          <IconButton size='small'>
+          <IconButton size="small">
             <RemoveCircleOutlineIcon htmlColor={theme.palette.error.main} />
           </IconButton>
         </Grid>
       </Grid>
       <Divider />
     </Fragment>
-  );
-};
+  )
+}

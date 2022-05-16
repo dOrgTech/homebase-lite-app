@@ -1,6 +1,6 @@
-import React from "react";
-import { Box, BoxProps, styled } from "@mui/material";
-import { getBlockie } from "services/contracts/utils";
+import React from "react"
+import { Box, BoxProps, styled } from "@mui/material"
+import { getBlockie } from "services/contracts/utils"
 
 const StyledBox = styled(Box)(({ address, size }: { address: string; size?: number }) => ({
   width: size || 23,
@@ -9,9 +9,9 @@ const StyledBox = styled(Box)(({ address, size }: { address: string; size?: numb
   maxHeight: size || 23,
   borderRadius: "50%",
   background: `url(${address})`,
-  backgroundSize: "contain",
-}));
+  backgroundSize: "contain"
+}))
 
 export const Blockie = ({ address, size, ...props }: BoxProps & { address: string; size?: number }) => {
-  return <StyledBox address={getBlockie(address.toLowerCase())} size={size} {...props} />;
-};
+  return <StyledBox address={getBlockie(address.toLowerCase())} size={size} {...props} />
+}
