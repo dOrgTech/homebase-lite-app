@@ -1,6 +1,6 @@
 import React from "react"
 import { Container } from "@mui/material"
 
-export const Landing: React.FC = () => {
+export const Landing = () => {
   return <Container>{/* <ProposalForm /> */}</Container>
 }

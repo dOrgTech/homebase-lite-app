@@ -10,17 +10,17 @@ const ProposalListContainer = styled(Grid)(({ theme }) => ({
   borderRadius: 8
 }))
 
-export const ProposalList: React.FC = () => {
+export const ProposalList = () => {
   return (
     <ProposalListContainer container flexDirection="column">
       <Grid container justifyContent="space-between" alignItems="center" py={3} px={5.5}>
         <Grid item>
-          <Typography variant={"body2"} color={theme.palette.text.secondary}>
+          <Typography variant="body2" color={theme.palette.text.secondary}>
             Proposals
           </Typography>
         </Grid>
         <Grid item>
-          <Dropdown options={[{ name: "All", value: "all" }]} value={"all"} />
+          <Dropdown options={[{ name: "All", value: "all" }]} value="all" />
         </Grid>
       </Grid>
       <Divider />

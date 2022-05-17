@@ -1,8 +1,8 @@
 import React from "react"
 import { Grid, TextField, styled, Container } from "@mui/material"
-import { UploadAvatar } from "./components/UploadAvatar"
-import { Plugins } from "./components/Plugins"
-import { BackButton } from "../common/BackButton"
+import { BackButton } from "modules/common/BackButton"
+import { UploadAvatar } from "modules/creator/components/UploadAvatar"
+import { Plugins } from "modules/creator/components/Plugins"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -20,7 +20,7 @@ export const CommunityCreator: React.FC = () => {
       </Grid>
 
       <Grid container>
-        <CommunityContainer container flexDirection={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
+        <CommunityContainer container flexDirection="column" style={{ gap: 30 }} xs={12} md={6} lg={8}>
           <Grid item>
             <TextField placeholder="Community Name*" />
           </Grid>
@@ -37,7 +37,7 @@ export const CommunityCreator: React.FC = () => {
             <TextField placeholder="Author Addresses" multiline minRows={4} maxRows={Infinity} />
           </Grid>
         </CommunityContainer>
-        <CommunityContainer container flexDirection={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={4}>
+        <CommunityContainer container flexDirection="column" style={{ gap: 30 }} item xs={12} md={6} lg={4}>
           <Grid item>
             <TextField placeholder="Symbol Acronym*" />
           </Grid>

@@ -1,6 +1,6 @@
 import React from "react"
 import { Avatar, Button, Divider, Grid, styled, Typography } from "@mui/material"
-import { theme } from "../../../theme"
+import { theme } from "theme"
 
 const AvatarCardContainer = styled(Grid)(({ theme }) => ({
   height: "100%",
@@ -13,17 +13,17 @@ const StyledAvatar = styled(Avatar)({
   height: 116
 })
 
-export const UploadAvatar: React.FC = () => {
+export const UploadAvatar = () => {
   return (
-    <AvatarCardContainer container flexDirection={"column"}>
+    <AvatarCardContainer container flexDirection="column">
       <Grid item px={2} py={2}>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+        <Typography variant="body2" color={theme.palette.text.secondary}>
           Avatar
         </Typography>
       </Grid>
       <Divider />
-      <Grid container my={3.8} style={{ gap: 28 }} alignItems={"center"} flexDirection={"column"}>
-        <Grid item justifyContent={"center"}>
+      <Grid container my={3.8} style={{ gap: 28 }} alignItems="center" flexDirection="column">
+        <Grid item justifyContent="center">
           <StyledAvatar> </StyledAvatar>
         </Grid>
 

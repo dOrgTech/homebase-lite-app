@@ -1,7 +1,5 @@
 import React from "react"
-import { Button, useMediaQuery, Grid, Typography, Theme } from "@mui/material"
-import styled from "@emotion/styled"
-import { useTheme } from "@mui/styles"
+import { Button, useMediaQuery, Grid, Typography, Theme, styled, useTheme } from "@mui/material"
 import { theme } from "theme"
 import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
@@ -19,8 +17,8 @@ const PageContainer = styled("div")({
   }
 })
 
-export const CommunityList: React.FC = () => {
-  const theme: Theme = useTheme()
+export const CommunityList = () => {
+  const theme = useTheme<Theme>()
   const navigate = useNavigate()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -35,7 +33,12 @@ export const CommunityList: React.FC = () => {
             style={{ gap: 42 }}
           >
             <Grid item xs={8} sm={6}>
-              <SearchInput search={""} />
+              <SearchInput
+                search={value => {
+                  // @TODO: Add functionality
+                  console.log("search value => ", value)
+                }}
+              />
             </Grid>
             <Grid item>
               <Grid container style={{ gap: 22 }} justifyContent="center">

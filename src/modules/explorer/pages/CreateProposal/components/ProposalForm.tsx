@@ -16,14 +16,14 @@ const ProposalChoices = styled(Grid)({
   minHeight: 250
 })
 
-export const ProposalForm: React.FC = () => {
+export const ProposalForm = () => {
   return (
     <Container>
       <Grid container mx={2} my={3}>
         <BackButton />
       </Grid>
       <Grid container>
-        <ProposalContainer container flexDirection={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
+        <ProposalContainer container flexDirection="column" style={{ gap: 30 }} xs={12} md={6} lg={8}>
           <Grid item>
             <TextField placeholder="Proposal Title" />
           </Grid>
@@ -31,7 +31,7 @@ export const ProposalForm: React.FC = () => {
             <TextField placeholder="Proposal Details" multiline minRows={15} maxRows={Infinity} />
           </Grid>
         </ProposalContainer>
-        <ProposalContainer container flexDirection={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={4}>
+        <ProposalContainer container flexDirection="column" style={{ gap: 30 }} item xs={12} md={6} lg={4}>
           <Grid item>
             <TextField placeholder="Proposal Title" />
           </Grid>

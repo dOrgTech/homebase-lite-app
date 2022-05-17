@@ -1,12 +1,12 @@
 import React from "react"
 import { Grid, Typography } from "@mui/material"
+import IosShareIcon from "@mui/icons-material/IosShare"
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import { GridContainer } from "modules/common/GridContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
 import { CreatorBadge } from "./CreatorBadge"
-import IosShareIcon from "@mui/icons-material/IosShare"
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 
-export const ProposalDetailCard: React.FC = () => {
+export const ProposalDetailCard = () => {
   return (
     <GridContainer container px={5.5} py={5} style={{ gap: 50 }}>
       <Grid container style={{ gap: 25 }}>
@@ -15,8 +15,8 @@ export const ProposalDetailCard: React.FC = () => {
         </Typography>
         <Grid
           container
-          justifyContent={"space-between"}
-          alignItems={"center"}
+          justifyContent="space-between"
+          alignItems="center"
           rowSpacing={2}
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >

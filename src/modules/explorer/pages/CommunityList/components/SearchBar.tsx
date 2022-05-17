@@ -1,11 +1,8 @@
 import React from "react"
-
+import { InputAdornment, TextField, styled } from "@mui/material"
 import { SearchOutlined } from "@mui/icons-material"
-import { styled, Theme } from "@mui/material/styles"
-import { InputAdornment, TextField } from "@mui/material"
-import { withStyles } from "@mui/styles"
 
-const StyledInput = withStyles((theme: Theme) => ({
+const StyledInput = styled(TextField)(({ theme }) => ({
   root: {
     "& label.MuiInputLabel-root": {
       display: "none"
@@ -39,15 +36,18 @@ const StyledInput = withStyles((theme: Theme) => ({
     "& .MuiInput-underline:after": {
       borderBottomColor: "transparent"
     }
-  },
-  input: {}
-}))(TextField)
+  }
+}))
 
 const SearchIcon = styled(SearchOutlined)({
   marginRight: 16
 })
 
-export const SearchInput: React.FC<{ search: any }> = ({ search }) => {
+type Props = { search: (value: string) => void }
+
+export const SearchInput = (props: Props) => {
+  const { search } = props
+
   return (
     <StyledInput
       id="standard-search"

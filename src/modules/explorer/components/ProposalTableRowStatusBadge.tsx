@@ -1,8 +1,22 @@
 import React from "react"
-import { Grid, GridProps, Typography } from "@mui/material"
-import { styled, Theme } from "@mui/material/styles"
+import { Grid, GridProps, Typography, styled, Theme } from "@mui/material"
 import hexToRgba from "hex-to-rgba"
 import { theme } from "theme"
+
+const Badge = styled(Grid)(({ status, theme }: { status: ProposalStatus; theme: Theme }) => ({
+  "borderRadius": 4,
+  "height": 27,
+  "boxSizing": "border-box",
+  "width": 105,
+  "textAlign": "center",
+  "padding": "0 7px",
+
+  "background": hexToRgba(getStatusColor(status, theme), 0.4),
+  "color": getStatusColor(status, theme),
+  "& > div": {
+    height: "100%"
+  }
+}))
 
 export enum ProposalStatus {
   PENDING = "pending",
@@ -32,27 +46,18 @@ const getStatusColor = (status: ProposalStatus, theme: Theme): string => {
   return statusToColor[status]
 }
 
-const Badge = styled(Grid)(({ status, theme }: { status: ProposalStatus; theme: Theme }) => ({
-  "borderRadius": 4,
-  "height": 27,
-  "boxSizing": "border-box",
-  "width": 105,
-  "textAlign": "center",
-  "padding": "0 7px",
+type Props = GridProps & { status: ProposalStatus }
 
-  "background": hexToRgba(getStatusColor(status, theme), 0.4),
-  "color": getStatusColor(status, theme),
-  "& > div": {
-    height: "100%"
-  }
-}))
+export const TableStatusBadge = (props: Props) => {
+  const { status } = props
 
-export const TableStatusBadge: React.FC<{ status: ProposalStatus } & GridProps> = ({ status }) => (
-  <Badge status={status} theme={theme}>
-    <Grid container alignItems="center" justifyContent="center">
-      <Grid item>
-        <Typography> {status.toUpperCase()} </Typography>
+  return (
+    <Badge status={status} theme={theme}>
+      <Grid container alignItems="center" justifyContent="center">
+        <Grid item>
+          <Typography> {status.toUpperCase()} </Typography>
+        </Grid>
       </Grid>
-    </Grid>
-  </Badge>
-)
+    </Badge>
+  )
+}

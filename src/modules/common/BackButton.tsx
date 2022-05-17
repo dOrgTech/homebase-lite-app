@@ -3,7 +3,7 @@ import { Grid, Typography } from "@mui/material"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import { useNavigate } from "react-router-dom"
 
-export const BackButton: React.FC = () => {
+export const BackButton = () => {
   const navigate = useNavigate()
   return (
     <Grid container style={{ gap: 16, cursor: "pointer" }} onClick={() => navigate(-1)} alignItems="center">

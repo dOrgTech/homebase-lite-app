@@ -6,7 +6,7 @@ import { GridContainer } from "modules/common/GridContainer"
 import { ChoiceItemSelected } from "modules/explorer/components/ChoiceItemSelected"
 import { VoteDetails } from "modules/explorer/components/VoteDetails"
 
-export const ProposalDetails: React.FC = () => {
+export const ProposalDetails = () => {
   return (
     <Container>
       <Grid container mx={2} my={3}>
