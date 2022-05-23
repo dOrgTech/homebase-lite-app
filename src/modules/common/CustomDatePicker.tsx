@@ -6,7 +6,7 @@ interface CustomDatePickerProps extends DatePickerProps {
   id: string
 }
 
-export const CustomDatePicker: React.FC = () => {
+export const CustomDatePicker = () => {
   const [value, setValue] = React.useState<Date | null>(null)
   return (
     <Grid container>

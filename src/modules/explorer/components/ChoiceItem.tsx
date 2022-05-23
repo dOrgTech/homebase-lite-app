@@ -1,24 +1,25 @@
 import React, { Fragment } from "react"
 import { Grid, Typography, IconButton, Divider } from "@mui/material"
-import { theme } from "theme"
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
+import { theme } from "theme"
 
-type ChoiceItemProps = {
+type Props = {
   index: number
   description: string
 }
 
-export const ChoiceItem: React.FC<ChoiceItemProps> = ({ index, description }) => {
+export const ChoiceItem = (props: Props) => {
+  const { index, description } = props
   return (
     <Fragment>
-      <Grid container px={3.5} py={1.5} justifyContent={"space-between"} alignItems={"center"}>
+      <Grid container px={3.5} py={1.5} justifyContent="space-between" alignItems="center">
         <Grid item>
-          <Typography variant={"body2"} color={theme.palette.text.primary}>
+          <Typography variant="body2" color={theme.palette.text.primary}>
             {index}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant={"body2"} color={theme.palette.text.secondary}>
+          <Typography variant="body2" color={theme.palette.text.secondary}>
             {description}
           </Typography>
         </Grid>

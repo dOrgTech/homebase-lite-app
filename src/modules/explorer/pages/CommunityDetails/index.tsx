@@ -11,12 +11,12 @@ const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   }
 }))
 
-export const CommunityDetails: React.FC = () => {
+export const CommunityDetails = () => {
   return (
     <Container>
       <Grid container>
         <CommunityDetailsContainer xs={12} md={4} lg={3}>
-          <DaoCard isDetails={true} />
+          <DaoCard isDetails />
         </CommunityDetailsContainer>
         <CommunityDetailsContainer xs={12} md={8} lg={9}>
           <ProposalList />

@@ -1,6 +1,5 @@
 import React from "react"
-import { Divider, Grid, Theme, Typography } from "@mui/material"
-import { styled } from "@mui/styles"
+import { Divider, Grid, Theme, Typography, styled } from "@mui/material"
 
 const StyledContainer = styled(Grid)(({ theme }: { theme: Theme }) => ({
   borderRadius: 4,
@@ -10,9 +9,13 @@ const StyledContainer = styled(Grid)(({ theme }: { theme: Theme }) => ({
   cursor: "pointer"
 }))
 
-export const ChoiceItemSelected: React.FC<{ description: string }> = ({ description }) => {
+type Props = { description: string }
+
+export const ChoiceItemSelected = (props: Props) => {
+  const { description } = props
+
   return (
-    <StyledContainer container justifyContent={"center"} alignItems="center">
+    <StyledContainer container justifyContent="center" alignItems="center">
       <Typography variant="body1" color="textPrimary">
         {description}
       </Typography>

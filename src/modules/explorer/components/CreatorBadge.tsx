@@ -1,9 +1,15 @@
 import React from "react"
 import { Grid, Typography } from "@mui/material"
-import { Blockie } from "modules/common/Blockie"
 import { toShortAddress } from "services/contracts/utils"
+import { Blockie } from "modules/common/Blockie"
 
-export const CreatorBadge: React.FC<{ address: string }> = ({ address }) => {
+type Props = {
+  address: string
+}
+
+export const CreatorBadge = (props: Props) => {
+  const { address } = props
+
   return (
     <Grid container style={{ gap: 15 }}>
       <Grid item>

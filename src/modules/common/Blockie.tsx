@@ -12,6 +12,10 @@ const StyledBox = styled(Box)(({ address, size }: { address: string; size?: numb
   backgroundSize: "contain"
 }))
 
-export const Blockie = ({ address, size, ...props }: BoxProps & { address: string; size?: number }) => {
-  return <StyledBox address={getBlockie(address.toLowerCase())} size={size} {...props} />
+type Props = BoxProps & { address: string; size?: number }
+
+export const Blockie = (props: Props) => {
+  const { address, size, ...rest } = props
+
+  return <StyledBox address={getBlockie(address.toLowerCase())} size={size} {...rest} />
 }

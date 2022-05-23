@@ -1,7 +1,6 @@
-import styled from "@emotion/styled"
-import { Grid, Typography } from "@mui/material"
-import { Box } from "@mui/system"
 import React from "react"
+import { Grid, Typography, styled } from "@mui/material"
+import { Box } from "@mui/system"
 
 const chartColor = ["#FFC2CF", "#FFC839", "#62CEAE", "#DB6C6C", "#56CAE3", "#E99571", "#FF486E", "#3866F9", "#81FEB7"]
 
@@ -30,19 +29,25 @@ const Dot = styled(Box)(({ color }: { color: string }) => ({
   display: "inline-block"
 }))
 
-export const LinearChart: React.FC<{ items: { name: string; votes: number; percent: number }[] }> = ({ items }) => {
+type Props = {
+  items: { name: string; votes: number; percent: number }[]
+}
+
+export const LinearChart = (props: Props) => {
+  const { items } = props
+
   return (
     <Grid container>
       <Grid item>
         <Grid container style={{ gap: 28 }}>
           {items.map((item, index) => (
             <Grid item key={item.name}>
-              <Grid container alignItems={"center"} style={{ gap: 10 }}>
+              <Grid container alignItems="center" style={{ gap: 10 }}>
                 <Dot color={chartColor[index]} />
-                <Typography variant="body2" color={"textSecondary"}>
+                <Typography variant="body2" color="textSecondary">
                   {item.name}
                 </Typography>
-                <Typography variant="body2" color={"textSecondary"}>
+                <Typography variant="body2" color="textSecondary">
                   {item.votes}
                 </Typography>
               </Grid>

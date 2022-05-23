@@ -23,7 +23,8 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }) => {
+export const Dropdown = (props: DropdownProps) => {
+  const { options, value, onSelected } = props
   const classes = useStyles()
   const [selected, setSelected] = useState<string | undefined>(value)
 
