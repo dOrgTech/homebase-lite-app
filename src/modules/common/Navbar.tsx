@@ -9,23 +9,24 @@ import { ProfileAvatar } from "modules/explorer/components/ProfileAvatar"
 import { NetworkMenu } from "./NetworkMenu"
 import HomeButton from "assets/logos/homebase_lite_logo.svg"
 
-const Header = styled(Grid)({
-  padding: "40px 0"
-})
-
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   boxShadow: "none",
   background: theme.palette.primary.dark
 }))
 
 const StyledToolbar = styled(Toolbar)({
   width: "100%",
+  height: "100px",
+  maxWidth: 1186,
   display: "flex",
-  padding: 0,
   boxSizing: "border-box",
   justifyContent: "space-between",
   flexWrap: "wrap"
 })
+
+const Header = styled(Grid)({})
 
 const ToolbarContainer = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {

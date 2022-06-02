@@ -32,3 +32,11 @@ export const getBlockie = (address: string): string => {
 
   return blockies.create({ seed: address }).toDataURL()
 }
+
+export const formatUnits = (amount: BigNumber, decimals: number | string) => {
+  return amount.multipliedBy(new BigNumber(10).pow(decimals))
+}
+
+export const xtzToMutez = (xtz: BigNumber) => {
+  return formatUnits(xtz, 6)
+}

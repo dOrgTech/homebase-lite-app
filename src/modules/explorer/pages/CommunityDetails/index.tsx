@@ -1,6 +1,6 @@
 import React from "react"
 import { Container, Grid, styled } from "@mui/material"
-import { DaoCard } from "../../components/DaoCard"
+// import { DaoCard } from "../../components/DaoCard"
 import { ProposalList } from "../../components/ProposalList"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
@@ -11,12 +11,13 @@ const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   }
 }))
 
+// @TODO GetDao
 export const CommunityDetails = () => {
   return (
     <Container>
       <Grid container>
         <CommunityDetailsContainer xs={12} md={4} lg={3}>
-          <DaoCard isDetails />
+          {/*<DaoCard isDetails />*/}
         </CommunityDetailsContainer>
         <CommunityDetailsContainer xs={12} md={8} lg={9}>
           <ProposalList />
