@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button, useMediaQuery, Grid, Typography, Theme, useTheme } from "@mui/material"
-import { DAOListItem, getAllDAOs } from "services/indexer"
+import { getAllDAOs } from "services/indexer"
 import { useWallet } from "services/beacon"
 import { PageContainer } from "modules/common/PageContainer"
 import { PageLoading } from "modules/common/PageLoading"
 import { PageError } from "modules/common/PageError"
 import { DaoCard } from "../../components/DaoCard"
 import { SearchInput } from "./components/SearchBar"
+import { DAOList } from "services/indexer/mock-data/all-daos-mock"
 
 export const CommunityList = () => {
   const { network } = useWallet()
@@ -18,11 +19,11 @@ export const CommunityList = () => {
 
   const [loading, setLoading] = useState(true)
   const [loadingError, setLoadingError] = useState(null)
-  const [DAOList, setDAOList] = useState<DAOListItem[]>([])
+  const [DAOList, setDAOList] = useState<DAOList>([])
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
-    getAllDAOs(network)
+    getAllDAOs()
       .then(daos => {
         const sortedDAOList = daos.sort((a, b) => b.ledgers.length - a.ledgers.length)
         setDAOList(sortedDAOList)
@@ -89,7 +90,7 @@ export const CommunityList = () => {
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             {filteredDAOList.map(dao => (
-              <Grid item xs={9} sm={6} md={4} lg={3} xl={2} key={dao.address}>
+              <Grid item xs={9} sm={6} md={4} lg={3} xl={3} key={dao.address}>
                 <DaoCard isDetails={false} dao={dao} />
               </Grid>
             ))}

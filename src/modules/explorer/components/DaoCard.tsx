@@ -2,8 +2,8 @@ import { Avatar, Button, Grid, styled, Typography } from "@mui/material"
 import React, { useMemo } from "react"
 import { theme } from "theme"
 import { useNavigate } from "react-router-dom"
-import { DAOListItem } from "services/indexer"
 import { useWallet } from "services/beacon"
+import { DAOListItem } from "services/indexer/mock-data/all-daos-mock"
 
 const getHashedHexRGB = (str: string) => {
   const colors = ["#FFC2CF", "#FFC839", "#62CEAE", "#DB6C6C", "#56CAE3", "#E99571"]

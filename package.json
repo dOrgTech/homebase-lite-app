@@ -25,7 +25,6 @@
     "@taquito/taquito": "^12.1.1",
     "@taquito/tezbridge-signer": "^12.1.1",
     "@taquito/tezbridge-wallet": "^12.1.1",
-    "@taquito/tzip12": "^12.1.1",
     "@taquito/tzip16": "^12.1.1",
     "bignumber.js": "^9.0.2",
     "blockies-ts": "^1.0.0",

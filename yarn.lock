@@ -2195,15 +2195,6 @@
   dependencies:
     "@taquito/taquito" "^12.1.1"
 
-"@taquito/tzip12@^12.1.1":
-  version "12.1.1"
-  resolved "https://registry.yarnpkg.com/@taquito/tzip12/-/tzip12-12.1.1.tgz#793eb07345837373e5b1c660d62d513d6f97979b"
-  integrity sha512-M9XYyKigB5yzPfj8dG7ITRJVnXc1atPt2xAXf0D5rcI3/lYwEcLj+k2ioEg/+hsTSfZPw0mWj9Scl0EwtvMZmA==
-  dependencies:
-    "@taquito/michelson-encoder" "^12.1.1"
-    "@taquito/taquito" "^12.1.1"
-    "@taquito/tzip16" "^12.1.1"
-
 "@taquito/tzip16@^12.1.1":
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/@taquito/tzip16/-/tzip16-12.1.1.tgz#8a1ed4396a50e5b46602528a8e9e04ed2a9cb836"

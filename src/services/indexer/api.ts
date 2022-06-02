@@ -1,16 +1,3 @@
-import { NetworkType } from "services/beacon"
-import { DAOListItem } from "./types"
-import { GET_ALL_DAOS_QUERY } from "./gql/queries"
-import { client } from "./gql/client"
+import { allDaos } from "./mock-data/all-daos-mock"
 
-export interface GetAllDAOsDTO {
-  daos: DAOListItem[]
-}
-
-export const getAllDAOs = async (network: NetworkType) => {
-  const response = await client.request<GetAllDAOsDTO>(GET_ALL_DAOS_QUERY, {
-    network
-  })
-
-  return response.daos
-}
+export const getAllDAOs = async () => Promise.resolve(allDaos)
