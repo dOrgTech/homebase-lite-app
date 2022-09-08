@@ -5,8 +5,8 @@ const { breakpoints } = defaultTheme
 export const theme = createTheme({
   palette: {
     primary: {
-      main: "#2F3438",
-      dark: "#1C1F23",
+      main: "#2f3438",
+      dark: "#1c1f23",
       light: "#7d8c8b33"
     },
     secondary: {
@@ -46,7 +46,9 @@ export const theme = createTheme({
       }
     },
     subtitle1: {
-      fontSize: 32
+      fontSize: 30,
+      lineHeight: "124.3%",
+      fontWeight: 500
     },
     subtitle2: {
       fontSize: 16,
@@ -58,7 +60,9 @@ export const theme = createTheme({
       fontFamily: "Roboto"
     },
     h2: {
-      fontSize: 24
+      fontSize: 18,
+      fontWeight: 200,
+      lineHeight: "146.3%"
     },
     h4: {
       fontSize: 21,
@@ -79,7 +83,7 @@ export const theme = createTheme({
       }
     },
     body2: {
-      fontSize: 16,
+      fontSize: 18,
       [breakpoints.down("xs")]: {
         fontSize: 14
       }
@@ -295,6 +299,12 @@ export const theme = createTheme({
           "&:hover fieldset": {
             border: "none"
           }
+        },
+        input: {
+          paddingLeft: 26,
+          paddingTop: 19,
+          paddingBottom: 19,
+          fontWeight: 300
         }
       }
     },
@@ -351,6 +361,13 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           marginBottom: 0
+        }
+      }
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        colorSecondary: {
+          color: "#2f3438"
         }
       }
     },

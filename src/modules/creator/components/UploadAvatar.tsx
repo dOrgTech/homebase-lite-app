@@ -1,6 +1,5 @@
 import React from "react"
-import { Avatar, Button, Divider, Grid, styled, Typography } from "@mui/material"
-import { theme } from "../../../theme"
+import { Avatar, Button, Grid, styled, Typography } from "@mui/material"
 
 const AvatarCardContainer = styled(Grid)(({ theme }) => ({
   height: "100%",
@@ -9,20 +8,29 @@ const AvatarCardContainer = styled(Grid)(({ theme }) => ({
 }))
 
 const StyledAvatar = styled(Avatar)({
-  width: 116,
-  height: 116
+  width: 166,
+  height: 166
 })
+
+const AvatarContainer = styled(Grid)({
+  marginTop: 50,
+  marginBottom: 30
+})
+
+const AvatarBox = styled(Grid)(({ theme }) => ({
+  borderBottom: `0.3px solid ${theme.palette.primary.light}`,
+  paddingLeft: 26
+}))
 
 export const UploadAvatar: React.FC = () => {
   return (
     <AvatarCardContainer container flexDirection={"column"}>
-      <Grid item px={2} py={2}>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+      <AvatarBox item py={2}>
+        <Typography variant={"body2"} color="textPrimary">
           Avatar
         </Typography>
-      </Grid>
-      <Divider />
-      <Grid container my={3.8} style={{ gap: 28 }} alignItems={"center"} flexDirection={"column"}>
+      </AvatarBox>
+      <AvatarContainer container style={{ gap: 28 }} alignItems={"center"} flexDirection={"column"}>
         <Grid item justifyContent={"center"}>
           <StyledAvatar> </StyledAvatar>
         </Grid>
@@ -32,7 +40,7 @@ export const UploadAvatar: React.FC = () => {
             Upload
           </Button>
         </Grid>
-      </Grid>
+      </AvatarContainer>
     </AvatarCardContainer>
   )
 }
