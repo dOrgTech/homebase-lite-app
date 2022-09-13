@@ -1,4 +1,5 @@
-import { createTheme } from "@mui/material/styles"
+import { createTheme } from "@material-ui/core"
+
 const defaultTheme = createTheme()
 const { breakpoints } = defaultTheme
 
@@ -92,32 +93,25 @@ export const theme = createTheme({
       fontSize: 14
     }
   },
-  components: {
+  overrides: {
     MuiSlider: {
-      styleOverrides: {
         root: {
           color: "#3D3D3D"
         }
-      }
-    },
+      },
     MuiTab: {
-      styleOverrides: {
         root: {
           maxWidth: "100%"
         }
-      }
-    },
+      },
     MuiTooltip: {
-      styleOverrides: {
         tooltip: {
           backgroundColor: "#4BCF93",
           fontSize: 14,
           padding: "10px 15px"
         }
-      }
-    },
+      },
     MuiStepLabel: {
-      styleOverrides: {
         root: {
           "&.Mui-active": {
             color: "#fff !important",
@@ -144,31 +138,23 @@ export const theme = createTheme({
             fontWeight: 300
           }
         }
-      }
-    },
+      },
     MuiStepConnector: {
-      styleOverrides: {
         lineVertical: {
           display: "none"
         }
-      }
-    },
+      },
     MuiStepContent: {
-      styleOverrides: {
         root: {
           borderLeft: "none"
         }
-      }
-    },
+      },
     MuiStep: {
-      styleOverrides: {
         root: {
           marginBottom: 15
         }
-      }
-    },
+      },
     MuiStepIcon: {
-      styleOverrides: {
         root: {
           "&.Mui-active": {
             color: "#1C1F23 !important"
@@ -194,39 +180,31 @@ export const theme = createTheme({
         text: {
           fill: "#fff"
         }
-      }
-    },
+      },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     MuiCalendarPicker: {
-      styleOverrides: {
         root: {
           background: "#2F3438"
         }
-      }
-    },
+      },
     MuiList: {
-      styleOverrides: {
         root: {
           "background": "#2F3438",
           "&:hover fieldset": {
             border: "none"
           }
         }
-      }
-    },
+      },
     MuiPickersDay: {
-      styleOverrides: {
         root: {
           "background": "#2F3438",
           "&:Mui-selected": {
             border: "1px solid #fff"
           }
         }
-      }
-    },
+      },
     MuiInput: {
-      styleOverrides: {
         underline: {
           "&:after": {
             borderBottom: "none"
@@ -250,10 +228,8 @@ export const theme = createTheme({
             borderBottom: "none"
           }
         }
-      }
-    },
+      },
     MuiButton: {
-      styleOverrides: {
         root: {
           "&$disabled": {
             color: "#3d3d3d"
@@ -271,10 +247,8 @@ export const theme = createTheme({
           "padding": "1px 8px",
           "fontSize": "1rem"
         }
-      }
-    },
+      },
     MuiInputBase: {
-      styleOverrides: {
         input: {
           fontSize: 18,
           lineHeight: "146.3%",
@@ -282,17 +256,13 @@ export const theme = createTheme({
           color: "#fff",
           borderRadius: 8
         }
-      }
-    },
+      },
     MuiTextField: {
-      styleOverrides: {
         root: {
           borderRadius: 8
         }
-      }
-    },
+      },
     MuiOutlinedInput: {
-      styleOverrides: {
         root: {
           "background": "#2F3438",
           "borderRadius": 8,
@@ -306,19 +276,15 @@ export const theme = createTheme({
           paddingBottom: 19,
           fontWeight: 300
         }
-      }
-    },
+      },
     MuiDivider: {
-      styleOverrides: {
         root: {
           marginTop: 0,
           marginBottom: 0,
           border: "1px solid #7d8c8b33"
         }
-      }
-    },
+      },
     MuiDialog: {
-      styleOverrides: {
         paper: {
           background: "#1C1F23",
           width: 615,
@@ -331,48 +297,36 @@ export const theme = createTheme({
           maxWidth: 615,
           height: "auto"
         }
-      }
-    },
+      },
     MuiFormControl: {
-      styleOverrides: {
         root: {
           width: "100%"
         }
-      }
-    },
+      },
     MuiDialogContent: {
-      styleOverrides: {
         root: {
           "padding": "42px 54px",
           "&:first-child": {
             paddingTop: "42px"
           }
         }
-      }
-    },
+      },
     MuiSelect: {
-      styleOverrides: {
         select: {
           textAlign: "right"
         }
-      }
-    },
+      },
     MuiDialogContentText: {
-      styleOverrides: {
         root: {
           marginBottom: 0
         }
-      }
-    },
+      },
     MuiCheckbox: {
-      styleOverrides: {
         colorSecondary: {
           color: "#2f3438"
         }
-      }
-    },
+      },
     MuiSwitch: {
-      styleOverrides: {
         root: {
           marginBottom: 0
         },
@@ -413,25 +367,19 @@ export const theme = createTheme({
             color: "#81FEB7"
           }
         }
-      }
-    },
+      },
     MuiFormHelperText: {
-      styleOverrides: {
         root: {
           display: "none"
         }
-      }
-    },
+      },
     MuiTable: {
-      styleOverrides: {
         root: {
           borderRadius: "8px",
           backgroundColor: "#2F3438"
         }
-      }
-    },
+      },
     MuiTableHead: {
-      styleOverrides: {
         root: {
           minHeight: 58,
           fontSize: 16,
@@ -439,10 +387,8 @@ export const theme = createTheme({
           letterSpacing: "-0.01em",
           color: "#FFFFFF"
         }
-      }
-    },
+      },
     MuiTableFooter: {
-      styleOverrides: {
         root: {
           minHeight: 60,
           fontSize: 16,
@@ -451,27 +397,21 @@ export const theme = createTheme({
           color: "##81FEB7",
           borderTop: "0.3px solid #3D3D3D"
         }
-      }
-    },
+      },
     MuiTableBody: {
-      styleOverrides: {
         root: {
           "& > *": {
             borderTop: "0.3px solid #3D3D3D",
             minHeight: 90
           }
         }
-      }
-    },
+      },
     MuiTableCell: {
-      styleOverrides: {
         root: {
           borderBottom: "unset"
         }
-      }
-    },
+      },
     MuiTableRow: {
-      styleOverrides: {
         root: {
           "& th:first-child, & td:first-child": {
             paddingLeft: 46
@@ -480,7 +420,6 @@ export const theme = createTheme({
             paddingRight: 46
           }
         }
-      }
     }
   }
 })

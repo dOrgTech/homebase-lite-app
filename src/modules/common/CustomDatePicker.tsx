@@ -1,8 +1,8 @@
 import React from "react"
-import { Grid, TextField } from "@mui/material"
-import DatePicker, { DatePickerProps } from "@mui/lab/DatePicker"
+import { Grid, TextField } from "@material-ui/core"
 
-interface CustomDatePickerProps extends DatePickerProps {
+
+interface CustomDatePickerProps {
   id: string
 }
 
@@ -12,12 +12,12 @@ export const CustomDatePicker: React.FC = () => {
     <Grid container>
       {/* <Grid item>Hello</Grid> */}
       <Grid item>
-        <DatePicker
+        {/* <DatePicker
           onChange={() => console.log("")}
-          renderInput={params => <TextField {...params} />}
+          renderInput={(params: any) => <TextField {...params} />}
           label="Basic example"
           value={value}
-        />
+        /> */}
       </Grid>
     </Grid>
   )

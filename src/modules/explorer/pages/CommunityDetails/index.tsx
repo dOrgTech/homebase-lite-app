@@ -1,5 +1,5 @@
 import React from "react"
-import { Container, Grid, styled } from "@mui/material"
+import { Container, Grid, styled } from "@material-ui/core"
 import { DaoCard } from "../../components/DaoCard"
 import { ProposalList } from "../../components/ProposalList"
 

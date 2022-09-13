@@ -1,13 +1,13 @@
 import React from "react"
-import { Grid, Typography } from "@mui/material"
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
-import { useNavigate } from "react-router-dom"
+import { Grid, Typography } from "@material-ui/core"
+import { useHistory } from "react-router-dom"
+import { ArrowBackIosOutlined } from "@material-ui/icons"
 
 export const BackButton: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useHistory()
   return (
-    <Grid container style={{ gap: 16, cursor: "pointer" }} onClick={() => navigate(-1)} alignItems="center">
-      <ArrowBackIosIcon color="secondary" />
+    <Grid container style={{ gap: 16, cursor: "pointer" }} onClick={() => navigate.goBack()} alignItems="center">
+      <ArrowBackIosOutlined color="secondary" />
       <Typography color="secondary">Back</Typography>
     </Grid>
   )

@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { Button, Divider, Grid, IconButton, styled, Typography } from "@mui/material"
+import { Button, Divider, Grid, IconButton, styled, Typography } from "@material-ui/core"
 import { theme } from "theme"
 
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
+import { AddCircleOutline } from "@material-ui/icons"
 import { ChoiceItem } from "./ChoiceItem"
 
 const ChoicesContainer = styled(Grid)(({ theme }) => ({
@@ -21,9 +21,9 @@ export const Choices: React.FC = () => {
   }
 
   return (
-    <ChoicesContainer container flexDirection={"column"}>
-      <Grid item px={2} py={2}>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+    <ChoicesContainer container direction="column">
+      <Grid item>
+        <Typography variant={"body2"} color="secondary">
           Choices
         </Typography>
       </Grid>
@@ -33,24 +33,23 @@ export const Choices: React.FC = () => {
         <ChoiceItem index={choice.index} description={choice.description} key={index} />
       ))}
 
-      <Grid container alignItems={"center"} justifyContent={"space-between"} flexGrow={1}>
+      <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Grid
           container
           justifyContent={"center"}
           alignItems={"center"}
           style={{ gap: 10, cursor: "pointer" }}
-          py={2}
           onClick={handleNewChoice}
         >
           <IconButton size="small">
-            <AddCircleOutlineIcon htmlColor={theme.palette.secondary.main} />
+            <AddCircleOutline htmlColor={theme.palette.secondary.main} />
           </IconButton>
           <Typography variant={"body2"} color={"secondary"}>
             Add Choice
           </Typography>
         </Grid>
 
-        <Grid container justifyContent={"center"} alignItems={"center"} style={{ gap: 10 }} py={3}>
+        <Grid container justifyContent={"center"} alignItems={"center"} style={{ gap: 10 }}>
           <Button variant="contained" color="secondary">
             Publish
           </Button>

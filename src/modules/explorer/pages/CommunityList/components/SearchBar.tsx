@@ -1,9 +1,7 @@
 import React from "react"
 
-import { SearchOutlined } from "@mui/icons-material"
-import { styled, Theme } from "@mui/material/styles"
-import { InputAdornment, TextField } from "@mui/material"
-import { withStyles } from "@mui/styles"
+import { InputAdornment, styled, TextField, Theme, withStyles } from "@material-ui/core"
+import { SearchOutlined } from "@material-ui/icons"
 
 const StyledInput = withStyles((theme: Theme) => ({
   root: {
@@ -39,8 +37,7 @@ const StyledInput = withStyles((theme: Theme) => ({
     "& .MuiInput-underline:after": {
       borderBottomColor: "transparent"
     }
-  },
-  input: {}
+  }
 }))(TextField)
 
 const SearchIcon = styled(SearchOutlined)({

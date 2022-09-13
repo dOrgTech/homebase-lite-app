@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Divider, Grid, styled, Typography } from "@mui/material"
+import { Button, Divider, Grid, styled, Typography } from "@material-ui/core"
 import { theme } from "../../../theme"
 
 const PluginsContainer = styled(Grid)(({ theme }) => ({
@@ -13,14 +13,14 @@ const PluginsContainer = styled(Grid)(({ theme }) => ({
 export const Plugins: React.FC = () => {
   return (
     <PluginsContainer>
-      <Grid item px={2} py={2}>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+      <Grid item>
+        <Typography variant={"body2"} color="secondary">
           Choices
         </Typography>
       </Grid>
       <Divider />
-      <Grid item px={1} py={1}>
-        <Grid container justifyContent={"center"} alignItems={"center"} style={{ gap: 10 }} py={1}>
+      <Grid item>
+        <Grid container justifyContent={"center"} alignItems={"center"} style={{ gap: 10 }}>
           <Button variant="contained" color="secondary">
             Add Plugin
           </Button>

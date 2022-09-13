@@ -1,5 +1,5 @@
 import React from "react"
-import { Divider, Grid, Typography, styled } from "@mui/material"
+import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { theme } from "theme"
 import { Dropdown } from "modules/common/Dropdown"
 import { ProposalTableRow } from "./ProposalTableRow"
@@ -12,10 +12,10 @@ const ProposalListContainer = styled(Grid)(({ theme }) => ({
 
 export const ProposalList: React.FC = () => {
   return (
-    <ProposalListContainer container flexDirection="column">
-      <Grid container justifyContent="space-between" alignItems="center" py={3} px={5.5}>
+    <ProposalListContainer container direction="column">
+      <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
-          <Typography variant={"body2"} color={theme.palette.text.secondary}>
+          <Typography variant={"body2"} color="secondary">
             Proposals
           </Typography>
         </Grid>

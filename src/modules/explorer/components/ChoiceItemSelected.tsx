@@ -1,6 +1,5 @@
 import React from "react"
-import { Divider, Grid, Theme, Typography } from "@mui/material"
-import { styled } from "@mui/styles"
+import { Divider, Grid, styled, Theme, Typography } from "@material-ui/core"
 
 const StyledContainer = styled(Grid)(({ theme }: { theme: Theme }) => ({
   borderRadius: 4,

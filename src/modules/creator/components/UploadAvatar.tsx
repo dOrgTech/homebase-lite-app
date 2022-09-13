@@ -1,5 +1,5 @@
 import React from "react"
-import { Avatar, Button, Grid, styled, Typography } from "@mui/material"
+import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 
 const AvatarCardContainer = styled(Grid)(({ theme }) => ({
   height: "100%",
@@ -24,13 +24,13 @@ const AvatarBox = styled(Grid)(({ theme }) => ({
 
 export const UploadAvatar: React.FC = () => {
   return (
-    <AvatarCardContainer container flexDirection={"column"}>
-      <AvatarBox item py={2}>
+    <AvatarCardContainer container direction={"column"}>
+      <AvatarBox item>
         <Typography variant={"body2"} color="textPrimary">
           Avatar
         </Typography>
       </AvatarBox>
-      <AvatarContainer container style={{ gap: 28 }} alignItems={"center"} flexDirection={"column"}>
+      <AvatarContainer container style={{ gap: 28 }} alignItems={"center"} direction={"column"}>
         <Grid item justifyContent={"center"}>
           <StyledAvatar> </StyledAvatar>
         </Grid>

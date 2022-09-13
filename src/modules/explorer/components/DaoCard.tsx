@@ -1,7 +1,19 @@
-import { Avatar, Button, Grid, styled, Typography } from "@mui/material"
+import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 import React from "react"
-import { theme } from "theme"
-import { useNavigate } from "react-router-dom"
+import { useHistory } from "react-router-dom"
+
+
+const StyledAvatar = styled(Avatar)({
+  height: 84,
+  width: 84
+})
+
+const MembersText = styled(Typography)({
+  fontWeight: 200,
+  fontSize: 16,
+  marginTop: -8,
+  marginBottom: 8
+})
 
 type DaoCardProps = {
   isDetails: boolean
@@ -12,25 +24,27 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   borderRadius: 8,
   alignItems: "center",
   justifyContent: "center",
-  flexDirection: "column"
+  flexDirection: "column",
+  height: 245,
+  marginBottom: 15
 }))
 
 export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
-  const navigate = useNavigate()
+  const navigate = useHistory()
   return (
-    <DaoCardContainer container py={isDetails ? 4.5 : 2.8} style={{ gap: 15 }}>
+    <DaoCardContainer container style={{ gap: 10 }}>
       <Grid item>
-        <Avatar sx={{ width: isDetails ? 116 : 84, height: isDetails ? 116 : 84 }}> </Avatar>
+        <StyledAvatar> </StyledAvatar>
       </Grid>
-      <Grid item style={{ cursor: "pointer" }} onClick={() => navigate("/explorer/communities/1")}>
-        <Typography variant={"body1"} color={theme.palette.text.primary}>
+      <Grid item style={{ cursor: "pointer" }} onClick={() => navigate.push("/explorer/communities/1")}>
+        <Typography variant={"body1"} color="textPrimary">
           TEZDAO
         </Typography>
       </Grid>
       <Grid item>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+        <MembersText variant={"body2"} color="textPrimary">
           300 members
-        </Typography>
+        </MembersText>
       </Grid>
       <Grid item>
         <Button variant="contained" color="secondary" size="small" onClick={() => console.log("Button")}>
@@ -43,7 +57,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
             variant="contained"
             color="secondary"
             size="small"
-            onClick={() => navigate("/explorer/communities/1/proposal")}
+            onClick={() => navigate.push("/explorer/communities/1/proposal")}
           >
             New Proposal
           </Button>

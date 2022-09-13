@@ -1,5 +1,5 @@
 import React from "react"
-import { Divider, Grid, Typography } from "@mui/material"
+import { Divider, Grid, Typography } from "@material-ui/core"
 import { GridContainer } from "modules/common/GridContainer"
 import { theme } from "theme"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
@@ -7,34 +7,34 @@ import { LinearChart } from "modules/common/LinearChart"
 
 export const VoteDetails: React.FC = () => {
   return (
-    <GridContainer container flexDirection="column">
-      <Grid item px={5} py={2.5}>
-        <Typography variant={"body2"} color={theme.palette.text.secondary}>
+    <GridContainer container direction="column">
+      <Grid item >
+        <Typography variant={"body2"} color="secondary">
           Information
         </Typography>
       </Grid>
       <Divider />
-      <Grid container px={5} py={3} style={{ gap: 25 }}>
+      <Grid container style={{ gap: 25 }}>
         <Grid item>
           <Grid container style={{ gap: 32 }} alignItems="center">
             <TableStatusBadge status={ProposalStatus.ACTIVE} />
-            <Typography variant={"body1"} color={theme.palette.text.primary} fontWeight={300}>
+            <Typography variant={"body1"} color="primary">
               Dec 19, 2020. 11:09 AM PST
             </Typography>
           </Grid>
         </Grid>
         <Grid item>
           <Grid container style={{ gap: 15 }}>
-            <Typography variant={"body1"} color={theme.palette.text.primary} fontWeight={500}>
+            <Typography variant={"body1"} color="primary" >
               Current Votes:
             </Typography>
-            <Typography variant={"body1"} color={theme.palette.text.primary} fontWeight={300}>
+            <Typography variant={"body1"} color="primary">
               10
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid container px={5} pb={3}>
+      <Grid container>
         <LinearChart
           items={[
             { name: "choice 1:", percent: 50, votes: 6 },

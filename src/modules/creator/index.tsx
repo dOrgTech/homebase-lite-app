@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, TextField, styled, Container, Typography, Checkbox, Button } from "@mui/material"
+import { Grid, TextField, styled, Container, Typography, Checkbox, Button } from "@material-ui/core"
 import { UploadAvatar } from "./components/UploadAvatar"
 import { BackButton } from "../common/BackButton"
 
@@ -51,7 +51,7 @@ const StyledContainer = styled(Container)({
 export const CommunityCreator: React.FC = () => {
   return (
     <StyledContainer>
-      <Grid container mx={2} my={3}>
+      <Grid container>
         <BackButton />
       </Grid>
 
@@ -61,7 +61,7 @@ export const CommunityCreator: React.FC = () => {
             Create a Community
           </Typography>
         </TitleContainer>
-        <CommunityContainer container flexDirection={"column"} style={{ gap: 30 }} xs={12} md={6} lg={9}>
+        <CommunityContainer container direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={9}>
           <Grid item>
             <TextField placeholder="Community Name*" />
           </Grid>
@@ -75,13 +75,13 @@ export const CommunityCreator: React.FC = () => {
             <TextField placeholder="Token Contract Address" />
           </Grid>
         </CommunityContainer>
-        <CommunityContainer container flexDirection={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
+        <CommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
           <AvatarContainer item>
             <UploadAvatar />
           </AvatarContainer>
         </CommunityContainer>
 
-        <CommunityContainerBottom container justifyContent="space-between" spacing={"16"}>
+        <CommunityContainerBottom container justifyContent="space-between" spacing={8}>
           <Grid item container xs={12} md={4}>
             <SmallTextField placeholder="Token Symbol" />
           </Grid>
@@ -93,7 +93,7 @@ export const CommunityCreator: React.FC = () => {
           </Grid>
         </CommunityContainerBottom>
 
-        <CommunityContainerBottom container flexDirection="column">
+        <CommunityContainerBottom container direction="column">
           <Grid container direction="row" alignItems="center">
             <Checkbox color="secondary" disableRipple />
 

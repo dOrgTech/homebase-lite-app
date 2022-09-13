@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Select, SelectProps, MenuItem, SelectChangeEvent } from "@mui/material"
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
-import { makeStyles } from "@mui/styles"
+import { Select, SelectProps, MenuItem, makeStyles } from "@material-ui/core"
+import { KeyboardArrowDown } from "@material-ui/icons"
 
 interface DropdownProps extends SelectProps {
   options: { name: string; value: string | undefined }[]
@@ -31,7 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }
     setSelected(value)
   }, [value])
 
-  const handleSelected = (event: SelectChangeEvent) => {
+  const handleSelected = (event: any) => {
     setSelected(event.target.value)
     if (onSelected) onSelected(event.target.value)
   }
@@ -39,7 +38,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }
   return (
     <Select
       value={selected}
-      IconComponent={() => <KeyboardArrowDownIcon color="inherit" />}
+      IconComponent={() => <KeyboardArrowDown color="inherit" />}
       onChange={handleSelected}
       classes={{
         icon: classes.icon,
