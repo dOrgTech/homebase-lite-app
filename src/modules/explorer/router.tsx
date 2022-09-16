@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter, Redirect, Route, Router, Switch, useRouteMatch } from "react-router-dom"
+import { Switch, Route, Redirect, useRouteMatch } from "react-router"
 import { CommunityList } from "./pages/CommunityList"
 import { CommunityDetails } from "./pages/CommunityDetails"
 import { CreateProposal } from "./pages/CreateProposal"

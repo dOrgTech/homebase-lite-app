@@ -3,7 +3,7 @@ import { Grid, AppBar, Toolbar, Typography, Box, useMediaQuery } from "@material
 import { styled, Theme } from "@material-ui/core/styles"
 import HomeButton from "assets/logos/homebase_lite_logo.svg"
 import { theme } from "theme"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 
 const Header = styled(Grid)({
   padding: "28px 125px"

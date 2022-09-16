@@ -1,7 +1,8 @@
 import React from "react"
 import { makeStyles, ThemeProvider } from "@material-ui/core"
 import { theme } from "theme"
-import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom"
+import { Switch, Route, Redirect } from "react-router"
+import { BrowserRouter as Router } from "react-router-dom"
 import ScrollToTop from "modules/common/ScrollToTop"
 import { Navbar as Toolbar } from "modules/common/Toolbar";
 import "App.css"
@@ -56,6 +57,7 @@ const styles = makeStyles({
 if (!process.env.REACT_APP_MIXPANEL_TOKEN) {
   throw new Error("REACT_APP_MIXPANEL_TOKEN env variable is missing");
 }
+
 
 if (!process.env.REACT_APP_MIXPANEL_DEBUG_ENABLED) {
   throw new Error("REACT_APP_MIXPANEL_DEBUG_ENABLED env variable is missing");

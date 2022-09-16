@@ -216,7 +216,10 @@ export const theme = createTheme({
             borderBottom: "none"
           },
           "&:before": {
-            borderBottom: "none"
+            borderBottom: "none",
+            "&:hover": {
+              borderBottom: "none"
+            }
           },
           "&:hover:not($disabled):not($focused):not($error):before": {
             borderBottom: "none"
@@ -226,6 +229,12 @@ export const theme = createTheme({
           },
           "&:active:not($disabled):not($focused):not($error):before": {
             borderBottom: "none"
+          },
+          "&:hover:not($disabled)": {
+            borderBottom: "none",
+            "&:before": {
+              borderBottom: "none"
+            }
           }
         }
       },
@@ -249,12 +258,31 @@ export const theme = createTheme({
         }
       },
     MuiInputBase: {
+        root: {
+          background: "#2f3438",
+          borderRadius: 4,
+          paddingLeft: 26,
+          paddingTop: 19,
+          paddingBottom: 19,
+          outline: "none",
+          "&:focus-visible" : {
+            outline: "none",
+          }
+        },
         input: {
           fontSize: 18,
           lineHeight: "146.3%",
           fontFamily: "Roboto Mono",
           color: "#fff",
-          borderRadius: 8
+          borderRadius: 8,
+          "&::placeholder": {
+            color: "rgba(255, 255, 255, 0.65)"
+          }
+        },
+        inputMultiline: {
+          paddingLeft: 26,
+          paddingTop: 19,
+          paddingBottom: 19
         }
       },
     MuiTextField: {
@@ -274,7 +302,10 @@ export const theme = createTheme({
           paddingLeft: 26,
           paddingTop: 19,
           paddingBottom: 19,
-          fontWeight: 300
+          fontWeight: 300,
+          "&::placeholder": {
+            color: "rgba(255, 255, 255, 0.65)"
+          }
         }
       },
     MuiDivider: {

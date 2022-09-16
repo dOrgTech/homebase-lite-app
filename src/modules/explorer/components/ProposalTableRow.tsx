@@ -9,7 +9,7 @@ import {
   PlayCircleOutlineOutlined,
   RemoveCircleOutline
 } from "@material-ui/icons"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 
 export interface ProposalTableRowData {
   daoId?: string

@@ -1,6 +1,6 @@
 import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 import React from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 
 
 const StyledAvatar = styled(Avatar)({

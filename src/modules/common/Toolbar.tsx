@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   Theme,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router";
 import { TezosToolkit } from "@taquito/taquito";
 
 import HomeButton from "assets/logos/homebase_logo.svg";

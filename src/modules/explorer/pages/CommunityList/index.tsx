@@ -2,7 +2,7 @@ import React from "react"
 import { theme } from "theme"
 import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 
 const PageContainer = styled("div")({
@@ -73,7 +73,6 @@ export const CommunityList: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
-
         <Grid container spacing={3}>
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
           {/*@ts-ignore */}
