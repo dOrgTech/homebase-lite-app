@@ -2,7 +2,6 @@ import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 import React from "react"
 import { useHistory } from "react-router"
 
-
 const StyledAvatar = styled(Avatar)({
   height: 84,
   width: 84
@@ -15,10 +14,6 @@ const MembersText = styled(Typography)({
   marginBottom: 8
 })
 
-type DaoCardProps = {
-  isDetails: boolean
-}
-
 const DaoCardContainer = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.main,
   borderRadius: 8,
@@ -29,8 +24,8 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   marginBottom: 15
 }))
 
-export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
-  const navigate = useHistory()
+export const DaoCard: React.FC = () => {
+  const navigate = useHistory();
   return (
     <DaoCardContainer container style={{ gap: 10 }}>
       <Grid item>
@@ -51,18 +46,6 @@ export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
           Join
         </Button>
       </Grid>
-      {isDetails && (
-        <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={() => navigate.push("/explorer/community/1/proposal")}
-          >
-            New Proposal
-          </Button>
-        </Grid>
-      )}
     </DaoCardContainer>
   )
 }

@@ -84,7 +84,8 @@ export const theme = createTheme({
       }
     },
     body2: {
-      fontSize: 18,
+      fontSize: 17,
+      fontWeight: 300,
       [breakpoints.down("xs")]: {
         fontSize: 14
       }

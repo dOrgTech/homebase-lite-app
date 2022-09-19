@@ -78,7 +78,7 @@ export const CommunityList: React.FC = () => {
           {/*@ts-ignore */}
           {[...Array(30).keys()].map(elem => (
             <Grid item xs={6} md={4} lg={3} xl={2} key={elem}>
-              <DaoCard isDetails={false} />
+              <DaoCard />
             </Grid>
           ))}
         </Grid>

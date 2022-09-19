@@ -91,7 +91,7 @@ const App: React.FC = () => {
                 <Route path="/creator">
                   <CommunityCreator />
                 </Route>
-                <Redirect to="/explorer/communities" />
+                <Redirect to="/explorer" />
               </Switch>
             </Router>
           </ActionSheetProvider>
