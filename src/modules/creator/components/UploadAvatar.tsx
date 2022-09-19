@@ -56,7 +56,7 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
                 const fileReader = new FileReader()
                 fileReader.onload = () => {
                   if (fileReader.readyState === 2) {
-                    setFieldValue("avatar", fileReader.result)
+                    setFieldValue("avatar_url", fileReader.result)
                     setAvatarPreview(fileReader.result)
                   }
                 }

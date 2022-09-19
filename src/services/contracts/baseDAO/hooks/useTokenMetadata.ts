@@ -4,14 +4,14 @@ import { getTokenMetadata } from "services/bakingBad/tokenBalances"
 
 import { useTezos } from "services/beacon/hooks/useTezos"
 
-export const useTokenMetadata = (address?: string, tokenId?: string) => {
+export const useTokenMetadata = (address?: string) => {
   const { tezos, network } = useTezos()
 
   const result = useQuery<Token, Error>(
-    ["tokenMetadata", address, tokenId],
-    () => getTokenMetadata(address as string, network, tokenId as string),
+    ["tokenMetadata", address],
+    () => getTokenMetadata(address as string, network),
     {
-      enabled: !!tezos && !!address && !!tokenId
+      enabled: !!tezos && !!address
     }
   )
 

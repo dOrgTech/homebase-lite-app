@@ -36,7 +36,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
       <Grid item>
         <StyledAvatar> </StyledAvatar>
       </Grid>
-      <Grid item style={{ cursor: "pointer" }} onClick={() => navigate.push("/explorer/communities/1")}>
+      <Grid item style={{ cursor: "pointer" }} onClick={() => navigate.push("/explorer/community/1")}>
         <Typography variant={"body1"} color="textPrimary">
           TEZDAO
         </Typography>
@@ -57,7 +57,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({ isDetails }) => {
             variant="contained"
             color="secondary"
             size="small"
-            onClick={() => navigate.push("/explorer/communities/1/proposal")}
+            onClick={() => navigate.push("/explorer/community/1/proposal")}
           >
             New Proposal
           </Button>

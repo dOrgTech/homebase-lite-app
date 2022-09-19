@@ -58,8 +58,8 @@ export const getDAOBalances = async (
   return getDAOBalances(daoId, network, offset + ELEMENTS_PER_REQUEST, balances.concat(fetchedBalances))
 }
 
-export const getTokenMetadata = async (contractAddress: string, network: Network, tokenId: string) => {
-  const url = `${API_URL}/tokens/${networkNameMap[network]}/metadata?contract=${contractAddress}&token_id=${tokenId}`
+export const getTokenMetadata = async (contractAddress: string, network: Network, tokenId?: string) => {
+  const url = `${API_URL}/tokens/${networkNameMap[network]}/metadata?contract=${contractAddress}`
   const response = await fetch(url)
   if (!response.ok) {
     throw new Error("Failed to fetch proposals from BakingBad API")

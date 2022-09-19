@@ -15,10 +15,10 @@ export const CommunityDetails: React.FC = () => {
   return (
     <Container>
       <Grid container>
-        <CommunityDetailsContainer xs={12} md={4} lg={3}>
+        <CommunityDetailsContainer item xs={12} md={4} lg={3}>
           <DaoCard isDetails={true} />
         </CommunityDetailsContainer>
-        <CommunityDetailsContainer xs={12} md={8} lg={9}>
+        <CommunityDetailsContainer item xs={12} md={8} lg={9}>
           <ProposalList />
         </CommunityDetailsContainer>
       </Grid>

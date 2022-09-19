@@ -13,13 +13,13 @@ export const DAOExplorerRouter: React.FC = (): JSX.Element => {
       <Route path={`${match.url}/communities`}>
         <CommunityList />
       </Route>
-      <Route path={`${match.url}/communities/:id`}>
+      <Route path={`${match.url}/community/:id`}>
         <CommunityDetails />
       </Route>
-      <Route path={`${match.url}/communities/:id/proposal`}>
+      <Route path={`${match.url}/community/:id/proposal`}>
         <CreateProposal />
       </Route>
-      <Route path={`${match.url}/communities/:id/proposal/:proposalId`}>
+      <Route path={`${match.url}/community/:id/proposal/:proposalId`}>
         <ProposalDetails />
       </Route>
       <Redirect to={`${match.url}/communities`} />

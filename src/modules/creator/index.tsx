@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Grid,
   TextField,
@@ -18,6 +18,9 @@ import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
 import { Community } from "models/Community"
 import { useHistory } from "react-router"
+import { validateContractAddress } from "@taquito/utils";
+import { useTokenMetadata } from "services/contracts/baseDAO/hooks/useTokenMetadata"
+
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -127,13 +130,68 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   }
 }))
 
+const ErrorText = styled(Typography)({
+  fontSize: 14,
+  color: "red",
+  marginBottom: -21,
+  marginTop: 2
+})
+
+const MetadataContainer = styled(Grid)({
+  margin: "-4px 0 16px 0",
+});
+
 const validateForm = (values: Community) => {
-  console.log("validate", values)
+  const errors: FormikErrors<Community> = {}
+
+  if (!values.name) {
+    errors.name = "Required"
+  }
+
+  if (!values.token_address) {
+    errors.token_address = "Required"
+  }
+
+  if (
+    values.token_address &&
+    validateContractAddress(values.token_address) !== 3
+  ) {
+    errors.token_address = "Invalid address"
+  }
+
+  return errors
 }
 
-const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched } : any) => {
+const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched }: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+
+
+  const {
+    data: tokenMetadata,
+    isLoading: loading,
+    error,
+  } = useTokenMetadata(
+    values?.token_address
+  );
+
+  useEffect(() => {
+    if (tokenMetadata) {
+      setFieldValue("token_id", tokenMetadata.token_id);
+    }
+
+    if (error) {
+      setFieldValue("token_id", undefined);
+    }
+
+    if (tokenMetadata) {
+      setFieldValue("token_symbol", tokenMetadata.symbol);
+    }
+
+    if (error) {
+      setFieldValue("token_symbol", undefined);
+    }
+  }, [error, setFieldValue, tokenMetadata]);
 
   return (
     <Grid container>
@@ -145,6 +203,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
       <CommunityContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={9}>
         <Grid item>
           <Field name="name" type="text" placeholder="Community Name*" component={CustomFormikTextField} />
+          {errors?.name && touched.name ? <ErrorText>{errors.name}</ErrorText> : null}
         </Grid>
         <Grid item>
           <Field name="description">
@@ -166,11 +225,21 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
         </Grid>
         <Grid item>
           <Field
+            onClick={() => setFieldTouched("token_address")}
             name="token_address"
             type="text"
-            placeholder="Token Contract Address"
+            placeholder="Token Contract Address*"
             component={CustomFormikTextField}
           />
+          {tokenMetadata && !loading && (
+            <MetadataContainer item xs={12}>
+              <Typography variant="subtitle2" color="secondary">
+                {tokenMetadata.name}
+              </Typography>
+            </MetadataContainer>
+          )}
+          {errors?.token_address && touched.token_address ? <ErrorText>{errors.token_address}</ErrorText> : null}
+
         </Grid>
       </CommunityContainer>
       <CommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
@@ -199,8 +268,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
                 disableRipple
                 checked={values.required_token}
                 value={getIn(values, "required_token")}
-                onChange={(newValue: any) => {
-                  console.log(newValue)
+                onChange={() => {
                   setFieldValue("required_token", !values.required_token)
                 }}
               />
@@ -217,8 +285,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
                 disableRipple
                 checked={values.allow_access}
                 value={getIn(values, "allow_access")}
-                onChange={(newValue: any) => {
-                  console.log(newValue)
+                onChange={() => {
                   setFieldValue("allow_access", !values.allow_access)
                 }}
               />
@@ -239,6 +306,8 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 }
 
 export const CommunityCreator: React.FC = () => {
+  const navigate = useHistory();
+
   const initialState: Community = {
     name: "",
     description: "",
@@ -252,8 +321,10 @@ export const CommunityCreator: React.FC = () => {
     allow_access: false
   }
 
-  const saveStepInfo = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
-    setSubmitting(true)
+  const saveCommunity = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
+    setSubmitting(true);
+
+    navigate.push("/explore/communities");
   }
 
   return (
@@ -267,7 +338,7 @@ export const CommunityCreator: React.FC = () => {
         validateOnChange={true}
         validateOnBlur={false}
         validate={validateForm}
-        onSubmit={saveStepInfo}
+        onSubmit={saveCommunity}
         initialValues={initialState}
       >
         {({ submitForm, isSubmitting, setFieldValue, values, errors, touched, setFieldTouched }) => {

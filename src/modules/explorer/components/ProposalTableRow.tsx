@@ -41,8 +41,8 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
 
   return (
-    <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/communities/1/proposal/1")}>
-      <Grid container style={{ gap: 26 }} xs={12} md={9} justifyContent={isMobile ? "center" : "flex-start"}>
+    <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
+      <Grid container item style={{ gap: 26 }} xs={12} md={9} justifyContent={isMobile ? "center" : "flex-start"}>
         <Typography variant="h4" color="textSecondary" align={isMobile ? "center" : "left"}>
           Contribute to the fund
         </Typography>
