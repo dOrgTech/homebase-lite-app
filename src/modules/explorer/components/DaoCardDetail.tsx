@@ -1,4 +1,4 @@
-import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
+import { Avatar, Button, Grid, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import React from "react"
 import { useHistory } from "react-router"
 
@@ -52,14 +52,16 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
 
 export const DaoCardDetail: React.FC = () => {
   const navigate = useHistory();
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
 
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
       <Grid item>
         <StyledAvatar> </StyledAvatar>
       </Grid>
-      <Grid item container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item direction="column" container xs={12} md={12} lg={6}>
+      <Grid item container direction="row" justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
+        <Grid item direction="column" container xs={12} md={12} lg={6} alignItems={isMobile ? "center" : "stretch"}>
           <CommunityText color="textPrimary">TEZDAO</CommunityText>
           <MembersText variant={"body1"} color="textPrimary">
             300 members

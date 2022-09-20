@@ -13,7 +13,8 @@ export const theme = createTheme({
     secondary: {
       main: "#81FEB7",
       dark: "#273833",
-      contrastText: "#1C1F23"
+      contrastText: "#1C1F23",
+      light: "#7E496F"
     },
     text: {
       primary: "#FFFFFF",
@@ -66,7 +67,8 @@ export const theme = createTheme({
       lineHeight: "146.3%"
     },
     h4: {
-      fontSize: 21,
+      fontSize: 22,
+      fontWeight: 500,
       [breakpoints.down("xs")]: {
         fontSize: 16
       }
@@ -256,6 +258,21 @@ export const theme = createTheme({
         "borderRadius": "4px",
         "padding": "1px 8px",
         "fontSize": "1rem"
+      }
+    },
+    MuiLinearProgress: {
+      barColorSecondary: {
+        backgroundColor: "#3FE888"
+      },
+      barColorPrimary: {
+        backgroundColor: "#3866F9"
+      },
+      bar: {
+        borderRadius: 4
+      },
+      root: {
+        borderRadius: 4
+
       }
     },
     MuiInputBase: {

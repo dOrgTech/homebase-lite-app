@@ -10,25 +10,34 @@ const ProposalListContainer = styled(Grid)(({ theme }) => ({
   borderRadius: 8
 }))
 
+const Header = styled(Grid)({
+  paddingLeft: 41,
+  paddingRight: 41
+})
+
+const StyledDivider = styled(Divider)({
+  height: 0
+})
+
 export const ProposalList: React.FC = () => {
   return (
     <ProposalListContainer container direction="column">
-      <Grid container justifyContent="space-between" alignItems="center">
+      <Header container justifyContent="space-between" alignItems="center">
         <Grid item>
-          <Typography variant={"body2"} color="secondary">
+          <Typography variant={"body2"} color="textPrimary">
             Proposals
           </Typography>
         </Grid>
         <Grid item>
-          <Dropdown options={[{ name: "All", value: "all" }]} value={"all"} />
+          <Dropdown options={[{ name: "All", value: "all"},{ name: "Active", value: "active"}, { name: "Closed", value: "closed"}]} value={"all"} />
         </Grid>
-      </Grid>
-      <Divider />
+      </Header>
+      <StyledDivider />
       <ProposalTableRow proposal={ProposalStatus.ACTIVE} />
-      <Divider />
-      <ProposalTableRow proposal={ProposalStatus.REJECTED} />
-      <Divider />
-      <ProposalTableRow proposal={ProposalStatus.PASSED} />
+      <StyledDivider />
+      <ProposalTableRow proposal={ProposalStatus.CLOSED} />
+      <StyledDivider />
+      <ProposalTableRow proposal={ProposalStatus.CLOSED} />
     </ProposalListContainer>
   )
 }

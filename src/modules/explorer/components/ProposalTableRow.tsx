@@ -1,15 +1,10 @@
 import React from "react"
-import { styled, Grid, Typography, useTheme, useMediaQuery } from "@material-ui/core"
+import { styled, Grid, Typography, useTheme, useMediaQuery, LinearProgress } from "@material-ui/core"
 import { RowContainer } from "./tables/RowContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
-import {
-  CancelOutlined,
-  CheckCircleOutlined,
-  PauseCircleOutline,
-  PlayCircleOutlineOutlined,
-  RemoveCircleOutline
-} from "@material-ui/icons"
 import { useHistory } from "react-router"
+import { Blockie } from "modules/common/Blockie"
+import { toShortAddress } from "services/contracts/utils"
 
 export interface ProposalTableRowData {
   daoId?: string
@@ -30,10 +25,31 @@ const StatusText = styled(Typography)({
 })
 
 const ArrowInfo = styled(Typography)(({ theme }) => ({
+  fontFamily: "Roboto Mono",
+  fontWeight: 500,
+  fontSize: 16,
   [theme.breakpoints.down("sm")]: {
     marginTop: 15
   }
 }))
+
+const Address = styled(Typography)({
+  marginLeft: 12
+})
+
+const BlockieContainer = styled(Grid)({
+  marginBottom: 19
+})
+
+const DescriptionText = styled(Typography)({
+  fontWeight: 300,
+  fontSize: 18,
+  marginBottom: 25
+})
+
+const LightText = styled(Typography)({
+  fontWeight: 300
+})
 
 export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ proposal }) => {
   const navigate = useHistory()
@@ -42,7 +58,13 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
 
   return (
     <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
-      <Grid container item style={{ gap: 26 }} xs={12} md={9} justifyContent={isMobile ? "center" : "flex-start"}>
+      <BlockieContainer container direction="row">
+        <Blockie address={"tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB"} size={24} />
+        <Address color="textPrimary" variant="subtitle2">
+          {toShortAddress("tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB")}
+        </Address>
+      </BlockieContainer>
+      <Grid container item style={{ gap: 25 }} xs={12} md={12} justifyContent={isMobile ? "center" : "flex-start"}>
         <Typography variant="h4" color="textSecondary" align={isMobile ? "center" : "left"}>
           Contribute to the fund
         </Typography>
@@ -52,27 +74,74 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
           direction={isMobile ? "column" : "row"}
           alignItems={isMobile ? "center" : "flex-start"}
           wrap="nowrap"
-          style={{ gap: 32 }}
+          style={{ gap: 18 }}
         >
           <TableStatusBadge status={proposal} />
-          <ArrowInfo color="textSecondary"> Created by 888f...88d8 </ArrowInfo>
+          <ArrowInfo color="textSecondary"> 2 days left</ArrowInfo>
+        </Grid>
+
+        <Grid>
+          <DescriptionText color="textPrimary">
+            This Proposal was created to fund a new project as the governing body
+          </DescriptionText>
         </Grid>
       </Grid>
-      <ArrowContainer item md={3} container direction="row" alignItems="center" justifyContent="flex-end">
-        {status === ProposalStatus.ACTIVE ? <PlayCircleOutlineOutlined htmlColor="#FFC839" fontSize={"large"} /> : null}
-        {status === ProposalStatus.PENDING ? (
-          <PauseCircleOutline htmlColor="rgba(56, 102, 249)" fontSize={"large"} />
-        ) : null}
-        {status === ProposalStatus.PASSED ? <CheckCircleOutlined fontSize={"large"} color="secondary" /> : null}
-        {status === ProposalStatus.NO_QUORUM ? (
-          <RemoveCircleOutline fontSize={"large"} htmlColor="rgb(61, 61, 61)" />
-        ) : null}
-        {status === ProposalStatus.EXECUTED ? <CheckCircleOutlined fontSize={"large"} color="secondary" /> : null}
-        {status === ProposalStatus.EXPIRED ? <CancelOutlined fontSize={"large"} htmlColor="rgb(61, 61, 61)" /> : null}
-        {status === ProposalStatus.REJECTED ? <CancelOutlined fontSize={"large"} color="error" /> : null}
-        {status === ProposalStatus.DROPPED ? <CancelOutlined fontSize={"large"} color="error" /> : null}
-        <StatusText color="textSecondary">{status}</StatusText>
-      </ArrowContainer>
+
+      <Grid style={{ gap: 19 }} container>
+        <Grid container direction="row" spacing={2} alignItems="center">
+          <Grid item xs={12} lg={3} md={4} sm={4} container direction="row" justifyContent="space-between">
+            <Grid item>
+              <Typography color="textPrimary"> Yes </Typography>
+            </Grid>
+            <Grid item>
+              <LightText color="textPrimary"> 100k </LightText>
+            </Grid>
+            <Grid>
+              <LightText color="textPrimary"> TOKN </LightText>
+            </Grid>
+          </Grid>
+          <Grid xs={12} lg={9} md={8} sm={8} spacing={1} container direction="row" justifyContent="space-around" alignItems="center">
+            <Grid item xs={10}>
+              <LinearProgress
+                style={{ width: "100%", marginRight: "4px" }}
+                color="secondary"
+                value={60}
+                variant="determinate"
+              />
+            </Grid>
+            <Grid item>
+              <Typography color="textPrimary">60%</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid container direction="row" spacing={2} alignItems="center">
+          <Grid item xs={12} lg={3} md={4} sm={4} container direction="row" justifyContent="space-between">
+            <Grid item>
+              <Typography color="textPrimary"> No </Typography>
+            </Grid>
+            <Grid item>
+              <LightText color="textPrimary"> 80k </LightText>
+            </Grid>
+            <Grid>
+              <LightText color="textPrimary"> TOKN </LightText>
+            </Grid>
+          </Grid>
+          <Grid xs={12} lg={9} spacing={1} md={8} sm={8} container direction="row" justifyContent="space-around" alignItems="center">
+            <Grid item xs={10}>
+              <LinearProgress
+                style={{ width: "100%", marginRight: "4px" }}
+                color="primary"
+                value={40}
+                variant="determinate"
+              />
+            </Grid>
+            <Grid item>
+              <Typography color="textPrimary">40%</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </RowContainer>
   )
 }
