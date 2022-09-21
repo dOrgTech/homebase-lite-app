@@ -100,7 +100,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
               <LightText color="textPrimary"> TOKN </LightText>
             </Grid>
           </Grid>
-          <Grid xs={12} lg={9} md={8} sm={8} spacing={1} container direction="row" justifyContent="space-around" alignItems="center">
+          <Grid xs={12} lg={9} md={8} sm={8} spacing={1} container direction="row" item justifyContent="space-around" alignItems="center">
             <Grid item xs={10}>
               <LinearProgress
                 style={{ width: "100%", marginRight: "4px" }}
@@ -127,7 +127,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
               <LightText color="textPrimary"> TOKN </LightText>
             </Grid>
           </Grid>
-          <Grid xs={12} lg={9} spacing={1} md={8} sm={8} container direction="row" justifyContent="space-around" alignItems="center">
+          <Grid xs={12} lg={9} spacing={1} md={8} sm={8} container item direction="row" justifyContent="space-around" alignItems="center">
             <Grid item xs={10}>
               <LinearProgress
                 style={{ width: "100%", marginRight: "4px" }}

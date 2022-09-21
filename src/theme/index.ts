@@ -1,4 +1,5 @@
 import { createTheme } from "@material-ui/core"
+import type { } from '@mui/x-date-pickers/themeAugmentation';
 
 const defaultTheme = createTheme()
 const { breakpoints } = defaultTheme
@@ -94,6 +95,29 @@ export const theme = createTheme({
     },
     h6: {
       fontSize: 14
+    }
+  },
+  components: {
+    MuiCalendarPicker: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+    MuiDatePicker: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          color: 'red !important',
+        },
+      }
     }
   },
   overrides: {
@@ -275,6 +299,11 @@ export const theme = createTheme({
 
       }
     },
+    MuiDatePicker: {
+      root: {
+        border: "none"
+      }
+    },
     MuiInputBase: {
       root: {
         background: "#2f3438",
@@ -285,6 +314,11 @@ export const theme = createTheme({
         outline: "none",
         "&:focus-visible": {
           outline: "none",
+        },
+        "& .MuiOutlinedInput": {
+          root: {
+            height: 72
+          }
         }
       },
       input: {
@@ -306,7 +340,8 @@ export const theme = createTheme({
         paddingLeft: 26,
         paddingTop: 19,
         paddingBottom: 19
-      }
+      },
+
     },
     MuiTextField: {
       root: {
@@ -315,6 +350,7 @@ export const theme = createTheme({
     },
     MuiOutlinedInput: {
       root: {
+        height: 72,
         "background": "#2F3438",
         "borderRadius": 8,
         "&:hover fieldset": {

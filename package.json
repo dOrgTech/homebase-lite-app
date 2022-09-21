@@ -13,10 +13,14 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@microsoft/signalr": "^5.0.9",
+    "@mui/material": "^5.10.6",
+    "@mui/x-date-pickers": "^5.0.2",
     "@taquito/beacon-wallet": "13.0.1",
     "@taquito/signer": "13.0.1",
     "@taquito/taquito": "13.0.1",
@@ -24,13 +28,14 @@
     "@taquito/tezbridge-wallet": "13.0.1",
     "@taquito/tzip12": "13.0.1",
     "@taquito/tzip16": "13.0.1",
+    "@types/aria-query": "^5.0.0",
     "@types/mixpanel-browser": "^2.35.7",
     "bignumber.js": "^9.0.2",
     "blockies-ts": "^1.0.0",
+    "dayjs": "^1.11.5",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-lab": "^0.0.8",
-    "dayjs": "^1.11.2",
     "graphql": "^15.5.1",
     "graphql-request": "^3.4.0",
     "hex-to-rgba": "^2.0.1",
@@ -91,8 +96,8 @@
     "husky": "^8.0.1",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
+    "react-error-overlay": "6.0.9",
     "source-map-explorer": "^2.5.2",
-    "typescript": "^4.2.3",
-    "react-error-overlay": "6.0.9"
+    "typescript": "^4.2.3"
   }
 }

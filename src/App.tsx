@@ -12,6 +12,8 @@ import { SnackbarProvider } from "notistack"
 import { ActionSheetProvider } from "modules/explorer/context/ActionSheets"
 import { QueryClient, QueryClientProvider } from "react-query"
 import mixpanel from "mixpanel-browser"
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -81,6 +83,7 @@ const App: React.FC = () => {
       >
         <QueryClientProvider client={queryClient}>
           <ActionSheetProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Router>
               <Toolbar />
               <ScrollToTop />
@@ -94,6 +97,7 @@ const App: React.FC = () => {
                 <Redirect to="/explorer" />
               </Switch>
             </Router>
+            </LocalizationProvider>
           </ActionSheetProvider>
         </QueryClientProvider>
       </SnackbarProvider>

@@ -52,17 +52,6 @@ const AvatarContainer = styled(Grid)({
   height: "100%"
 })
 
-const SmallTextField = styled(TextField)(({ theme }) => ({
-  "& .MuiOutlinedInput-root": {
-    "& input": {
-      width: 310,
-      [theme.breakpoints.down("md")]: {
-        minWidth: 310
-      }
-    }
-  }
-}))
-
 const PageContainer = styled("div")({
   marginBottom: 50,
   width: "1000px",
