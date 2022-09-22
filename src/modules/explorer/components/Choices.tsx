@@ -1,60 +1,119 @@
 import React, { useState } from "react"
-import { Button, Divider, Grid, IconButton, styled, Typography } from "@material-ui/core"
+import { Button, Grid, IconButton, InputAdornment, styled, Typography, withStyles } from "@material-ui/core"
 import { theme } from "theme"
 
-import { AddCircleOutline } from "@material-ui/icons"
-import { ChoiceItem } from "./ChoiceItem"
+import { AddCircleOutline, RemoveCircleOutline } from "@material-ui/icons"
+import { FieldArray, Field } from "formik"
+import { TextField as FormikTextField } from "formik-material-ui"
 
 const ChoicesContainer = styled(Grid)(({ theme }) => ({
-  height: "100%",
+  paddingBottom: 19,
   background: theme.palette.primary.main,
   borderRadius: 8
 }))
 
-export const Choices: React.FC = () => {
-  const [choices, setChoices] = useState([{ index: 1, description: "Choice 1" }])
+const RemoveCircle = styled(RemoveCircleOutline)(({ theme }) => ({
+  color: theme.palette.error.main,
+  cursor: "pointer"
+}))
 
-  const handleNewChoice = () => {
-    const currentChoices = [...choices]
-    currentChoices.push({ index: 1, description: "Choice 1" })
-    setChoices(currentChoices)
+const Title = styled(Grid)(({ theme }) => ({
+  paddingLeft: 26,
+  paddingRight: 26,
+  paddingTop: 19,
+  paddingBottom: 19,
+  borderBottom: `0.3px solid ${theme.palette.primary.light}`,
+  marginTop: "0px !important"
+}))
+
+const CustomFormikTextField = withStyles({
+  root: {
+    "& .MuiInput-root": {
+      fontWeight: 300,
+      textAlign: "initial",
+      borderBottom: `0.3px solid ${theme.palette.primary.light} !important`,
+      marginTop: "0px !important"
+    },
+    "& .MuiInputBase-input": {
+      textAlign: "initial"
+    },
+    "& .MuiInput-underline:before": {
+      borderBottom: "none !important"
+    },
+    "& .MuiInput-underline:hover:before": {
+      borderBottom: "none !important"
+    },
+    "& .MuiInput-underline:after": {
+      borderBottom: "none !important"
+    }
   }
+})(FormikTextField)
 
+export const Choices: React.FC<any> = ({ choices }) => {
+  
   return (
-    <ChoicesContainer container direction="column">
-      <Grid item>
-        <Typography variant={"body2"} color="secondary">
-          Choices
-        </Typography>
-      </Grid>
-      <Divider />
-
-      {choices.map((choice, index) => (
-        <ChoiceItem index={choice.index} description={choice.description} key={index} />
-      ))}
-
-      <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Grid
-          container
-          justifyContent={"center"}
-          alignItems={"center"}
-          style={{ gap: 10, cursor: "pointer" }}
-          onClick={handleNewChoice}
-        >
-          <IconButton size="small">
-            <AddCircleOutline htmlColor={theme.palette.secondary.main} />
-          </IconButton>
-          <Typography variant={"body2"} color={"secondary"}>
-            Add Choice
+    <>
+      <ChoicesContainer container direction="column">
+        <Title item>
+          <Typography variant={"body2"} color="textPrimary">
+            Set Poll Options
           </Typography>
-        </Grid>
+        </Title>
 
-        <Grid container justifyContent={"center"} alignItems={"center"} style={{ gap: 10 }}>
-          <Button variant="contained" color="secondary">
-            Publish
-          </Button>
-        </Grid>
+        <FieldArray
+          name="choices"
+          render={arrayHelpers => (
+            <div>
+              {choices && choices.length > 0
+                ? choices.map((choice: any, index: number) => (
+                    <div key={index}>
+                      <Field
+                        type="text"
+                        name={`choices[${index}]`}
+                        placeholder={`Choice ${index + 1}`}
+                        component={CustomFormikTextField}
+                        InputProps={{
+                          endAdornment:
+                            index + 1 === choices.length ? (
+                              <InputAdornment position="start">
+                                <RemoveCircle
+                                  onClick={() => {
+                                    if (index !== 0) {
+                                      arrayHelpers.remove(index)
+                                    }
+                                  }}
+                                />
+                              </InputAdornment>
+                            ) : null
+                        }}
+                      />
+                    </div>
+                  ))
+                : null}
+              <div>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  style={{ gap: 10, cursor: "pointer", paddingLeft: 16, paddingTop: 12 }}
+                  onClick={() => arrayHelpers.insert(choices.length, "")}
+                >
+                  <IconButton size="small">
+                    <AddCircleOutline htmlColor={theme.palette.secondary.main} />
+                  </IconButton>
+                  <Typography variant={"body2"} color={"secondary"}>
+                    Add Choice
+                  </Typography>
+                </Grid>
+              </div>
+            </div>
+          )}
+        />
+      </ChoicesContainer>
+      <Grid container  style={{ gap: 10, marginTop: 31 }}>
+        <Button variant="contained" color="secondary">
+          Create Proposal
+        </Button>
       </Grid>
-    </ChoicesContainer>
+    </>
   )
 }

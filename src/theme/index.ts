@@ -1,8 +1,7 @@
 import { createTheme } from "@material-ui/core"
-import type { } from '@mui/x-date-pickers/themeAugmentation';
-
 const defaultTheme = createTheme()
 const { breakpoints } = defaultTheme
+
 
 export const theme = createTheme({
   palette: {
@@ -98,6 +97,13 @@ export const theme = createTheme({
     }
   },
   components: {
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiCalendarPicker: {
       styleOverrides: {
         root: {
@@ -309,6 +315,7 @@ export const theme = createTheme({
         background: "#2f3438",
         borderRadius: 4,
         paddingLeft: 26,
+        paddingRight: 26,
         paddingTop: 19,
         paddingBottom: 19,
         outline: "none",

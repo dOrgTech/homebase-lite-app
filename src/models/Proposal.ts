@@ -3,7 +3,12 @@ export interface Proposal {
     title: string
     description: string
     link: string
-    choices: Array<string>
+    choices: string[]
     start_date: string
     end_date: string
   }
+
+interface Choice {
+  index: number
+  description: string
+}
