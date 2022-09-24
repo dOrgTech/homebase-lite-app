@@ -6,7 +6,7 @@ import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   [theme.breakpoints.down("md")]: {
-    marginTop: 30
+    marginTop: 0
   }
 }))
 

@@ -43,6 +43,7 @@ export const theme = createTheme({
     fontFamily: "Roboto Mono",
     h1: {
       fontSize: 30,
+      fontWeight: 500,
       [breakpoints.down("xs")]: {
         fontSize: 22
       }
@@ -50,7 +51,10 @@ export const theme = createTheme({
     subtitle1: {
       fontSize: 30,
       lineHeight: "124.3%",
-      fontWeight: 500
+      fontWeight: 500,
+      [breakpoints.down("xs")]: {
+        fontSize: 26
+      }
     },
     subtitle2: {
       fontSize: 16,
@@ -64,7 +68,10 @@ export const theme = createTheme({
     h2: {
       fontSize: 18,
       fontWeight: 200,
-      lineHeight: "146.3%"
+      lineHeight: "146.3%",
+      [breakpoints.down("xs")]: {
+        fontSize: 16
+      }
     },
     h4: {
       fontSize: 22,
@@ -82,14 +89,14 @@ export const theme = createTheme({
     body1: {
       fontSize: 18,
       [breakpoints.down("xs")]: {
-        fontSize: 14
+        fontSize: 16
       }
     },
     body2: {
       fontSize: 17,
       fontWeight: 300,
       [breakpoints.down("xs")]: {
-        fontSize: 14
+        fontSize: 16
       }
     },
     h6: {
@@ -288,6 +295,11 @@ export const theme = createTheme({
         "borderRadius": "4px",
         "padding": "1px 8px",
         "fontSize": "1rem"
+      },
+      label: {
+        [breakpoints.down("xs")]: {
+          fontSize: 15
+        }
       }
     },
     MuiLinearProgress: {
@@ -315,7 +327,6 @@ export const theme = createTheme({
         background: "#2f3438",
         borderRadius: 4,
         paddingLeft: 26,
-        paddingRight: 26,
         paddingTop: 19,
         paddingBottom: 19,
         outline: "none",

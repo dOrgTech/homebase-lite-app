@@ -31,9 +31,13 @@ const PageContainer = styled("div")({
   }
 })
 
-const ButtonLabel = styled(Button)({
-  fontSize: 15
-})
+const ButtonLabel = styled(Button)(({ theme }) => ({
+  fontSize: 15,
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 14,
+    padding: "8px !important"
+  }
+}))
 
 const CommunitiesContainer = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -52,11 +56,11 @@ export const CommunityList: React.FC = () => {
       <Grid container direction="column">
         <Grid item>
           <Grid container justifyContent={isMobileSmall ? "center" : "space-between"} alignItems="center">
-            <Grid item xs={8} sm={6}>
+            <Grid item xs={12} sm={6}>
               <SearchInput search={""} />
             </Grid>
             <Grid item>
-              <Grid container style={{ gap: 22 }} justifyContent="center">
+              <Grid container style={{ gap: isMobileSmall ? 16 : 22 }} justifyContent="center">
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
                     <Grid item>

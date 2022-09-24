@@ -17,11 +17,18 @@ import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
 import { Community } from "models/Community"
 import { useHistory } from "react-router"
-import { validateContractAddress } from "@taquito/utils";
+import { validateContractAddress } from "@taquito/utils"
 import { useTokenMetadata } from "services/contracts/baseDAO/hooks/useTokenMetadata"
 
-
 const CommunityContainer = styled(Grid)(({ theme }) => ({
+  boxSizing: "border-box",
+  padding: "0px 15px",
+  [theme.breakpoints.down("md")]: {
+    marginTop: 0
+  }
+}))
+
+const AvatarCommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
   [theme.breakpoints.down("md")]: {
@@ -33,7 +40,8 @@ const CommunityContainerBottom = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
   [theme.breakpoints.down("md")]: {
-    marginTop: 30
+    marginTop: 30,
+    gap: 12
   },
   marginTop: 30
 }))
@@ -42,7 +50,7 @@ const TitleContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
   [theme.breakpoints.down("md")]: {
-    marginTop: 30
+    marginTop: 0
   },
   marginBottom: 26
 }))
@@ -126,8 +134,17 @@ const ErrorText = styled(Typography)({
 })
 
 const MetadataContainer = styled(Grid)({
-  margin: "-4px 0 16px 0",
-});
+  margin: "-4px 0 16px 0"
+})
+
+const CheckboxContainer = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.down("xs")]: {
+    maxWidth: "16.666667%",
+    flexBasis: "16.666667%"
+  },
+  maxwidth: "5%",
+  flexBasis: "5%"
+}))
 
 const validateForm = (values: Community) => {
   const errors: FormikErrors<Community> = {}
@@ -140,10 +157,7 @@ const validateForm = (values: Community) => {
     errors.token_address = "Required"
   }
 
-  if (
-    values.token_address &&
-    validateContractAddress(values.token_address) !== 3
-  ) {
+  if (values.token_address && validateContractAddress(values.token_address) !== 3) {
     errors.token_address = "Invalid address"
   }
 
@@ -154,32 +168,25 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
-
-  const {
-    data: tokenMetadata,
-    isLoading: loading,
-    error,
-  } = useTokenMetadata(
-    values?.token_address
-  );
+  const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.token_address)
 
   useEffect(() => {
     if (tokenMetadata) {
-      setFieldValue("token_id", tokenMetadata.token_id);
+      setFieldValue("token_id", tokenMetadata.token_id)
     }
 
     if (error) {
-      setFieldValue("token_id", undefined);
+      setFieldValue("token_id", undefined)
     }
 
     if (tokenMetadata) {
-      setFieldValue("token_symbol", tokenMetadata.symbol);
+      setFieldValue("token_symbol", tokenMetadata.symbol)
     }
 
     if (error) {
-      setFieldValue("token_symbol", undefined);
+      setFieldValue("token_symbol", undefined)
     }
-  }, [error, setFieldValue, tokenMetadata]);
+  }, [error, setFieldValue, tokenMetadata])
 
   return (
     <Grid container>
@@ -227,14 +234,13 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
             </MetadataContainer>
           )}
           {errors?.token_address && touched.token_address ? <ErrorText>{errors.token_address}</ErrorText> : null}
-
         </Grid>
       </CommunityContainer>
-      <CommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
+      <AvatarCommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
         <AvatarContainer container item>
           <UploadAvatar url={values.avatar_url} setFieldValue={setFieldValue} />
         </AvatarContainer>
-      </CommunityContainer>
+      </AvatarCommunityContainer>
 
       <CommunityContainerBottom container justifyContent="space-between" spacing={isMobileSmall ? 4 : 1}>
         <Grid item container xs={12} md={4}>
@@ -250,38 +256,52 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
       <CommunityContainerBottom container direction="column">
         <Grid container direction="row" alignItems="center">
-          <Field name="required_token">
-            {() => (
-              <Checkbox
-                disableRipple
-                checked={values.required_token}
-                value={getIn(values, "required_token")}
-                onChange={() => {
-                  setFieldValue("required_token", !values.required_token)
-                }}
-              />
-            )}
-          </Field>
-          <Typography variant="h2" color="textPrimary">
-            Require token ownership to create proposals
-          </Typography>
+          <CheckboxContainer item xs={2}>
+            <Field name="required_token">
+              {() => (
+                <Checkbox
+                  disableRipple
+                  checked={values.required_token}
+                  value={getIn(values, "required_token")}
+                  inputProps={{
+                    "aria-label": "Checkbox A"
+                  }}
+                  onChange={() => {
+                    setFieldValue("required_token", !values.required_token)
+                  }}
+                />
+              )}
+            </Field>
+          </CheckboxContainer>
+          <Grid item xs>
+            <Typography variant="h2" color="textPrimary">
+              Require token ownership to create proposals
+            </Typography>
+          </Grid>
         </Grid>
         <Grid container direction="row" alignItems="center">
-          <Field name="allow_access">
-            {() => (
-              <Checkbox
-                disableRipple
-                checked={values.allow_access}
-                value={getIn(values, "allow_access")}
-                onChange={() => {
-                  setFieldValue("allow_access", !values.allow_access)
-                }}
-              />
-            )}
-          </Field>
-          <Typography variant="h2" color="textPrimary">
-            Allow public read access to this community
-          </Typography>
+          <CheckboxContainer item xs={2}>
+            <Field name="allow_access">
+              {() => (
+                <Checkbox
+                  disableRipple
+                  checked={values.allow_access}
+                  value={getIn(values, "allow_access")}
+                  inputProps={{
+                    "aria-label": "Checkbox B"
+                  }}
+                  onChange={() => {
+                    setFieldValue("allow_access", !values.allow_access)
+                  }}
+                />
+              )}
+            </Field>
+          </CheckboxContainer>
+          <Grid item xs>
+            <Typography variant="h2" color="textPrimary">
+              Allow public read access to this community
+            </Typography>
+          </Grid>
         </Grid>
       </CommunityContainerBottom>
       <CommunityContainerBottom>
@@ -294,7 +314,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 }
 
 export const CommunityCreator: React.FC = () => {
-  const navigate = useHistory();
+  const navigate = useHistory()
 
   const initialState: Community = {
     name: "",
@@ -310,9 +330,9 @@ export const CommunityCreator: React.FC = () => {
   }
 
   const saveCommunity = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
-    setSubmitting(true);
+    setSubmitting(true)
 
-    navigate.push("/explore/communities");
+    navigate.push("/explore/communities")
   }
 
   return (

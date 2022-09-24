@@ -74,9 +74,12 @@ const PageContainer = styled("div")({
   }
 })
 
-const Header = styled(Grid)({
-  marginBottom: 26
-})
+const Header = styled(Grid)(({ theme }) => ({
+  marginBottom: 26,
+  [theme.breakpoints.down("sm")] :{
+    marginBottom: 6
+  }
+}))
 
 const ProposalChoices = styled(Grid)({
   flexGrow: 1
@@ -161,47 +164,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
             New Proposal
           </Typography>
         </Header>
-        <Grid container direction={isMobileSmall ? "row" : "column"} >
-          {isMobileSmall ? (
-            <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={4}>
-              <Grid item>
-                <Field name="start_date">
-                  {() => (
-                    <DateTimePicker
-                      inputFormat="DD/MM/YYYY hh:mm a"
-                      label={getIn(values, "start_date") ? "" : "Start date"}
-                      value={getIn(values, "start_date")}
-                      onChange={(newValue: any) => {
-                        setFieldValue("start_date", newValue)
-                      }}
-                      components={{
-                        OpenPickerIcon: DateRange
-                      }}
-                      renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                    />
-                  )}
-                </Field>
-              </Grid>
-              <Grid item>
-                <Field name="end_date">
-                  {() => (
-                    <DateTimePicker
-                      inputFormat="DD/MM/YYYY hh:mm a"
-                      label={getIn(values, "end_date") ? "" : "End date"}
-                      value={getIn(values, "end_date")}
-                      onChange={(newValue: any) => {
-                        setFieldValue("end_date", newValue)
-                      }}
-                      components={{
-                        OpenPickerIcon: DateRange
-                      }}
-                      renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                    />
-                  )}
-                </Field>
-              </Grid>
-            </ProposalContainer>
-          ) : null}
+        <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 30 }}>
           <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
             <Grid item>
               <Field name="title" type="text" placeholder="Proposal Title*" component={CustomFormikTextField} />
@@ -224,6 +187,47 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
             <Grid item>
               <Field name="link" type="text" placeholder="External Link" component={CustomFormikTextField} />
             </Grid>
+
+            {isMobileSmall ? (
+              <>
+                <Grid item>
+                  <Field name="start_date">
+                    {() => (
+                      <DateTimePicker
+                        inputFormat="DD/MM/YYYY hh:mm a"
+                        label={getIn(values, "start_date") ? "" : "Start date"}
+                        value={getIn(values, "start_date")}
+                        onChange={(newValue: any) => {
+                          setFieldValue("start_date", newValue)
+                        }}
+                        components={{
+                          OpenPickerIcon: DateRange
+                        }}
+                        renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      />
+                    )}
+                  </Field>
+                </Grid>
+                <Grid item>
+                  <Field name="end_date">
+                    {() => (
+                      <DateTimePicker
+                        inputFormat="DD/MM/YYYY hh:mm a"
+                        label={getIn(values, "end_date") ? "" : "End date"}
+                        value={getIn(values, "end_date")}
+                        onChange={(newValue: any) => {
+                          setFieldValue("end_date", newValue)
+                        }}
+                        components={{
+                          OpenPickerIcon: DateRange
+                        }}
+                        renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      />
+                    )}
+                  </Field>
+                </Grid>
+              </>
+            ) : null}
             <ProposalChoices>
               <Choices choices={getIn(values, "choices")} />
             </ProposalChoices>

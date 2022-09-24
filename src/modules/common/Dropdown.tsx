@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Select, SelectProps, MenuItem, makeStyles } from "@material-ui/core"
 import { KeyboardArrowDown } from "@material-ui/icons"
+import { Theme } from "@mui/material";
 
 interface DropdownProps extends SelectProps {
   options: { name: string; value: string | undefined }[]
@@ -8,7 +9,7 @@ interface DropdownProps extends SelectProps {
   onSelected?: (item: string | undefined) => void
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     left: 0
   },
@@ -16,6 +17,9 @@ const useStyles = makeStyles(() => ({
     transform: "none"
   },
   selectSelect: {
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16
+    },
     paddingLeft: 40,
     paddingTop: 0,
     paddingBottom: 0

@@ -8,7 +8,7 @@ export const CreatorBadge: React.FC<{ address: string }> = ({ address }) => {
     <Grid container style={{ gap: 15 }}>
       <Grid item>
         <Typography color="textPrimary" variant="subtitle2">
-          CREATED BY
+          by
         </Typography>
       </Grid>
       <Grid item>

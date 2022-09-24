@@ -41,11 +41,14 @@ const BlockieContainer = styled(Grid)({
   marginBottom: 19
 })
 
-const DescriptionText = styled(Typography)({
+const DescriptionText = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
   fontSize: 18,
-  marginBottom: 25
-})
+  marginBottom: 25,
+  [theme.breakpoints.down("sm")] : {
+    fontSize: 16
+  }
+}))
 
 const LightText = styled(Typography)({
   fontWeight: 300

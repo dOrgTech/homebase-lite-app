@@ -26,7 +26,10 @@ const StyledInput = withStyles((theme: Theme) => ({
       },
       "&:focus-visible": {
         outline: "none"
-      }
+      },
+      ["@media (max-width: 280px)"]: {
+        marginBottom: "20px",
+      },
     },
     "& .MuiInput-underline:before": {
       borderBottomColor: "transparent"
