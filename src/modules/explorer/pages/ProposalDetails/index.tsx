@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Grid, styled } from "@material-ui/core"
+import { Button, Grid, styled, useMediaQuery, useTheme } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard"
 import { GridContainer } from "modules/common/GridContainer"
@@ -33,6 +33,10 @@ const PageContainer = styled("div")({
 })
 
 export const ProposalDetails: React.FC = () => {
+
+  const theme = useTheme()
+  const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+  
   return (
     <PageContainer style={{ gap: 30 }}>
       <Grid container>
@@ -44,7 +48,7 @@ export const ProposalDetails: React.FC = () => {
         </Grid>
         <Grid container item xs={12}>
           <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
-            <Grid container item justifyContent="space-between" direction="row" style={{ gap: 30 }}>
+            <Grid container item justifyContent={isMobileSmall ? "center" : "space-between"} direction="row" style={{ gap: 30 }}>
               <ChoiceItemSelected description="This is choice 1" />
               <ChoiceItemSelected description="This is choice 2" />
               <ChoiceItemSelected description="This is choice 3" />

@@ -14,7 +14,7 @@ export const ChoiceItemSelected: React.FC<{ description: string }> = ({ descript
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
   
   return (
-    <StyledContainer spacing={2} container item xs={isMobileSmall ? 12 : 6} justifyContent={"center"} alignItems="center">
+    <StyledContainer spacing={isMobileSmall ? 1 : 2} container item xs={isMobileSmall ? 12 : 6} justifyContent={"center"} alignItems="center">
       <Typography variant="body1" color="textPrimary">
         {description}
       </Typography>

@@ -115,7 +115,7 @@ export const ProposalDetailCard: React.FC = () => {
           </Typography>
         </Grid>
 
-        <Grid container>
+        <Grid container alignItems="center">
           <LogoItem src={LinkIcon} />
           <StyledLink color="secondary" href="#">
             https://example.com/

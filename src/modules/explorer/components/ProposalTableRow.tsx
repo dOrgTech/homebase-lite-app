@@ -28,8 +28,8 @@ const ArrowInfo = styled(Typography)(({ theme }) => ({
   fontFamily: "Roboto Mono",
   fontWeight: 500,
   fontSize: 16,
-  [theme.breakpoints.down("sm")]: {
-    marginTop: 15
+  [theme.breakpoints.down("xs")]: {
+    marginTop: 5
   }
 }))
 
@@ -57,7 +57,8 @@ const LightText = styled(Typography)({
 export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ proposal }) => {
   const navigate = useHistory()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
+  const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
   return (
     <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
@@ -75,7 +76,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ propo
         <Grid
           container
           direction={isMobile ? "column" : "row"}
-          alignItems={isMobile ? "center" : "flex-start"}
+          alignItems={isMobileSmall ? "center" : "flex-start"}
           wrap="nowrap"
           style={{ gap: 18 }}
         >

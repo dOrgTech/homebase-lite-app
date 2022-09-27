@@ -29,8 +29,6 @@ export const ActionSheetProvider: React.FC<any> = ({ children }) => {
     }
   }, [openedModal])
 
-  console.log(openedModal)
-
   return (
     <ActionSheetContext.Provider value={{ openedModal, setOpenedModal, onClose }}>
       {children}

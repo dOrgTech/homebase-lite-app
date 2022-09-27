@@ -44,16 +44,22 @@ export const theme = createTheme({
     h1: {
       fontSize: 30,
       fontWeight: 500,
-      [breakpoints.down("xs")]: {
+      [breakpoints.down("sm")]: {
         fontSize: 22
+      },
+      [breakpoints.down("xs")]: {
+        fontSize: 18
       }
     },
     subtitle1: {
       fontSize: 30,
       lineHeight: "124.3%",
       fontWeight: 500,
-      [breakpoints.down("xs")]: {
+      [breakpoints.down("sm")]: {
         fontSize: 26
+      },
+      [breakpoints.down("xs")]: {
+        fontSize: 22
       }
     },
     subtitle2: {
@@ -69,15 +75,21 @@ export const theme = createTheme({
       fontSize: 18,
       fontWeight: 200,
       lineHeight: "146.3%",
-      [breakpoints.down("xs")]: {
+      [breakpoints.down("sm")]: {
         fontSize: 16
+      },
+      [breakpoints.down("xs")]: {
+        fontSize: 13
       }
     },
     h4: {
       fontSize: 22,
       fontWeight: 500,
-      [breakpoints.down("xs")]: {
+      [breakpoints.down("sm")]: {
         fontSize: 16
+      },
+      [breakpoints.down("xs")]: {
+        fontSize: 13
       }
     },
     h5: {

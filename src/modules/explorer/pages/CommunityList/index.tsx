@@ -50,17 +50,18 @@ export const CommunityList: React.FC = () => {
   const theme: Theme = useTheme()
   const navigate = useHistory()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+  const isMobile= useMediaQuery(theme.breakpoints.down("xs"))
 
   return (
     <PageContainer>
       <Grid container direction="column">
         <Grid item>
-          <Grid container justifyContent={isMobileSmall ? "center" : "space-between"} alignItems="center">
+          <Grid container justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
             <Grid item xs={12} sm={6}>
               <SearchInput search={""} />
             </Grid>
             <Grid item>
-              <Grid container style={{ gap: isMobileSmall ? 16 : 22 }} justifyContent="center">
+              <Grid container style={{ gap: isMobileSmall ? 10 : isMobile ? 0 : 22 }} justifyContent="center">
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
                     <Grid item>
