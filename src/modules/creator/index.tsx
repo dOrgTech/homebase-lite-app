@@ -134,7 +134,8 @@ const ErrorText = styled(Typography)({
 })
 
 const MetadataContainer = styled(Grid)({
-  margin: "-4px 0 16px 0"
+  marginTop: 5,
+  marginBottom: -20
 })
 
 const CheckboxContainer = styled(Grid)(({ theme }) => ({

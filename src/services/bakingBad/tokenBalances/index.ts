@@ -15,7 +15,7 @@ export interface NFTDAOHolding extends DAOHolding {
   token: NFT
 }
 
-export const getTokenMetadata = async (contractAddress: string, network: Network, tokenId?: string) => {
+export const getTokenMetadata = async (contractAddress: string, network: Network) => {
   const url = `${API_URL}/tokens/${networkNameMap[network]}/metadata?contract=${contractAddress}`
   const response = await fetch(url)
   if (!response.ok) {
