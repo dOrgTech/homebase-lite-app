@@ -67,7 +67,7 @@ export const VoteDetails: React.FC = () => {
                 variant="determinate"
               />
             </Grid>
-            <Grid item xs={2} lg={1} sm={1}  container justifyContent={isMobileMedium ? "flex-end" : "flex-start"}>
+            <Grid item xs={2} lg={1} sm={1}  container justifyContent="flex-end">
               <Typography color="textPrimary" variant="body2">
                 60%
               </Typography>
@@ -97,7 +97,7 @@ export const VoteDetails: React.FC = () => {
                 variant="determinate"
               />
             </Grid>
-            <Grid item xs={2} lg={1} md={1} sm={1} container justifyContent={isMobileMedium ? "flex-end" : "flex-start"}>
+            <Grid item xs={2} lg={1} md={1} sm={1} container justifyContent="flex-end">
               <Typography color="textPrimary" variant="body2">
                 40%
               </Typography>
