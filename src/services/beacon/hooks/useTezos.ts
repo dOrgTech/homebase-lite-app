@@ -44,7 +44,7 @@ export const useTezos = (): WalletConnectReturn => {
         }
       })
 
-      mixpanel.identify(account)
+      // mixpanel.identify(account)
 
       return newTezos
     },
@@ -66,7 +66,7 @@ export const useTezos = (): WalletConnectReturn => {
       })
     }, [dispatch, wallet]),
     changeNetwork: async (newNetwork: Network) => {
-      mixpanel.register({ Network: newNetwork })
+      // mixpanel.register({ Network: newNetwork })
 
       localStorage.setItem("homebase:network", newNetwork)
 

@@ -18,7 +18,7 @@ import { TextField as FormikTextField } from "formik-material-ui"
 import { Community } from "models/Community"
 import { useHistory } from "react-router"
 import { validateContractAddress } from "@taquito/utils"
-import { useTokenMetadata } from "services/contracts/baseDAO/hooks/useTokenMetadata"
+import { useTokenMetadata } from "services/hooks/useTokenMetadata"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",

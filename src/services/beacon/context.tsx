@@ -42,9 +42,9 @@ const getSavedState = async (): Promise<TezosState> => {
 export const TezosProvider: React.FC<any> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
 
-  useEffect(() => {
-    mixpanel.register({ Network: state.network })
-  }, [state.network])
+  // useEffect(() => {
+  //   mixpanel.register({ Network: state.network })
+  // }, [state.network])
 
   useEffect(() => {
     getSavedState().then(tezosState => {

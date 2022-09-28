@@ -56,20 +56,6 @@ const styles = makeStyles({
   }
 })
 
-if (!process.env.REACT_APP_MIXPANEL_TOKEN) {
-  throw new Error("REACT_APP_MIXPANEL_TOKEN env variable is missing");
-}
-
-
-if (!process.env.REACT_APP_MIXPANEL_DEBUG_ENABLED) {
-  throw new Error("REACT_APP_MIXPANEL_DEBUG_ENABLED env variable is missing");
-}
-
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
-  debug: process.env.REACT_APP_MIXPANEL_DEBUG_ENABLED == "true",
-});
-mixpanel.track("Visit");
-
 const App: React.FC = () => {
   const classes = styles()
   return (
