@@ -9,16 +9,18 @@ import {
   useTheme,
   withStyles,
   withTheme,
-  TextareaAutosize
+  TextareaAutosize,
+  MenuItem
 } from "@material-ui/core"
 import { UploadAvatar } from "./components/UploadAvatar"
 import { BackButton } from "../common/BackButton"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
-import { TextField as FormikTextField } from "formik-material-ui"
+import { Select, TextField as FormikTextField } from "formik-material-ui"
 import { Community } from "models/Community"
 import { useHistory } from "react-router"
 import { validateContractAddress } from "@taquito/utils"
 import { useTokenMetadata } from "services/hooks/useTokenMetadata"
+import { Dropdown } from "modules/common/Dropdown"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -124,6 +126,18 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   "&:focus-visible": {
     outline: "none"
   }
+}))
+
+const CustomSelect = styled(Field)(({ theme }) => ({
+  width: "100%",
+  background: theme.palette.primary.main,
+  border: "none",
+  color: theme.palette.text.secondary,
+  fontFamily: "Roboto Mono",
+  fontSize: 18,
+  paddingLeft: 26,
+  borderRight: "26px solid transparent",
+  borderRadius: 4,
 }))
 
 const ErrorText = styled(Typography)({
@@ -251,7 +265,21 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           <Field name="token_id" type="text" placeholder="Token ID" component={CustomFormikTextField} />
         </Grid>
         <Grid item container xs={12} md={4}>
-          <Field name="token_standard" type="text" placeholder="Token Standard" component={CustomFormikTextField} />
+          <Field name="token_standard">
+            {() => (
+              <CustomSelect
+                as="select"
+                name={getIn(values, "token_standard")}
+                label="Token Standard"
+                onChange={(newValue: any) => {
+                  setFieldValue("token_standard", newValue.target.value)
+                }}
+              >
+                <option value={"FA2"}>FA2</option>
+                <option value={"NFT"}>NFT</option>
+              </CustomSelect>
+            )}
+          </Field>
         </Grid>
       </CommunityContainerBottom>
 
@@ -324,7 +352,7 @@ export const CommunityCreator: React.FC = () => {
     token_address: "",
     token_symbol: "",
     token_id: "",
-    token_standard: "",
+    token_standard: "FA2",
     avatar_url: "",
     required_token: false,
     allow_access: false

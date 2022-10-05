@@ -49,7 +49,6 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
             <input
               name="avatar_url"
               accept="image/*"
-              id="contained-button-file"
               type="file"
               hidden
               onChange={e => {
