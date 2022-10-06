@@ -435,6 +435,12 @@ export const theme = createTheme({
         }
       }
     },
+    MuiDialogTitle: {
+      root: {
+        padding: "46px 54px",
+        paddingBottom: 16
+      }
+    },
     MuiSelect: {
       select: {
         textAlign: "right"
@@ -443,6 +449,13 @@ export const theme = createTheme({
     MuiDialogContentText: {
       root: {
         marginBottom: 0
+      }
+    },
+    MuiDialogActions: {
+      root: {
+        justifyContent: "center",
+        paddingTop: 24,
+        paddingBottom: 24
       }
     },
     MuiCheckbox: {

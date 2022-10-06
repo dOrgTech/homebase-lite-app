@@ -32,7 +32,8 @@ const CustomFormikTextField = withStyles({
       fontWeight: 300,
       textAlign: "initial",
       borderBottom: `0.3px solid ${theme.palette.primary.light} !important`,
-      marginTop: "0px !important"
+      marginTop: "0px !important",
+      paddingRight: 24
     },
     "& .MuiInputBase-input": {
       textAlign: "initial"

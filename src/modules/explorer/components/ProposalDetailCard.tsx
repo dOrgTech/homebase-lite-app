@@ -16,7 +16,8 @@ const LogoItem = styled("img")({
 const TextContainer = styled(Typography)({
   display: "flex",
   alignItems: "center",
-  gap: 10
+  gap: 10,
+  marginRight: 8
 })
 
 const Divider = styled(Typography)({
@@ -51,9 +52,9 @@ export const ProposalDetailCard: React.FC = () => {
               Should the DAO fund a new project?
             </Typography>
           </Grid>
-          <Grid item>
-            <Grid container style={{ gap: 18 }}>
-              <Grid item alignItems="center" style={{ cursor: "pointer" }}>
+          <Grid item >
+            <Grid container style={{ gap: 18 }} direction="row">
+              <Grid style={{ cursor: "pointer" }}>
                 <MoreHoriz color="secondary" />
               </Grid>
               <Grid item>
@@ -84,27 +85,23 @@ export const ProposalDetailCard: React.FC = () => {
           </Grid>
         </Grid>
         <Grid container direction="row">
-          <Grid item>
+          <Grid item container direction="row" spacing={2} alignItems="center">
             <TextContainer color="textPrimary" variant="body1">
               Start date:{" "}
-              <Typography variant="body2" color="textPrimary">
-                {" "}
-                Aug. 16, 2022
-              </Typography>
             </TextContainer>
-          </Grid>
-          <Grid item>
+            <Typography variant="body2" color="textPrimary">
+              {" "}
+              Aug. 16, 2022
+            </Typography>
             <Divider color="textPrimary">-</Divider>
-          </Grid>
-          <Grid item>
             <TextContainer color="textPrimary" variant="body1">
               {" "}
               End date:{" "}
-              <Typography variant="body2" color="textPrimary">
-                {" "}
-                Sep. 16, 2022{" "}
-              </Typography>
             </TextContainer>
+            <Typography variant="body2" color="textPrimary">
+              {" "}
+              Sep. 16, 2022{" "}
+            </Typography>
           </Grid>
         </Grid>
 

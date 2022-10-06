@@ -7,6 +7,10 @@ const StyledContainer = styled(Grid)(({ theme }: { theme: Theme }) => ({
   border: "1px solid",
   borderColor: theme.palette.primary.light,
   cursor: "pointer",
+  "&:hover": {
+    border: "1px solid",
+    borderColor: theme.palette.secondary.main,
+  }
 }))
 
 export const ChoiceItemSelected: React.FC<{ description: string }> = ({ description }) => {

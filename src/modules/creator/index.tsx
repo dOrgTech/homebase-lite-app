@@ -138,6 +138,7 @@ const CustomSelect = styled(Field)(({ theme }) => ({
   paddingLeft: 26,
   borderRight: "26px solid transparent",
   borderRadius: 4,
+  minHeight: 72
 }))
 
 const ErrorText = styled(Typography)({

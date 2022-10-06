@@ -1,6 +1,7 @@
 import React from "react"
 import { Grid, LinearProgress, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import { GridContainer } from "modules/common/GridContainer"
+import { VotesDialog } from "./VotesDialog"
 
 const Container = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.light,
@@ -35,7 +36,20 @@ const GraphicsContainer = styled(Grid)({
 export const VoteDetails: React.FC = () => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("xs"))
-  const isMobileMedium = useMediaQuery(theme.breakpoints.down("sm"))
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+
+
+  const [open, setOpen] = React.useState(false)
+
+  const handleClickOpen = () => {
+    if (!isMobile) {
+      setOpen(true)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   return (
     <Container container direction="column">
@@ -67,7 +81,7 @@ export const VoteDetails: React.FC = () => {
                 variant="determinate"
               />
             </Grid>
-            <Grid item xs={2} lg={1} sm={1}  container justifyContent="flex-end">
+            <Grid item xs={2} lg={1} sm={1} container justifyContent="flex-end">
               <Typography color="textPrimary" variant="body2">
                 60%
               </Typography>
@@ -107,7 +121,7 @@ export const VoteDetails: React.FC = () => {
 
         <LegendContainer container direction="row">
           <Grid item container direction="row" xs={12} sm={6} md={6} lg={6} style={{ gap: 10 }}>
-            <Typography color="secondary" variant="body1">
+            <Typography color="secondary" variant="body1" onClick={() => handleClickOpen()}>
               30
             </Typography>
             <Typography color="textPrimary" variant="body1">
@@ -140,6 +154,8 @@ export const VoteDetails: React.FC = () => {
             </Typography>
           </Grid>
         </LegendContainer>
+
+        <VotesDialog open={open} handleClose={handleClose} />
       </GraphicsContainer>
     </Container>
   )
