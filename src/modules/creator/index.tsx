@@ -169,12 +169,12 @@ const validateForm = (values: Community) => {
     errors.name = "Required"
   }
 
-  if (!values.token_address) {
-    errors.token_address = "Required"
+  if (!values.tokenAddress) {
+    errors.tokenAddress = "Required"
   }
 
-  if (values.token_address && validateContractAddress(values.token_address) !== 3) {
-    errors.token_address = "Invalid address"
+  if (values.tokenAddress && validateContractAddress(values.tokenAddress) !== 3) {
+    errors.tokenAddress = "Invalid address"
   }
 
   return errors
@@ -184,7 +184,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
-  const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.token_address)
+  const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.tokenAddress)
 
   useEffect(() => {
     if (tokenMetadata) {
@@ -236,8 +236,8 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
         </Grid>
         <Grid item>
           <Field
-            onClick={() => setFieldTouched("token_address")}
-            name="token_address"
+            onClick={() => setFieldTouched("tokenAddress")}
+            name="tokenAddress"
             type="text"
             placeholder="Token Contract Address*"
             component={CustomFormikTextField}
@@ -249,12 +249,12 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
               </Typography>
             </MetadataContainer>
           )}
-          {errors?.token_address && touched.token_address ? <ErrorText>{errors.token_address}</ErrorText> : null}
+          {errors?.tokenAddress && touched.tokenAddress ? <ErrorText>{errors.tokenAddress}</ErrorText> : null}
         </Grid>
       </CommunityContainer>
       <AvatarCommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
         <AvatarContainer container item>
-          <UploadAvatar url={values.avatar_url} setFieldValue={setFieldValue} />
+          <UploadAvatar url={values.picUri} setFieldValue={setFieldValue} />
         </AvatarContainer>
       </AvatarCommunityContainer>
 
@@ -350,11 +350,11 @@ export const CommunityCreator: React.FC = () => {
     name: "",
     description: "",
     link: "",
-    token_address: "",
+    tokenAddress: "",
     token_symbol: "",
     token_id: "",
     token_standard: "FA2",
-    avatar_url: "",
+    picUri: "",
     required_token: false,
     allow_access: false
   }

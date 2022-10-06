@@ -1,13 +1,15 @@
 export interface Community {
-    id?: string
+    _id?: string
     name: string
     description: string
     link: string
-    token_address: string
+    members?: string[]
+    tokenAddress: string
+    tokenType?: string
     token_symbol: string
     token_id: string
     token_standard: string
-    avatar_url: string
+    picUri: string
     required_token: boolean
     allow_access: boolean
   }

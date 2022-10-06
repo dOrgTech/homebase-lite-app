@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { theme } from "theme"
 import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
 import { useHistory } from "react-router"
 import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Community } from 'models/Community'
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -19,7 +20,7 @@ const PageContainer = styled("div")({
   ["@media (max-width:1335px)"]: {},
 
   ["@media (max-width:1167px)"]: {
-    width: "86vw",
+    width: "86vw"
   },
 
   ["@media (max-width:1030px)"]: {},
@@ -27,7 +28,7 @@ const PageContainer = styled("div")({
   ["@media (max-width:960px)"]: {},
 
   ["@media (max-width:645px)"]: {
-    flexDirection: "column",
+    flexDirection: "column"
   }
 })
 
@@ -50,7 +51,26 @@ export const CommunityList: React.FC = () => {
   const theme: Theme = useTheme()
   const navigate = useHistory()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-  const isMobile= useMediaQuery(theme.breakpoints.down("xs"))
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
+  const [communities, setCommunities] = useState<Community[]>([])
+
+  useEffect(() => {
+    async function getCommunities() {
+      const response = await fetch(`http://localhost:5001/daos/`)
+      if (!response.status) {
+        const message = `An error occurred: ${response.statusText}`
+        window.alert(message)
+        return
+      }
+
+      const records = await response.json()
+      setCommunities(records)
+    }
+
+    getCommunities()
+
+    return
+  }, [communities.length])
 
   return (
     <PageContainer>
@@ -81,9 +101,9 @@ export const CommunityList: React.FC = () => {
         <Grid container spacing={3}>
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
           {/*@ts-ignore */}
-          {[...Array(30).keys()].map(elem => (
-            <Grid item xs={6} md={4} lg={3} xl={2} key={elem}>
-              <DaoCard />
+          {communities && communities.map(elem => (
+            <Grid item xs={6} md={4} lg={3} xl={2} key={elem._id}>
+              <DaoCard community={elem} />
             </Grid>
           ))}
         </Grid>

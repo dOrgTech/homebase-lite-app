@@ -47,7 +47,7 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
           <Button variant="contained" color="secondary" component="label">
             Upload
             <input
-              name="avatar_url"
+              name="picUri"
               accept="image/*"
               type="file"
               hidden
@@ -55,7 +55,7 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
                 const fileReader = new FileReader()
                 fileReader.onload = () => {
                   if (fileReader.readyState === 2) {
-                    setFieldValue("avatar_url", fileReader.result)
+                    setFieldValue("picUri", fileReader.result)
                     setAvatarPreview(fileReader.result)
                   }
                 }

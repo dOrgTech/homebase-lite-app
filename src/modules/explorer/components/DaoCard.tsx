@@ -1,6 +1,7 @@
 import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 import React from "react"
 import { useHistory } from "react-router"
+import { Community } from "models/Community"
 
 const StyledAvatar = styled(Avatar)({
   height: 84,
@@ -25,21 +26,21 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   cursor: "pointer"
 }))
 
-export const DaoCard: React.FC = () => {
+export const DaoCard: React.FC<any> = ({ community }) => {
   const navigate = useHistory()
   return (
     <DaoCardContainer container style={{ gap: 10 }} onClick={() => navigate.push("/explorer/community/1")}>
       <Grid item>
-        <StyledAvatar> </StyledAvatar>
+        <StyledAvatar src={community.picUri}> </StyledAvatar>
       </Grid>
       <Grid item style={{ cursor: "pointer" }}>
         <Typography variant={"body1"} color="textPrimary">
-          TEZDAO
+          {community.name}
         </Typography>
       </Grid>
       <Grid item>
         <MembersText variant={"body2"} color="textPrimary">
-          300 members
+          {community.members.length} members
         </MembersText>
       </Grid>
       <Grid item>
@@ -50,7 +51,7 @@ export const DaoCard: React.FC = () => {
           onClick={e => {
             console.log("Button")
             if (!e) {
-              const e = window.event;
+              const e = window.event
               if (e) {
                 e.cancelBubble = true
               }
