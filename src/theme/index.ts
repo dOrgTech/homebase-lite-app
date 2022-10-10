@@ -299,6 +299,15 @@ export const theme = createTheme({
         "fontWeight": 500,
         "fontSize": 18
       },
+      colorInherit: {
+        "&$disabled": {
+          border: "2px solid #3d3d3d"
+        },
+        background: "#81feb7",
+        "&:hover": {
+          background: "#ff486e"
+        }
+      },
       outlined: {
         "&$disabled": {
           border: "2px solid #3d3d3d"

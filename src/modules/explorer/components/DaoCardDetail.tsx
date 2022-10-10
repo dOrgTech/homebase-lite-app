@@ -1,6 +1,9 @@
 import { Avatar, Button, Grid, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Community } from "models/Community"
 import React from "react"
 import { useHistory } from "react-router"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { JoinButton } from "./JoinButton"
 
 const StyledAvatar = styled(Avatar)({
   height: 159,
@@ -15,19 +18,9 @@ const MembersText = styled(Typography)({
 
 const CommunityText = styled(Typography)({
   fontWeight: 500,
-  fontSize: 34,
+  fontSize: 30,
   lineHeight: "146.3%"
 })
-
-const JoinButton = styled(Button)(({ theme }) => ({
-  width: 74,
-  padding: 7,
-  fontSize: 15,
-  [theme.breakpoints.down("md")]: {
-    marginTop: 8,
-    marginBottom: 4
-  }
-}))
 
 const CommunityDescription = styled(Typography)({
   marginBottom: 22,
@@ -47,51 +40,59 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   justifyContent: "center",
   flexDirection: "column",
   marginBottom: 15,
-  padding: "33px 43px"
+  padding: "33px 40px"
 }))
 
-export const DaoCardDetail: React.FC = () => {
-  const navigate = useHistory();
+interface DaoCardDetailProps {
+  community?: Community,
+  setIsUpdated: any
+}
+
+export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUpdated }) => {
+  const navigate = useHistory()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+  const { account } = useTezos();
+
 
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
       <Grid item>
-        <StyledAvatar> </StyledAvatar>
+        <StyledAvatar src={community?.picUri}> </StyledAvatar>
       </Grid>
       <Grid item container direction="row" justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
-        <Grid item direction="column" container xs={12} md={12} lg={6} alignItems={isMobile ? "center" : "stretch"}>
-          <CommunityText color="textPrimary">TEZDAO</CommunityText>
+        <Grid item direction="column" container xs={12} md={12} lg={7} alignItems={isMobile ? "center" : "stretch"}>
+          <CommunityText color="textPrimary">{community?.name}</CommunityText>
           <MembersText variant={"body1"} color="textPrimary">
-            300 members
+            {community?.members?.length} members
           </MembersText>
         </Grid>
         <Grid item>
-          <JoinButton variant="contained" color="secondary" size="small" onClick={() => console.log("Button")}>
-            Join
-          </JoinButton>
+        <JoinButton 
+            account={account}
+            setIsUpdated={setIsUpdated}
+            members={community?.members ? community?.members : []}
+            communityId={community?._id ? community._id : ""}
+          />
         </Grid>
       </Grid>
 
       <Grid container direction="row">
         <CommunityDescription variant="body2" color="textPrimary">
-          The TezDAO was founded as a partnership between some of the most known Tezos Influencers. The purpose of this
-          DAO is allow creativity.
+          {community?.description}
         </CommunityDescription>
       </Grid>
 
-        <Grid item>
-          <ProposalButton
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={() => navigate.push("/explorer/community/1/proposal")}
-          >
-            New Proposal
-          </ProposalButton>
-        </Grid>
-
+      <Grid item>
+        <ProposalButton
+          variant="contained"
+          color="secondary"
+          size="small"
+          onClick={() => navigate.push("/explorer/community/1/proposal")}
+        >
+          New Proposal
+        </ProposalButton>
+      </Grid>
     </DaoCardContainer>
   )
 }

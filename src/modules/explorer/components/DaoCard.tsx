@@ -1,7 +1,9 @@
+import React, { useEffect, useState } from "react"
 import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
-import React from "react"
 import { useHistory } from "react-router"
 import { Community } from "models/Community"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { JoinButton } from "./JoinButton"
 
 const StyledAvatar = styled(Avatar)({
   height: 84,
@@ -26,10 +28,24 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   cursor: "pointer"
 }))
 
-export const DaoCard: React.FC<any> = ({ community }) => {
+const CustomButton = styled(Button)(({ theme }) => ({
+  "width": 67,
+  "height": 34,
+  ".MuiButton-containedSecondary:hover": {
+    backgroundColor: `${theme.palette.secondary.main} !important`
+  }
+}))
+
+export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({ community, setIsUpdated }) => {
   const navigate = useHistory()
+  const { account } = useTezos()
+
   return (
-    <DaoCardContainer container style={{ gap: 10 }} onClick={() => navigate.push("/explorer/community/1")}>
+    <DaoCardContainer
+      container
+      style={{ gap: 10 }}
+      onClick={() => navigate.push(`/explorer/community/${community._id}`)}
+    >
       <Grid item>
         <StyledAvatar src={community.picUri}> </StyledAvatar>
       </Grid>
@@ -40,27 +56,16 @@ export const DaoCard: React.FC<any> = ({ community }) => {
       </Grid>
       <Grid item>
         <MembersText variant={"body2"} color="textPrimary">
-          {community.members.length} members
+          {community.members?.length} members
         </MembersText>
       </Grid>
       <Grid item>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="small"
-          onClick={e => {
-            console.log("Button")
-            if (!e) {
-              const e = window.event
-              if (e) {
-                e.cancelBubble = true
-              }
-            }
-            if (e.stopPropagation) e.stopPropagation()
-          }}
-        >
-          Join
-        </Button>
+        <JoinButton
+          account={account}
+          members={community.members}
+          setIsUpdated={setIsUpdated}
+          communityId={community._id ? community._id : ""}
+        />
       </Grid>
     </DaoCardContainer>
   )

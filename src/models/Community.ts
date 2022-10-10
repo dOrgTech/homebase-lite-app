@@ -3,7 +3,7 @@ export interface Community {
     name: string
     description: string
     link: string
-    members?: string[]
+    members: string[]
     tokenAddress: string
     tokenType?: string
     token_symbol: string

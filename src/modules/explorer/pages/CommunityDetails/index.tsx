@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Grid, styled } from "@material-ui/core"
 import { ProposalList } from "../../components/ProposalList"
 import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
+import { useParams } from "react-router-dom"
+import { Community } from "models/Community"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -37,11 +39,42 @@ const PageContainer = styled("div")({
 })
 
 export const CommunityDetails: React.FC = () => {
+  const { id } = useParams<{
+    id: string
+  }>()
+
+  const [community, setCommunity] = useState<Community>()
+  const [isUpdated, setIsUpdated] = useState(1)
+
+  useEffect(() => {
+    async function fetchData() {
+      const communityId = id.toString()
+      await fetch(`http://localhost:5001/daos/${communityId}`).then(async response => {
+        if (!response.ok) {
+          const message = `An error has occurred: ${response.statusText}`
+          console.log(message)
+          return
+        }
+
+        const record = await response.json()
+        if (!record) {
+          console.log(`Record with id ${id} not found`)
+          return
+        }
+        setCommunity(record)
+      })
+    }
+    fetchData()
+
+    return
+  }, [id, isUpdated])
+
+
   return (
     <PageContainer>
       <Grid container spacing={3}>
         <CommunityDetailsContainer item xs={12} lg={4} md={4}>
-          <DaoCardDetail />
+          <DaoCardDetail community={community} setIsUpdated={setIsUpdated} />
         </CommunityDetailsContainer>
         <CommunityDetailsContainer item xs={12} lg={8} md={8}>
           <ProposalList />

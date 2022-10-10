@@ -4,7 +4,7 @@ import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
 import { useHistory } from "react-router"
 import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
-import { Community } from 'models/Community'
+import { Community } from "models/Community"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -53,24 +53,31 @@ export const CommunityList: React.FC = () => {
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
   const [communities, setCommunities] = useState<Community[]>([])
+  const [error, setError] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(1)
 
   useEffect(() => {
     async function getCommunities() {
-      const response = await fetch(`http://localhost:5001/daos/`)
-      if (!response.status) {
-        const message = `An error occurred: ${response.statusText}`
-        window.alert(message)
-        return
-      }
+      await fetch(`http://localhost:5001/daos/`)
+        .then(async response => {
+          if (!response.status) {
+            const message = `An error occurred: ${response.statusText}`
+            setError(true)
+            return
+          }
 
-      const records = await response.json()
-      setCommunities(records)
+          const records = await response.json()
+          setCommunities(records)
+        })
+        .catch(err => setError(true))
     }
-
     getCommunities()
-
     return
   }, [communities.length])
+
+  useEffect(() => {
+    setCommunities([])
+  }, [isUpdated])
 
   return (
     <PageContainer>
@@ -85,7 +92,7 @@ export const CommunityList: React.FC = () => {
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center" style={{ height: "100%" }}>
                     <Grid item>
-                      <Typography color="textPrimary">548 communities</Typography>
+                      <Typography color="textPrimary">{error ? 0 : communities.length} communities</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -98,14 +105,21 @@ export const CommunityList: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
+        {error ? (
+          <Grid container>
+            <Typography variant="body1" color="textPrimary">
+              No communities found
+            </Typography>
+          </Grid>
+        ) : null}
+
         <Grid container spacing={3}>
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
-          {/*@ts-ignore */}
-          {communities && communities.map(elem => (
-            <Grid item xs={6} md={4} lg={3} xl={2} key={elem._id}>
-              <DaoCard community={elem} />
-            </Grid>
-          ))}
+          {communities &&
+            communities.map(elem => (
+              <Grid item xs={6} md={4} lg={3} xl={2} key={elem._id}>
+                <DaoCard community={elem} setIsUpdated={setIsUpdated} />
+              </Grid>
+            ))}
         </Grid>
       </Grid>
     </PageContainer>

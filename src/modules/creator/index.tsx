@@ -356,6 +356,7 @@ export const CommunityCreator: React.FC = () => {
     token_standard: "FA2",
     picUri: "",
     required_token: false,
+    members: [],
     allow_access: false
   }
 
