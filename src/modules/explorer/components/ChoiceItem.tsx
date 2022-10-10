@@ -1,7 +1,7 @@
 import React, { Fragment } from "react"
 import { Grid, Typography, IconButton, Divider } from "@mui/material"
 import { theme } from "theme"
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
+import { RemoveCircleOutline } from "@material-ui/icons"
 
 type ChoiceItemProps = {
   index: number
@@ -25,7 +25,7 @@ export const ChoiceItem: React.FC<ChoiceItemProps> = ({ index, description }) =>
 
         <Grid item>
           <IconButton size="small">
-            <RemoveCircleOutlineIcon htmlColor={theme.palette.error.main} />
+            <RemoveCircleOutline htmlColor={theme.palette.error.main} />
           </IconButton>
         </Grid>
       </Grid>

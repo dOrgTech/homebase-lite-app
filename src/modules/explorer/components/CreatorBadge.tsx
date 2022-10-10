@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Typography } from "@mui/material"
+import { Grid, Typography } from "@material-ui/core"
 import { Blockie } from "modules/common/Blockie"
 import { toShortAddress } from "services/contracts/utils"
 
@@ -7,8 +7,8 @@ export const CreatorBadge: React.FC<{ address: string }> = ({ address }) => {
   return (
     <Grid container style={{ gap: 15 }}>
       <Grid item>
-        <Typography color="textPrimary" variant="subtitle2" fontWeight={500}>
-          CREATED BY
+        <Typography color="textPrimary" variant="subtitle2">
+          by
         </Typography>
       </Grid>
       <Grid item>

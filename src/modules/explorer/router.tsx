@@ -1,17 +1,20 @@
 import React from "react"
-import { Route, Routes } from "react-router-dom"
+import { Switch, Route, Redirect, useRouteMatch } from "react-router"
 import { CommunityList } from "./pages/CommunityList"
-import { CommunityDetails } from "./pages/CommunityDetails"
-import { CreateProposal } from "./pages/CreateProposal"
-import { ProposalDetails } from "./pages/ProposalDetails"
+import { CommunityDetailsRouter } from "./pages/CommunityDetails/router"
 
 export const DAOExplorerRouter: React.FC = (): JSX.Element => {
+  const match = useRouteMatch();
+
   return (
-    <Routes>
-      <Route path={`/communities`} element={<CommunityList />} />
-      <Route path={`/communities/:id`} element={<CommunityDetails />} />
-      <Route path={`/communities/:id/proposal`} element={<CreateProposal />} />
-      <Route path={`/communities/:id/proposal/:proposalId`} element={<ProposalDetails />} />
-    </Routes>
+    <Switch>
+      <Route path={`${match.url}/communities`}>
+        <CommunityList />
+      </Route>
+      <Route path={`${match.url}/community`}>
+        <CommunityDetailsRouter />
+      </Route>
+      <Redirect to={`${match.url}/communities`} />
+    </Switch>
   )
 }

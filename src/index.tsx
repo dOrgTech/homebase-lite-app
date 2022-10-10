@@ -1,11 +1,21 @@
 import React from "react"
-import ReactDOM from "react-dom/client"
-import App from "./App"
+import ReactDOM from "react-dom"
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+import App from "App"
+import { TezosProvider } from "services/beacon/context"
+import localizedFormat from "dayjs/plugin/localizedFormat"
+import dayjs from "dayjs"
+import BigNumber from "bignumber.js"
 
-root.render(
+// BigNumber.config({ DECIMAL_PLACES:  })
+
+dayjs.extend(localizedFormat)
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <TezosProvider>
+      <App />
+    </TezosProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 )

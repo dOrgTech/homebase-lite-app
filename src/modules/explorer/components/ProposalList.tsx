@@ -1,6 +1,5 @@
 import React from "react"
-import { Divider, Grid, Typography, styled } from "@mui/material"
-import { theme } from "theme"
+import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { Dropdown } from "modules/common/Dropdown"
 import { ProposalTableRow } from "./ProposalTableRow"
 import { ProposalStatus } from "./ProposalTableRowStatusBadge"
@@ -10,25 +9,35 @@ const ProposalListContainer = styled(Grid)(({ theme }) => ({
   borderRadius: 8
 }))
 
+const Header = styled(Grid)({
+  paddingLeft: 41,
+  paddingRight: 41
+})
+
+const StyledDivider = styled(Divider)({
+  height: 0
+})
+
+
 export const ProposalList: React.FC = () => {
   return (
-    <ProposalListContainer container flexDirection="column">
-      <Grid container justifyContent="space-between" alignItems="center" py={3} px={5.5}>
-        <Grid item>
-          <Typography variant={"body2"} color={theme.palette.text.secondary}>
+    <ProposalListContainer container direction="column">
+      <Header container justifyContent="space-between" alignItems="center">
+        <Grid item xs={6}>
+          <Typography variant={"body2"} color="textPrimary">
             Proposals
           </Typography>
         </Grid>
-        <Grid item>
-          <Dropdown options={[{ name: "All", value: "all" }]} value={"all"} />
+        <Grid item xs={6} container direction="row" justifyContent="flex-end">
+          <Dropdown options={[{ name: "All", value: "all"},{ name: "Active", value: "active"}, { name: "Closed", value: "closed"}]} value={"all"} />
         </Grid>
-      </Grid>
-      <Divider />
+      </Header>
+      <StyledDivider />
       <ProposalTableRow proposal={ProposalStatus.ACTIVE} />
-      <Divider />
-      <ProposalTableRow proposal={ProposalStatus.REJECTED} />
-      <Divider />
-      <ProposalTableRow proposal={ProposalStatus.PASSED} />
+      <StyledDivider />
+      <ProposalTableRow proposal={ProposalStatus.CLOSED} />
+      <StyledDivider />
+      <ProposalTableRow proposal={ProposalStatus.CLOSED} />
     </ProposalListContainer>
   )
 }

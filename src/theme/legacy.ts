@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles"
+import { createTheme } from "@material-ui/core/styles"
 export const legacyTheme = createTheme({
   palette: {
     primary: {
@@ -65,336 +65,284 @@ export const legacyTheme = createTheme({
       opacity: 0.8
     }
   },
-  components: {
+  overrides: {
     MuiSlider: {
-      styleOverrides: {
-        root: {
-          color: "#3D3D3D"
-        }
+      root: {
+        color: "#3D3D3D"
       }
     },
     MuiTab: {
-      styleOverrides: {
-        root: {
-          maxWidth: "100%"
-        }
+      root: {
+        maxWidth: "100%"
       }
     },
     MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          backgroundColor: "#4BCF93",
-          fontSize: 14,
-          padding: "10px 15px"
-        }
+      tooltip: {
+        backgroundColor: "#4BCF93",
+        fontSize: 14,
+        padding: "10px 15px"
       }
     },
     MuiStepLabel: {
-      styleOverrides: {
-        label: {
-          "color": "#fff",
-          "opacity": 0.5,
-          "marginLeft": 15,
-          "lineHeight": "40px",
-          "&$completed": {
-            fontWeight: 300
-          },
-          "&$active": {
-            fontWeight: 300
-          },
-          "& .MuiStepLabel-completed": {
-            fontWeight: 300
-          }
+      label: {
+        "color": "#fff",
+        "opacity": 0.5,
+        "marginLeft": 15,
+        "lineHeight": "40px",
+        "&$completed": {
+          fontWeight: 300
         },
-        active: {
-          color: "#fff !important",
-          opacity: 1
+        "&$active": {
+          fontWeight: 300
         },
-        completed: {
-          color: "#fff !important",
-          opacity: 0.5,
+        "& .MuiStepLabel-completed": {
           fontWeight: 300
         }
+      },
+      active: {
+        color: "#fff !important",
+        opacity: 1
+      },
+      completed: {
+        color: "#fff !important",
+        opacity: 0.5,
+        fontWeight: 300
       }
     },
     MuiStepConnector: {
-      styleOverrides: {
-        lineVertical: {
-          display: "none"
-        }
+      lineVertical: {
+        display: "none"
       }
     },
     MuiStepContent: {
-      styleOverrides: {
-        root: {
-          borderLeft: "none"
-        }
+      root: {
+        borderLeft: "none"
       }
     },
     MuiStep: {
-      styleOverrides: {
-        root: {
-          marginBottom: 15
-        }
+      root: {
+        marginBottom: 15
       }
     },
     MuiStepIcon: {
-      styleOverrides: {
-        active: {
-          color: "#1C1F23 !important"
-        },
-        completed: {
-          color: "#fff !important"
-        },
-        root: {
-          "height": 32,
-          "width": 32,
-          "color": "#1C1F23",
+      active: {
+        color: "#1C1F23 !important"
+      },
+      completed: {
+        color: "#fff !important"
+      },
+      root: {
+        "height": 32,
+        "width": 32,
+        "color": "#1C1F23",
+        "border": "1px solid #3D3D3D",
+        "borderRadius": "50%",
+        "&$active": {
+          "fill": "#fff",
           "border": "1px solid #3D3D3D",
           "borderRadius": "50%",
-          "&$active": {
-            "fill": "#fff",
-            "border": "1px solid #3D3D3D",
-            "borderRadius": "50%",
-            "& $text": {
-              fill: "#1C1F23",
-              border: "1px solid #3D3D3D"
-            }
+          "& $text": {
+            fill: "#1C1F23",
+            border: "1px solid #3D3D3D"
           }
-        },
-        text: {
-          fill: "#fff"
         }
+      },
+      text: {
+        fill: "#fff"
       }
     },
     MuiInput: {
-      styleOverrides: {
-        underline: {
-          "&:after": {
-            borderBottom: "none"
-          },
-          "&$focused:after": {
-            borderBottom: "none"
-          },
-          "&$error:after": {
-            borderBottom: "none"
-          },
-          "&:before": {
-            borderBottom: "none"
-          },
-          "&:hover:not($disabled):not($focused):not($error):before": {
-            borderBottom: "none"
-          },
-          "&$disabled:before": {
-            borderBottom: "none"
-          },
-          "&:active:not($disabled):not($focused):not($error):before": {
-            borderBottom: "none"
-          }
+      underline: {
+        "&:after": {
+          borderBottom: "none"
         },
-        root: {
-          borderRadius: 8
+        "&$focused:after": {
+          borderBottom: "none"
+        },
+        "&$error:after": {
+          borderBottom: "none"
+        },
+        "&:before": {
+          borderBottom: "none"
+        },
+        "&:hover:not($disabled):not($focused):not($error):before": {
+          borderBottom: "none"
+        },
+        "&$disabled:before": {
+          borderBottom: "none"
+        },
+        "&:active:not($disabled):not($focused):not($error):before": {
+          borderBottom: "none"
         }
+      },
+      root: {
+        borderRadius: 8
       }
     },
     MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px !important"
-        }
+      root: {
+        borderRadius: "8px !important"
       }
     },
     MuiButton: {
-      styleOverrides: {
-        root: {
-          "&$disabled": {
-            color: "#3d3d3d"
-          },
-          "textTransform": "capitalize",
-          "fontWeight": 500,
-          "fontSize": 18
+      root: {
+        "&$disabled": {
+          color: "#3d3d3d"
         },
-        outlined: {
-          "&$disabled": {
-            border: "2px solid #3d3d3d"
-          },
-          "borderWidth": "2px !important",
-          "borderRadius": "4px",
-          "padding": "1px 8px",
-          "fontSize": "1rem"
-        }
+        "textTransform": "capitalize",
+        "fontWeight": 500,
+        "fontSize": 18
+      },
+      outlined: {
+        "&$disabled": {
+          border: "2px solid #3d3d3d"
+        },
+        "borderWidth": "2px !important",
+        "borderRadius": "4px",
+        "padding": "1px 8px",
+        "fontSize": "1rem"
       }
     },
     MuiInputBase: {
-      styleOverrides: {
-        input: {
-          textAlign: "center",
-          color: "#fff"
-        }
+      input: {
+        textAlign: "center",
+        color: "#fff"
       }
     },
     MuiDivider: {
-      styleOverrides: {
-        root: {
-          background: "#7D8C8B"
-        }
+      root: {
+        background: "#7D8C8B"
       }
     },
     MuiDialog: {
-      styleOverrides: {
-        paper: {
-          background: "#1C1F23",
-          width: 615,
-          maxWidth: "100%"
-        },
-        root: {
-          height: "auto"
-        },
-        paperWidthSm: {
-          maxWidth: 615,
-          height: "auto"
-        }
+      paper: {
+        background: "#1C1F23",
+        width: 615,
+        maxWidth: "100%"
+      },
+      root: {
+        height: "auto"
+      },
+      paperWidthSm: {
+        maxWidth: 615,
+        height: "auto"
       }
     },
     MuiFormControl: {
-      styleOverrides: {
-        root: {
-          width: "100%"
-        }
+      root: {
+        width: "100%"
       }
     },
     MuiDialogContent: {
-      styleOverrides: {
-        root: {
-          "padding": "42px 54px",
-          "&:first-child": {
-            paddingTop: "42px"
-          }
+      root: {
+        "padding": "42px 54px",
+        "&:first-child": {
+          paddingTop: "42px"
         }
       }
     },
     MuiSelect: {
-      styleOverrides: {
-        select: {
-          textAlign: "right"
-        }
+      select: {
+        textAlign: "right"
       }
     },
     MuiDialogContentText: {
-      styleOverrides: {
-        root: {
-          marginBottom: 0
-        }
+      root: {
+        marginBottom: 0
       }
     },
     MuiSwitch: {
-      styleOverrides: {
-        root: {
-          marginBottom: 0
+      root: {
+        marginBottom: 0
+      },
+      switchBase: {
+        "color": "red",
+        "top": 8,
+        "left": 8,
+        "$checked$checked + &": {
+          opacity: 1,
+          backgroundColor: "#1C1F23",
+          color: "#81FEB7"
+        }
+      },
+      track: {
+        "borderRadius": "40px",
+        "backgroundColor": "inherit",
+        "border": "1px solid #fff",
+        "opacity": 0.5,
+        "$checked$checked + &": {
+          opacity: 1,
+          backgroundColor: "#1C1F23",
+          color: "#81FEB7"
+        }
+      },
+      thumb: {
+        "width": 18,
+        "height": 18,
+        "$checked$checked + &": {
+          color: "#81FEB7"
+        }
+      },
+      colorSecondary: {
+        "color": "#fff",
+        "$checked$checked + &": {
+          color: "#81FEB7"
         },
-        switchBase: {
-          "color": "red",
-          "top": 8,
-          "left": 8,
-          "$checked$checked + &": {
-            opacity: 1,
-            backgroundColor: "#1C1F23",
-            color: "#81FEB7"
-          }
-        },
-        track: {
-          "borderRadius": "40px",
-          "backgroundColor": "inherit",
-          "border": "1px solid #fff",
-          "opacity": 0.5,
-          "$checked$checked + &": {
-            opacity: 1,
-            backgroundColor: "#1C1F23",
-            color: "#81FEB7"
-          }
-        },
-        thumb: {
-          "width": 18,
-          "height": 18,
-          "$checked$checked + &": {
-            color: "#81FEB7"
-          }
-        },
-        colorSecondary: {
-          "color": "#fff",
-          "$checked$checked + &": {
-            color: "#81FEB7"
-          },
-          "& .Mui-checked": {
-            color: "#81FEB7"
-          }
+        "& .Mui-checked": {
+          color: "#81FEB7"
         }
       }
     },
     MuiFormHelperText: {
-      styleOverrides: {
-        root: {
-          display: "none"
-        }
+      root: {
+        display: "none"
       }
     },
     MuiTable: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          backgroundColor: "#2F3438"
-        }
+      root: {
+        borderRadius: "8px",
+        backgroundColor: "#2F3438"
       }
     },
     MuiTableHead: {
-      styleOverrides: {
-        root: {
-          minHeight: 58,
-          fontSize: 16,
-          fontWeight: 400,
-          letterSpacing: "-0.01em",
-          color: "#FFFFFF"
-        }
+      root: {
+        minHeight: 58,
+        fontSize: 16,
+        fontWeight: 400,
+        letterSpacing: "-0.01em",
+        color: "#FFFFFF"
       }
     },
     MuiTableFooter: {
-      styleOverrides: {
-        root: {
-          minHeight: 60,
-          fontSize: 16,
-          fontWeight: 400,
-          letterSpacing: "-0.01em",
-          color: "##81FEB7",
-          borderTop: "0.3px solid #3D3D3D"
-        }
+      root: {
+        minHeight: 60,
+        fontSize: 16,
+        fontWeight: 400,
+        letterSpacing: "-0.01em",
+        color: "##81FEB7",
+        borderTop: "0.3px solid #3D3D3D"
       }
     },
     MuiTableBody: {
-      styleOverrides: {
-        root: {
-          "& > *": {
-            borderTop: "0.3px solid #3D3D3D",
-            minHeight: 90
-          }
+      root: {
+        "& > *": {
+          borderTop: "0.3px solid #3D3D3D",
+          minHeight: 90
         }
       }
     },
     MuiTableCell: {
-      styleOverrides: {
-        root: {
-          borderBottom: "unset"
-        }
+      root: {
+        borderBottom: "unset"
       }
     },
     MuiTableRow: {
-      styleOverrides: {
-        root: {
-          "& th:first-child, & td:first-child": {
-            paddingLeft: 46
-          },
-          "& th:last-child, & td:last-child": {
-            paddingRight: 46
-          }
+      root: {
+        "& th:first-child, & td:first-child": {
+          paddingLeft: 46
+        },
+        "& th:last-child, & td:last-child": {
+          paddingRight: 46
         }
       }
     }

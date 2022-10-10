@@ -1,9 +1,9 @@
 import React from "react"
-import { Grid, AppBar, Toolbar, Typography, Box, useMediaQuery } from "@mui/material"
-import { styled, Theme } from "@mui/material/styles"
+import { Grid, AppBar, Toolbar, Typography, Box, useMediaQuery } from "@material-ui/core"
+import { styled, Theme } from "@material-ui/core/styles"
 import HomeButton from "assets/logos/homebase_lite_logo.svg"
 import { theme } from "theme"
-import { useNavigate } from "react-router-dom"
+import { useHistory } from "react-router"
 
 const Header = styled(Grid)({
   padding: "28px 125px"
@@ -58,7 +58,7 @@ const ToolbarContainer = styled(Grid)(({ theme }) => ({
 
 export const Navbar: React.FC = () => {
   const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("xs"))
-  const navigate = useNavigate()
+  const navigate = useHistory()
   return (
     <StyledAppBar position="sticky">
       <StyledToolbar>
@@ -67,7 +67,7 @@ export const Navbar: React.FC = () => {
           direction={isMobileExtraSmall ? "column" : "row"}
           alignItems="center"
           wrap="wrap"
-          onClick={() => navigate("/explorer/communities")}
+          onClick={() => navigate.push("/explorer/communities")}
           justifyContent="space-between"
         >
           <Grid item>
