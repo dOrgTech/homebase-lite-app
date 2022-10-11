@@ -361,14 +361,6 @@ export const CommunityCreator: React.FC = () => {
     polls: []
   }
 
-  // const saveCommunity = useCallback((values, setSubmitting): void => {
-  //   setSubmitting(true)
-
-    
-
-  //   navigate.push("/explore/communities")
-  // })
-
   const saveCommunity = useCallback(async (values: Community) => {
     console.log(values);
     await fetch(`${process.env.REACT_APP_API_URL}/dao/add`, {
@@ -379,7 +371,7 @@ export const CommunityCreator: React.FC = () => {
       body: JSON.stringify(values),
     })
     .catch(error => {
-      window.alert(error);
+      console.log(error)
       return;
     });
     navigate.push("/explore/communities")
