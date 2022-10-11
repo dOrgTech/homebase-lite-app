@@ -28,7 +28,7 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, members, setIsU
     } else {
       updatedArray = updatedArray?.filter(elem => elem !== account)
     }
-    await fetch(`http://localhost:5001/update/${communityId}`, {
+    await fetch(`${process.env.REACT_APP_API_URL}/update/${communityId}`, {
       method: "POST",
       body: JSON.stringify(updatedArray),
       headers: {

@@ -58,7 +58,7 @@ export const CommunityList: React.FC = () => {
 
   useEffect(() => {
     async function getCommunities() {
-      await fetch(`http://localhost:5001/daos/`)
+      await fetch(`${process.env.REACT_APP_API_URL}/daos/`)
         .then(async response => {
           if (!response.status) {
             const message = `An error occurred: ${response.statusText}`

@@ -5,6 +5,7 @@ export interface Community {
     link: string
     members: string[]
     tokenAddress: string
+    polls: string[]
     tokenType?: string
     token_symbol: string
     token_id: string

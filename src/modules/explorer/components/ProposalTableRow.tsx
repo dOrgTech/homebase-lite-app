@@ -5,6 +5,7 @@ import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
 import { useHistory } from "react-router"
 import { Blockie } from "modules/common/Blockie"
 import { toShortAddress } from "services/contracts/utils"
+import { Poll } from "models/Polls"
 
 export interface ProposalTableRowData {
   daoId?: string
@@ -54,12 +55,12 @@ const LightText = styled(Typography)({
   fontWeight: 300
 })
 
-export const ProposalTableRow: React.FC<{ proposal: ProposalStatus }> = ({ proposal }) => {
+export const ProposalTableRow: React.FC<{ proposal: ProposalStatus, poll: Poll }> = ({ proposal, poll }) => {
   const navigate = useHistory()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-
+console.log(poll)
   return (
     <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
       <BlockieContainer container direction="row">

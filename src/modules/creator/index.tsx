@@ -357,7 +357,8 @@ export const CommunityCreator: React.FC = () => {
     picUri: "",
     required_token: false,
     members: [],
-    allow_access: false
+    allow_access: false,
+    polls: []
   }
 
   const saveCommunity = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
