@@ -9,11 +9,12 @@ export const useIsMembers = (account: string, members: any) => {
       if (member) {
         setIsMember(true)
         return
+      } else {
+        setIsMember(false)
       }
     }
     isCommunityMember()
     return
-  }, [account, members])
-
+  }, [members, account])
   return isMember
 }

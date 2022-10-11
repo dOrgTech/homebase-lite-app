@@ -54,7 +54,6 @@ export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUp
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   const { account } = useTezos();
 
-
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
       <Grid item>

@@ -64,7 +64,7 @@ export const CommunityDetails: React.FC = () => {
         setCommunity(record)
       })
     }
-    fetchData()
+    fetchData();
 
     return
   }, [id, isUpdated])
