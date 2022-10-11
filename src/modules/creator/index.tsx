@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Grid,
   styled,
@@ -232,7 +232,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           </Field>
         </Grid>
         <Grid item>
-          <Field name="link" type="text" placeholder="Link to Terms" component={CustomFormikTextField} />
+          <Field name="linkToTerms" type="text" placeholder="Link to Terms" component={CustomFormikTextField} />
         </Grid>
         <Grid item>
           <Field
@@ -266,14 +266,14 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           <Field name="token_id" type="text" placeholder="Token ID" component={CustomFormikTextField} />
         </Grid>
         <Grid item container xs={12} md={4}>
-          <Field name="token_standard">
+          <Field name="tokenType">
             {() => (
               <CustomSelect
                 as="select"
-                name={getIn(values, "token_standard")}
+                name={getIn(values, "tokenType")}
                 label="Token Standard"
                 onChange={(newValue: any) => {
-                  setFieldValue("token_standard", newValue.target.value)
+                  setFieldValue("tokenType", newValue.target.value)
                 }}
               >
                 <option value={"FA2"}>FA2</option>
@@ -349,11 +349,11 @@ export const CommunityCreator: React.FC = () => {
   const initialState: Community = {
     name: "",
     description: "",
-    link: "",
+    linkToTerms: "",
     tokenAddress: "",
     token_symbol: "",
     token_id: "",
-    token_standard: "FA2",
+    tokenType: "FA2",
     picUri: "",
     required_token: false,
     members: [],
@@ -361,11 +361,30 @@ export const CommunityCreator: React.FC = () => {
     polls: []
   }
 
-  const saveCommunity = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
-    setSubmitting(true)
+  // const saveCommunity = useCallback((values, setSubmitting): void => {
+  //   setSubmitting(true)
 
+    
+
+  //   navigate.push("/explore/communities")
+  // })
+
+  const saveCommunity = useCallback(async (values: Community) => {
+    console.log(values);
+    await fetch(`${process.env.REACT_APP_API_URL}/dao/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+    .catch(error => {
+      window.alert(error);
+      return;
+    });
     navigate.push("/explore/communities")
-  }
+
+  }, [navigate]);
 
   return (
     <PageContainer>

@@ -20,7 +20,6 @@ const StyledDivider = styled(Divider)({
 })
 
 export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
-  console.log(polls);
   return (
     <ProposalListContainer container direction="column">
       <Header container justifyContent="space-between" alignItems="center">
@@ -41,14 +40,15 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
         </Grid>
       </Header>
       <StyledDivider />
-      {polls && polls.map((poll, i) => {
-        <ProposalTableRow key={`poll-${i}`} poll={poll} proposal={ProposalStatus.ACTIVE} />
-      })}
-      {/* <ProposalTableRow  proposal={ProposalStatus.ACTIVE} />
-
-      <ProposalTableRow proposal={ProposalStatus.CLOSED} />
-      <StyledDivider />
-      <ProposalTableRow proposal={ProposalStatus.CLOSED} /> */}
+      {polls &&
+        polls.map((poll, i) => {
+          return (
+            <div key={`poll-${i}`}>
+              <ProposalTableRow poll={poll} proposal={ProposalStatus.ACTIVE} />
+              {polls.length - 1 !== i ? <StyledDivider key={`divider-${i}`} /> : null}
+            </div>
+          )
+        })}
     </ProposalListContainer>
   )
 }

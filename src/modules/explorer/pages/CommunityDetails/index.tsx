@@ -107,7 +107,6 @@ export const CommunityDetails: React.FC = () => {
           <DaoCardDetail community={community} setIsUpdated={setIsUpdated} />
         </CommunityDetailsContainer>
         <CommunityDetailsContainer item xs={12} lg={8} md={8}>
-        {console.log(polls)}
           <ProposalList polls={polls} />
         </CommunityDetailsContainer>
       </Grid>

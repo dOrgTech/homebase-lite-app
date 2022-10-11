@@ -60,7 +60,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus, poll: Poll }
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-console.log(poll)
+  console.log(poll)
   return (
     <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
       <BlockieContainer container direction="row">
@@ -71,7 +71,7 @@ console.log(poll)
       </BlockieContainer>
       <Grid container item style={{ gap: 25 }} xs={12} md={12} justifyContent={isMobile ? "center" : "flex-start"}>
         <Typography variant="h4" color="textSecondary" align={isMobile ? "center" : "left"}>
-          Contribute to the fund
+          {poll.name}
         </Typography>
 
         <Grid
@@ -87,7 +87,7 @@ console.log(poll)
 
         <Grid>
           <DescriptionText color="textPrimary">
-            This Proposal was created to fund a new project as the governing body
+            {poll.description}
           </DescriptionText>
         </Grid>
       </Grid>
