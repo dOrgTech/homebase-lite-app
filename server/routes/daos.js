@@ -55,22 +55,55 @@ daoRoutes.route("/update/:id").post(function (req, response) {
 });
 
 // This section will help you create a new record.
-daoRoutes.route("/dao/add").post(function (req, response) {
+daoRoutes.route("/dao/add").post(async function (req, response) {
+
+  const mongoClient = dbo.getClient();
+  const session = mongoClient.startSession();
   let db_connect = dbo.getDb();
-  let data = {
+
+  const original_id = ObjectId()
+
+  let DAOData = {
     name: req.body.name,
     description: req.body.description,
     linkToTerms: req.body.linkToTerms,
-    tokenAddress: req.body.tokenAddress,
+    picUri: req.body.picUri,
     members: req.body.members,
     polls: req.body.polls,
+    tokenAddress: req.body.tokenAddress,
     tokenType: req.body.tokenType,
-    picUri: req.body.picUri,
+    requiredTokenOwnership: req.body.requiredTokenOwnership,
+    allowPublicAccess: req.body.allowPublicAccess,
+    _id: original_id
   };
-  db_connect.collection("DAOs").insertOne(data, function (err, res) {
-    if (err) throw err;
-    response.json(res);
-  });
+
+
+
+  try {
+    await session.withTransaction(async () => {
+      const coll1 = db_connect.collection('DAOs');
+      const coll2 = db_connect.collection('Tokens');
+      // Important:: You must pass the session to the operations
+      await coll1.insertOne(DAOData, { session });
+
+      await coll2.insertOne(
+        {
+          tokenAddress: req.body.tokenAddress,
+          tokenType: req.body.tokenType,
+          symbol: req.body.symbol,
+          tokenID: req.body.tokenID,
+          daoID: original_id
+        }
+        , { session })
+    }).then(res => response.json(res));
+  } catch (e) {
+    result = e.Message;
+    console.warn(result);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+
 });
 
 module.exports = daoRoutes

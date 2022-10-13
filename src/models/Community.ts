@@ -7,9 +7,17 @@ export interface Community {
     tokenAddress: string
     polls: string[]
     tokenType?: string
-    token_symbol: string
-    token_id: string
+    symbol: string
+    tokenID: string
     picUri: string
-    required_token: boolean
-    allow_access: boolean
+    requiredTokenOwnership: boolean
+    allowPublicAccess: boolean
   }
+
+export interface CommunityToken {
+  _id?: string
+  daoID: string
+  tokenID: number
+  symbol: string
+  tokenAddress: string
+}

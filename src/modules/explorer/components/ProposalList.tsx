@@ -19,6 +19,11 @@ const StyledDivider = styled(Divider)({
   height: 0
 })
 
+const NoProposalsText = styled(Typography)({
+  paddingTop: 20,
+  paddingBottom: 20
+})
+
 export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
   return (
     <ProposalListContainer container direction="column">
@@ -40,7 +45,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
         </Grid>
       </Header>
       <StyledDivider />
-      {polls &&
+      {polls && polls.length > 0 ?
         polls.map((poll, i) => {
           return (
             <div key={`poll-${i}`}>
@@ -48,7 +53,10 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
               {polls.length - 1 !== i ? <StyledDivider key={`divider-${i}`} /> : null}
             </div>
           )
-        })}
+        }) : (
+        <Header>
+          <NoProposalsText color="textPrimary">No proposals</NoProposalsText>
+        </Header>)}
     </ProposalListContainer>
   )
 }

@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 app.use(require("./routes/daos"));
 app.use(require("./routes/polls"));
+app.use(require("./routes/tokens"));
 
 // get driver connection
 const dbo = require("./db/conn");
