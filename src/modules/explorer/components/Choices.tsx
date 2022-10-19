@@ -50,7 +50,7 @@ const CustomFormikTextField = withStyles({
   }
 })(FormikTextField)
 
-export const Choices: React.FC<any> = ({ choices }) => {
+export const Choices: React.FC<any> = ({ choices, submitForm }) => {
   
   return (
     <>
@@ -111,7 +111,7 @@ export const Choices: React.FC<any> = ({ choices }) => {
         />
       </ChoicesContainer>
       <Grid container  style={{ gap: 10, marginTop: 31 }}>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={submitForm}>
           Create Proposal
         </Button>
       </Grid>

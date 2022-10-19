@@ -62,9 +62,8 @@ export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({
       <Grid item>
         <JoinButton
           account={account}
-          members={community.members}
           setIsUpdated={setIsUpdated}
-          communityId={community._id ? community._id : ""}
+          community={community}
         />
       </Grid>
     </DaoCardContainer>

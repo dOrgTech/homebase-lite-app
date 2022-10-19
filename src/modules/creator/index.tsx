@@ -10,17 +10,17 @@ import {
   withStyles,
   withTheme,
   TextareaAutosize,
-  MenuItem
+  CircularProgress
 } from "@material-ui/core"
 import { UploadAvatar } from "./components/UploadAvatar"
 import { BackButton } from "../common/BackButton"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
-import { Select, TextField as FormikTextField } from "formik-material-ui"
-import { Community, CommunityToken } from "models/Community"
+import { TextField as FormikTextField } from "formik-material-ui"
+import { Community } from "models/Community"
 import { useHistory } from "react-router"
 import { validateContractAddress } from "@taquito/utils"
 import { useTokenMetadata } from "services/hooks/useTokenMetadata"
-import { Dropdown } from "modules/common/Dropdown"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -33,7 +33,7 @@ const CommunityContainer = styled(Grid)(({ theme }) => ({
 const AvatarCommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
-  [theme.breakpoints.down("md")]: {
+  [theme.breakpoints.down("sm")]: {
     marginTop: 30
   }
 }))
@@ -41,7 +41,7 @@ const AvatarCommunityContainer = styled(Grid)(({ theme }) => ({
 const CommunityContainerBottom = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
-  [theme.breakpoints.down("md")]: {
+  [theme.breakpoints.down("sm")]: {
     marginTop: 30,
     gap: 12
   },
@@ -180,7 +180,7 @@ const validateForm = (values: Community) => {
   return errors
 }
 
-const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched }: any) => {
+const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched, isSubmitting }: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -220,6 +220,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           <Field name="description">
             {() => (
               <CustomTextarea
+                disabled={isSubmitting}
                 maxLength={1500}
                 aria-label="empty textarea"
                 placeholder="Short description"
@@ -254,7 +255,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
       </CommunityContainer>
       <AvatarCommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
         <AvatarContainer container item>
-          <UploadAvatar url={values.picUri} setFieldValue={setFieldValue} />
+          <UploadAvatar url={values.picUri} setFieldValue={setFieldValue} disabled={isSubmitting} />
         </AvatarContainer>
       </AvatarCommunityContainer>
 
@@ -269,6 +270,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           <Field name="tokenType">
             {() => (
               <CustomSelect
+                disabled={isSubmitting}
                 as="select"
                 name={getIn(values, "tokenType")}
                 label="Token Standard"
@@ -334,10 +336,14 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           </Grid>
         </Grid>
       </CommunityContainerBottom>
-      <CommunityContainerBottom>
-        <Button variant="contained" color="secondary" onClick={() => submitForm(values)}>
-          Create Community
-        </Button>
+      <CommunityContainerBottom container direction="row">
+        {isSubmitting ? (
+          <CircularProgress color="secondary" />
+        ) : (
+          <Button variant="contained" color="secondary" onClick={() => submitForm(values)}>
+            Create Community
+          </Button>
+        )}
       </CommunityContainerBottom>
     </Grid>
   )
@@ -345,6 +351,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
 export const CommunityCreator: React.FC = () => {
   const navigate = useHistory()
+  const openNotification = useNotification()
 
   const initialState: Community = {
     name: "",
@@ -371,7 +378,11 @@ export const CommunityCreator: React.FC = () => {
         body: JSON.stringify(values)
       })
         .then(async res => {
-          console.log(res);
+          openNotification({
+            message: "Community created!",
+            autoHideDuration: 3000,
+            variant: "success"
+          })
           navigate.push("/explore/communities")
         })
         .catch(error => {
@@ -379,7 +390,7 @@ export const CommunityCreator: React.FC = () => {
           return
         })
     },
-    [navigate]
+    [navigate, openNotification]
   )
 
   return (

@@ -4,7 +4,6 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito"
 import { connectWithBeacon, Network, rpcNodes, TezosActionType } from "services/beacon"
 import { TezosContext } from "services/beacon/context"
 import { Tzip16Module } from "@taquito/tzip16"
-import mixpanel from "mixpanel-browser"
 
 type WalletConnectReturn = {
   tezos: TezosToolkit
@@ -43,9 +42,6 @@ export const useTezos = (): WalletConnectReturn => {
           wallet
         }
       })
-
-      // mixpanel.identify(account)
-
       return newTezos
     },
     [dispatch, network]

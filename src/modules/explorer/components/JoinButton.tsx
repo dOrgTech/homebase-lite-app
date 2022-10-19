@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { Button, styled, Typography } from "@material-ui/core"
 import { useIsMembers } from "../hooks/useIsMember"
+import { useNotification } from "modules/common/hooks/useNotification"
+import { Community } from "models/Community"
 
 const CustomButton = styled(Button)(({ theme }) => ({
   "width": 67,
@@ -12,29 +14,37 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 interface JoinButtonProps {
   account: string
-  members: string[]
   setIsUpdated?: any
-  communityId: string
+  community: Community | undefined
 }
 
-export const JoinButton: React.FC<JoinButtonProps> = ({ account, members, setIsUpdated, communityId }) => {
-  const isMember = useIsMembers(account, members)
+export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, community }) => {
+  const isMember = useIsMembers(account, community?.members)
   const [hover, setHover] = useState(false)
+  const openNotification = useNotification()
 
   const joinCommunity = async () => {
-    let updatedArray = members
+    let updatedArray = community?.members
     if (!isMember && updatedArray) {
       updatedArray.push(account)
     } else {
       updatedArray = updatedArray?.filter(elem => elem !== account)
     }
-    await fetch(`${process.env.REACT_APP_API_URL}/update/${communityId}`, {
+    await fetch(`${process.env.REACT_APP_API_URL}/update/${community?._id}`, {
       method: "POST",
       body: JSON.stringify(updatedArray),
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(() =>  setIsUpdated(Math.random()))
+    }).then(() =>  {
+      setIsUpdated(Math.random())
+      openNotification({
+        message: `You just ${!isMember ? 'joined' : 'left' } ${community?.name}!`,
+        autoHideDuration: 3000,
+        variant: "info"
+      })
+      }
+    )
   }
 
   return (

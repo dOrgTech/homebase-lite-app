@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { theme } from "theme"
 import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
 import { useHistory } from "react-router"
-import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme, CircularProgress } from "@material-ui/core"
 import { Community } from "models/Community"
 
 const PageContainer = styled("div")({
@@ -55,21 +54,26 @@ export const CommunityList: React.FC = () => {
   const [communities, setCommunities] = useState<Community[]>([])
   const [error, setError] = useState(false)
   const [isUpdated, setIsUpdated] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getCommunities() {
+      setIsLoading(true)
       await fetch(`${process.env.REACT_APP_API_URL}/daos/`)
         .then(async response => {
           if (!response.status) {
-            const message = `An error occurred: ${response.statusText}`
             setError(true)
             return
           }
 
           const records = await response.json()
           setCommunities(records)
+          setIsLoading(false)
         })
-        .catch(err => setError(true))
+        .catch(err => {
+          setIsLoading(false)
+          setError(true)
+        })
     }
     getCommunities()
     return
@@ -105,7 +109,7 @@ export const CommunityList: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
-        {error ? (
+        {error && !isLoading ? (
           <Grid container>
             <Typography variant="body1" color="textPrimary">
               No communities found
@@ -113,8 +117,15 @@ export const CommunityList: React.FC = () => {
           </Grid>
         ) : null}
 
+        {isLoading ? (
+          <Grid container direction="row" justifyContent="center">
+            <CircularProgress color="secondary" />
+          </Grid>
+        ) : null}
+
         <Grid container spacing={3}>
-          {communities &&
+          {!isLoading &&
+            communities &&
             communities.map(elem => (
               <Grid item xs={6} md={4} lg={3} xl={2} key={elem._id}>
                 <DaoCard community={elem} setIsUpdated={setIsUpdated} />

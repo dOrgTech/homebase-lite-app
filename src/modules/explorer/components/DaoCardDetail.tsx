@@ -13,7 +13,8 @@ const StyledAvatar = styled(Avatar)({
 const MembersText = styled(Typography)({
   fontWeight: 300,
   fontSize: 18,
-  letterSpacing: "-0.01em"
+  letterSpacing: "-0.01em",
+  marginBottom: 10
 })
 
 const CommunityText = styled(Typography)({
@@ -25,7 +26,8 @@ const CommunityText = styled(Typography)({
 const CommunityDescription = styled(Typography)({
   marginBottom: 22,
   maxHeight: 124,
-  overflowY: "scroll"
+  overflowY: "scroll",
+  marginTop: 10
 })
 
 const ProposalButton = styled(Button)({
@@ -44,7 +46,7 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
 }))
 
 interface DaoCardDetailProps {
-  community?: Community,
+  community?: Community
   setIsUpdated: any
 }
 
@@ -52,27 +54,20 @@ export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUp
   const navigate = useHistory()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-  const { account } = useTezos();
+  const { account } = useTezos()
 
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
       <Grid item>
         <StyledAvatar src={community?.picUri}> </StyledAvatar>
       </Grid>
-      <Grid item container direction="row" justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
-        <Grid item direction="column" container xs={12} md={12} lg={7} alignItems={isMobile ? "center" : "stretch"}>
+      <Grid item container direction="column" justifyContent="center" alignItems="center">
+        <Grid item direction="column" container alignItems="center">
           <CommunityText color="textPrimary">{community?.name}</CommunityText>
           <MembersText variant={"body1"} color="textPrimary">
             {community?.members?.length} members
           </MembersText>
-        </Grid>
-        <Grid item>
-        <JoinButton 
-            account={account}
-            setIsUpdated={setIsUpdated}
-            members={community?.members ? community?.members : []}
-            communityId={community?._id ? community._id : ""}
-          />
+          <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} />
         </Grid>
       </Grid>
 
@@ -87,7 +82,7 @@ export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUp
           variant="contained"
           color="secondary"
           size="small"
-          onClick={() => navigate.push("/explorer/community/1/proposal")}
+          onClick={() => navigate.push(`/explorer/community/${community?._id}/proposal`)}
         >
           New Proposal
         </ProposalButton>
