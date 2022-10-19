@@ -187,7 +187,7 @@ const validateForm = (values: Poll) => {
   return errors
 }
 
-export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched }: any) => {
+export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touched, isSubmitting }: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -267,7 +267,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
               </>
             ) : null}
             <ProposalChoices>
-              <Choices choices={getIn(values, "choices")} submitForm={submitForm} />
+              <Choices choices={getIn(values, "choices")} isLoading={isSubmitting} submitForm={submitForm} />
               {errors?.choices && touched.choices ? <ErrorTextChoices>{errors.choices}</ErrorTextChoices> : null}
             </ProposalChoices>
           </ProposalContainer>
@@ -325,6 +325,7 @@ export const ProposalCreator: React.FC = () => {
   const { network, account } = useTezos()
   const [tokenAddress, setTokenAddress] = useState<string>("")
   const openNotification = useNotification()
+  const [isLoading, setIsLoading] = useState(false)
 
   const { id } = useParams<{
     id: string
@@ -366,6 +367,8 @@ export const ProposalCreator: React.FC = () => {
 
   const saveProposal = useCallback(
     async (values: Poll) => {
+      setIsLoading(true);
+  
       const block = await getCurrentBlock(network)
       const total = await getTotalSupplyAtReferenceBlock(network, tokenAddress, block)
 
@@ -389,6 +392,7 @@ export const ProposalCreator: React.FC = () => {
             autoHideDuration: 3000,
             variant: "success"
           })
+          setIsLoading(false)
           navigate.push(`/explore/community/${id}`)
         })
         .catch(error => {
@@ -402,6 +406,7 @@ export const ProposalCreator: React.FC = () => {
         })
     },
     [navigate, openNotification, id, network, tokenAddress]
+    // [id, network, tokenAddress]
   )
 
   return (
@@ -423,7 +428,7 @@ export const ProposalCreator: React.FC = () => {
             <Form style={{ width: "100%" }}>
               <ProposalForm
                 submitForm={submitForm}
-                isSubmitting={isSubmitting}
+                isSubmitting={isLoading}
                 setFieldValue={setFieldValue}
                 errors={errors}
                 touched={touched}
