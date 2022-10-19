@@ -66,7 +66,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus, poll: Poll }
       <BlockieContainer container direction="row">
         <Blockie address={"tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB"} size={24} />
         <Address color="textPrimary" variant="subtitle2">
-          {toShortAddress("tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB")}
+          {toShortAddress(poll.author)}
         </Address>
       </BlockieContainer>
       <Grid container item style={{ gap: 25 }} xs={12} md={12} justifyContent={isMobile ? "center" : "flex-start"}>

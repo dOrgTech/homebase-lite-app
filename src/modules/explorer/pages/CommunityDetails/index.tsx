@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, styled } from "@material-ui/core"
+import { Grid, styled, CircularProgress } from "@material-ui/core"
 import { ProposalList } from "../../components/ProposalList"
 import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
 import { useParams } from "react-router-dom"
@@ -8,6 +8,7 @@ import { Poll } from "models/Polls"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
+  height: "fit-content",
   [theme.breakpoints.down("md")]: {
     marginTop: 0
   }
@@ -106,8 +107,8 @@ export const CommunityDetails: React.FC = () => {
         <CommunityDetailsContainer item xs={12} lg={4} md={4}>
           <DaoCardDetail community={community} setIsUpdated={setIsUpdated} />
         </CommunityDetailsContainer>
-        <CommunityDetailsContainer item xs={12} lg={8} md={8}>
-          <ProposalList polls={polls} />
+        <CommunityDetailsContainer container justifyContent="center" item xs={12} lg={8} md={8}>
+          {polls.length > 0 ? <ProposalList polls={polls} /> : <CircularProgress color="secondary" />} 
         </CommunityDetailsContainer>
       </Grid>
     </PageContainer>
