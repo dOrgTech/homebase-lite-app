@@ -7,6 +7,8 @@ import { MoreHoriz } from "@material-ui/icons"
 import Share from "assets/img/share.svg"
 import { CommunityBadge } from "./CommunityBadge"
 import LinkIcon from "assets/img/link.svg"
+import { Poll } from "models/Polls"
+import dayjs from "dayjs"
 
 const LogoItem = styled("img")({
   height: 18,
@@ -32,7 +34,7 @@ const StyledLink = styled(Link)({
   marginLeft: 8
 })
 
-export const ProposalDetailCard: React.FC = () => {
+export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -49,7 +51,7 @@ export const ProposalDetailCard: React.FC = () => {
         >
           <Grid item>
             <Typography variant="h1" color="textPrimary">
-              Should the DAO fund a new project?
+              {poll.name}
             </Typography>
           </Grid>
           <Grid item >
@@ -79,7 +81,7 @@ export const ProposalDetailCard: React.FC = () => {
                 <CommunityBadge />
               </Grid>
               <Grid item>
-                <CreatorBadge address="tz1WF58LWoYY5SqSNiAQMp6nw2PHjSEAwjWy" />
+                <CreatorBadge address={poll.author} />
               </Grid>
             </Grid>
           </Grid>
@@ -91,7 +93,7 @@ export const ProposalDetailCard: React.FC = () => {
             </TextContainer>
             <Typography variant="body2" color="textPrimary">
               {" "}
-              Aug. 16, 2022
+              {dayjs(Number(poll.startTime)).format('ll')}
             </Typography>
             <Divider color="textPrimary">-</Divider>
             <TextContainer color="textPrimary" variant="body1">
@@ -100,22 +102,21 @@ export const ProposalDetailCard: React.FC = () => {
             </TextContainer>
             <Typography variant="body2" color="textPrimary">
               {" "}
-              Sep. 16, 2022{" "}
+              {dayjs(Number(poll.endTime)).format("ll")}
             </Typography>
           </Grid>
         </Grid>
 
         <Grid container>
           <Typography variant="body2" color="textPrimary">
-            This Proposal was created to fund a new project as the governing body of such and such and such and other
-            can go here.
+            {poll.description}
           </Typography>
         </Grid>
 
         <Grid container alignItems="center">
           <LogoItem src={LinkIcon} />
           <StyledLink color="secondary" href="#">
-            https://example.com/
+           {poll.externalLink}
           </StyledLink>
         </Grid>
       </Grid>

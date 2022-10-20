@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { Dropdown } from "modules/common/Dropdown"
 import { ProposalTableRow } from "./ProposalTableRow"
 import { ProposalStatus } from "./ProposalTableRowStatusBadge"
 import { Poll } from "models/Polls"
+import { isProposalActive } from "services/utils"
 
 const ProposalListContainer = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -25,6 +26,22 @@ const NoProposalsText = styled(Typography)({
 })
 
 export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
+
+  useEffect(() => {
+    async function formatPolls() {
+        if (polls && polls.length > 0) {
+          polls.forEach((poll) => {
+             poll.timeFormatted = isProposalActive(Number(poll.endTime))
+             poll.isActive = !poll.timeFormatted.includes("ago") ? ProposalStatus.ACTIVE : ProposalStatus.CLOSED
+             return
+          })
+        }
+    }
+
+    formatPolls()
+    return
+  }, [polls])
+
   return (
     <ProposalListContainer container direction="column">
       <Header container justifyContent="space-between" alignItems="center">

@@ -401,12 +401,10 @@ export const ProposalCreator: React.FC = () => {
             autoHideDuration: 3000,
             variant: "error"
           })
-          console.log("entra en error", error)
           return
         })
     },
     [navigate, openNotification, id, network, tokenAddress]
-    // [id, network, tokenAddress]
   )
 
   return (

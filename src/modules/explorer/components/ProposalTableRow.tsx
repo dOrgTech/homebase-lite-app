@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { createContext, useEffect, useState } from "react"
 import { styled, Grid, Typography, useTheme, useMediaQuery, LinearProgress } from "@material-ui/core"
 import { RowContainer } from "./tables/RowContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
@@ -7,6 +7,7 @@ import { Blockie } from "modules/common/Blockie"
 import { toShortAddress } from "services/contracts/utils"
 import { Choice } from "models/Choice"
 import { Poll } from "models/Polls"
+import { isProposalActive } from "services/utils"
 
 export interface ProposalTableRowData {
   daoId?: string
@@ -62,7 +63,6 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-  console.log(poll)
   const [choices, setChoices] = useState<Choice[]>([])
 
   useEffect(() => {
@@ -84,7 +84,13 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }
   }, [poll])
 
   return (
-    <RowContainer item container alignItems="center" onClick={() => navigate.push("/explorer/community/1/proposal/1")}>
+    <RowContainer
+      item
+      container
+      alignItems="center"
+      onClick={() => navigate.push(`/explorer/community/${poll.daoID}/proposal/${poll._id}`, 
+      { poll: poll, choices: choices })}
+    >
       <BlockieContainer container direction="row">
         <Blockie address={"tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB"} size={24} />
         <Address color="textPrimary" variant="subtitle2">
@@ -103,8 +109,8 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }
           wrap="nowrap"
           style={{ gap: 18 }}
         >
-          <TableStatusBadge status={proposal} />
-          <ArrowInfo color="textSecondary"> 2 days left</ArrowInfo>
+          <TableStatusBadge status={poll.isActive || ProposalStatus.ACTIVE} />
+          <ArrowInfo color="textSecondary">{poll.timeFormatted}</ArrowInfo>
         </Grid>
 
         <Grid>
@@ -123,7 +129,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }
                   <Grid item xs>
                     <LightText color="textPrimary"> 0 </LightText>
                   </Grid>
-                  <Grid xs={2}>
+                  <Grid item xs={2}>
                     <LightText color="textPrimary"> TOKN </LightText>
                   </Grid>
                 </Grid>
