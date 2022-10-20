@@ -1,10 +1,13 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, Grid, styled, useMediaQuery, useTheme } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard"
 import { GridContainer } from "modules/common/GridContainer"
 import { ChoiceItemSelected } from "modules/explorer/components/ChoiceItemSelected"
 import { VoteDetails } from "modules/explorer/components/VoteDetails"
+import { useHistory, useLocation, useParams } from "react-router-dom"
+import { Poll } from "models/Polls"
+import { Choice } from "models/Choice"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -33,10 +36,23 @@ const PageContainer = styled("div")({
 })
 
 export const ProposalDetails: React.FC = () => {
-
+  const { id } = useParams<{
+    id: string
+  }>()
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-  
+  const navigate = useHistory()
+  const { state } = useLocation<{poll: Poll, choices: Choice[]}>();
+
+  useEffect(() => {
+    if (state === undefined) {
+      navigate.push(`/explorer/community/${id}`)
+    }
+  })
+
+  const poll = state.poll;
+  const choices = state.choices;
+
   return (
     <PageContainer style={{ gap: 30 }}>
       <Grid container>
@@ -44,14 +60,21 @@ export const ProposalDetails: React.FC = () => {
       </Grid>
       <Grid container style={{ gap: 30 }}>
         <Grid item>
-          <ProposalDetailCard />
+          <ProposalDetailCard poll={poll} />
         </Grid>
         <Grid container item xs={12}>
           <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
-            <Grid container item justifyContent={isMobileSmall ? "center" : "space-between"} direction="row" style={{ gap: 30 }}>
-              <ChoiceItemSelected description="This is choice 1" />
-              <ChoiceItemSelected description="This is choice 2" />
-              <ChoiceItemSelected description="This is choice 3" />
+            <Grid
+              container
+              item
+              justifyContent={isMobileSmall ? "center" : "space-between"}
+              direction="row"
+              style={{ gap: 30 }}
+            >
+              {choices.map((choice, index) => {
+              return <ChoiceItemSelected key={index} choice={choice} />
+              })}
+
             </Grid>
             <Button variant="contained" color="secondary">
               Cast your vote

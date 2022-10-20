@@ -75,7 +75,6 @@ export const CommunityDetails: React.FC = () => {
   useEffect(() => {
     async function fetchPoll() {
       const pollList = community?.polls
-      console.log(pollList)
       if (pollList && pollList.length > 0) {
         pollList.forEach(async elem => {
           await fetch(`${process.env.REACT_APP_API_URL}/polls/${elem}`).then(async response => {

@@ -324,6 +324,12 @@ export const theme = createTheme({
       }
     },
     MuiLinearProgress: {
+      colorSecondary: {
+        backgroundColor: "rgba(125,140,139, 0.2) !important"
+      },
+      colorPrimary:{
+        backgroundColor: "rgba(125,140,139, 0.2) !important"
+      },
       barColorSecondary: {
         backgroundColor: "#3FE888"
       },

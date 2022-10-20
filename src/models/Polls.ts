@@ -1,3 +1,5 @@
+import { ProposalStatus } from "modules/explorer/components/ProposalTableRowStatusBadge"
+
 export interface Poll {
     _id?: string
     daoID: string
@@ -9,5 +11,7 @@ export interface Poll {
     totalSupplyAtReferenceBlock?: string
     choices: string[],
     externalLink: "",
-    author: string
+    author: string,
+    isActive?: ProposalStatus;
+    timeFormatted?: string
   }
