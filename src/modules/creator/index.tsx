@@ -186,8 +186,6 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
   const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.tokenAddress)
 
-  console.log('test commit')
-
   useEffect(() => {
     if (tokenMetadata) {
       setFieldValue("tokenID", tokenMetadata.token_id)

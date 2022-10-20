@@ -56,6 +56,13 @@ export const CommunityList: React.FC = () => {
   const [isUpdated, setIsUpdated] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
+  const search = (filter: any) => {
+    const updatedCommunitiesList = communities.filter((comunity) => {
+      return comunity.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+    });
+    setCommunities(updatedCommunitiesList);
+  }
+
   useEffect(() => {
     async function getCommunities() {
       setIsLoading(true)
@@ -89,7 +96,7 @@ export const CommunityList: React.FC = () => {
         <Grid item>
           <Grid container justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
             <Grid item xs={12} sm={6}>
-              <SearchInput search={""} />
+              <SearchInput search={search} />
             </Grid>
             <Grid item>
               <Grid container style={{ gap: isMobileSmall ? 10 : isMobile ? 0 : 22 }} justifyContent="center">
