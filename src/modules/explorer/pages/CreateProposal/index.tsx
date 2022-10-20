@@ -90,6 +90,17 @@ const ProposalChoices = styled(Grid)({
   flexGrow: 1
 })
 
+// css-d0vs79-MuiClockPointer-root, 
+// css-umzx0k-MuiClock-pin,
+// css-h2z9v1-MuiButtonBase-root-MuiIconButton-root-MuiClock-amButton : background-color: #81FEB7;
+
+// css-eg3pzz-MuiClockPointer-thumb : background-color: #81FEB7; border: 16px solid #81FEB7;
+
+// css-4f0ona-MuiClock-clock : background-color: rgb(221, 221, 221);
+
+// css-gztimk-MuiPaper-root-MuiPickersPopper-paper : background: rgb(47, 52, 56)
+
+
 const CustomPicker = withStyles((theme: Theme) => ({
   root: {
     "& .MuiInput-root": {
