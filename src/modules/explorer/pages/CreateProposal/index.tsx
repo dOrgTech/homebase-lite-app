@@ -240,6 +240,8 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDate={dayjs()}
+                        maxDate={getIn(values, "endTime")}
                       />
                     )}
                   </Field>
@@ -259,6 +261,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDate={getIn(values, "startTime")}
                       />
                     )}
                   </Field>
@@ -288,6 +291,8 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minDate={dayjs()}
+                      maxDate={getIn(values, "endTime")}
                     />
                   )}
                 </Field>
@@ -307,6 +312,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minDate={getIn(values, "startTime")}
                     />
                   )}
                 </Field>
