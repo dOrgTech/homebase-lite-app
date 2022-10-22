@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { Choices } from "modules/explorer/components/Choices"
-import { Proposal } from "models/Proposal"
 import { useHistory, useParams } from "react-router-dom"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
@@ -24,6 +23,7 @@ import { useTezos } from "services/beacon/hooks/useTezos"
 import { getCurrentBlock, getTotalSupplyAtReferenceBlock } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
+import "modules/explorer/pages/CreateProposal/DataTimePickerCustom.css"
 
 const ProposalContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -89,17 +89,6 @@ const Header = styled(Grid)(({ theme }) => ({
 const ProposalChoices = styled(Grid)({
   flexGrow: 1
 })
-
-// css-d0vs79-MuiClockPointer-root, 
-// css-umzx0k-MuiClock-pin,
-// css-h2z9v1-MuiButtonBase-root-MuiIconButton-root-MuiClock-amButton : background-color: #81FEB7;
-
-// css-eg3pzz-MuiClockPointer-thumb : background-color: #81FEB7; border: 16px solid #81FEB7;
-
-// css-4f0ona-MuiClock-clock : background-color: rgb(221, 221, 221);
-
-// css-gztimk-MuiPaper-root-MuiPickersPopper-paper : background: rgb(47, 52, 56)
-
 
 const CustomPicker = withStyles((theme: Theme) => ({
   root: {
