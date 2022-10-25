@@ -56,7 +56,7 @@ export const ProposalDetails: React.FC = () => {
   const [refresh, setRefresh] = useState<number>()
   const { hasVoted, vote } = useHasVoted(refresh)
   const poll = state.poll
-  const choices = usePollChoices(poll)
+  const choices = usePollChoices(poll, refresh)
 
 
   // const choices = state.choices
@@ -149,7 +149,7 @@ export const ProposalDetails: React.FC = () => {
           </GridContainer>
         </Grid>
         <Grid item xs={12}>
-          <VoteDetails />
+          <VoteDetails poll={poll} choices={choices}/>
         </Grid>
       </Grid>
     </PageContainer>

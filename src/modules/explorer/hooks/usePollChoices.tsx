@@ -2,7 +2,7 @@ import { Choice } from "models/Choice"
 import { Poll } from "models/Polls"
 import React, { useEffect, useState } from "react"
 
-export const usePollChoices = (poll: Poll) => {
+export const usePollChoices = (poll: Poll, refresh?: number) => {
     const [choices, setChoices] = useState<Choice[]>([])
     
   useEffect(() => {
@@ -20,6 +20,6 @@ export const usePollChoices = (poll: Poll) => {
       }
       fetchChoices()
     return
-  }, [poll])
+  }, [poll, refresh])
   return choices
 }

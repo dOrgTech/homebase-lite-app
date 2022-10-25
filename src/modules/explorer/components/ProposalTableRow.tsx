@@ -87,7 +87,7 @@ export const ProposalTableRow: React.FC<{ poll: Poll }> = ({ poll }) => {
 
       {choices && choices.length > 0
         ? choices.map((choice: Choice, index: number) => (
-          <ChoiceDetails key={`'choice-'${index}`} poll={poll} choice={choice} index={index}></ChoiceDetails>
+          <ChoiceDetails key={`'choice-'${choice.name}${index}`} poll={poll} choice={choice} index={index}></ChoiceDetails>
           ))
         : null}
     </RowContainer>

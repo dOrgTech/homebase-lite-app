@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, styled, CircularProgress } from "@material-ui/core"
+import { Grid, styled, CircularProgress, Typography } from "@material-ui/core"
 import { ProposalList } from "../../components/ProposalList"
 import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
 import { useParams } from "react-router-dom"
@@ -83,7 +83,13 @@ export const CommunityDetails: React.FC = () => {
           <DaoCardDetail community={community} setIsUpdated={setIsUpdated} />
         </CommunityDetailsContainer>
         <CommunityDetailsContainer container justifyContent="center" item xs={12} lg={8} md={8}>
-          {polls.length > 0 ? <ProposalList polls={polls} /> : <CircularProgress color="secondary" />}
+          {polls.length > 0 ? (
+            <ProposalList polls={polls} />
+          ) : (
+            <Typography style={{ width: "inherit" }} color="textPrimary">
+              0 proposals found
+            </Typography>
+          )}
         </CommunityDetailsContainer>
       </Grid>
     </PageContainer>

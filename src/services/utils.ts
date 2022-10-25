@@ -53,6 +53,23 @@ export const getUserTotalSupplyAtReferenceBlock = async (network: Network, addre
 
 }
 
+export const getTurnoutValue = async (network: Network, address: string, level: number, voters: number) => {
+  const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/contracts/${address}/bigmaps/ledger/historical_keys/${level}`
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract current block")
+  }
+  const result = await response.json()
+
+  if (result) {
+    return (voters * 100) / result.length;
+  }
+
+  return 0;
+
+}
+
 export const isProposalActive = (date: number) => {
   const config = {
     rounding: Math.floor
@@ -90,6 +107,32 @@ export const calculateChoiceTotal = (choices: any[]) => {
     total += Number(choice.balanceAtReferenceBlock)
   })
   return total;
+}
+
+export const calculateProposalTotal = (choices: Choice[]) => {
+  let total = 0;
+  choices.map((choice: any) => {
+    choice.walletAddresses.map((elem: any) => {
+      total += Number(elem.balanceAtReferenceBlock)
+    })
+  })
+  return total;
+}
+
+export const getTotalVoters = (choices: Choice[]) => {
+  let votersTotal = 0;
+  choices.map((choice: Choice) => {
+    votersTotal += choice.walletAddresses.length;
+  })
+  return votersTotal;
+}
+
+export const getTreasuryPercentage = (proposalTotal: number, totalSupply: number) => {
+  return (Number(proposalTotal) * 100) / Number(totalSupply)
+}
+
+export const numberWithCommas = (x: number) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 const SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
