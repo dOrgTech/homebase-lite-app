@@ -4,6 +4,7 @@ import { DaoCard } from "../../components/DaoCard"
 import { useHistory } from "react-router"
 import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme, CircularProgress } from "@material-ui/core"
 import { Community } from "models/Community"
+import axios from 'axios'
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -52,39 +53,44 @@ export const CommunityList: React.FC = () => {
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
   const [communities, setCommunities] = useState<Community[]>([])
+  const [communitiesList, setCommunitiesList] = useState<Community[]>([])
   const [error, setError] = useState(false)
   const [isUpdated, setIsUpdated] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
   const search = (filter: any) => {
-    const updatedCommunitiesList = communities.filter((comunity) => {
-      return comunity.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-    });
-    setCommunities(updatedCommunitiesList);
+    if (filter !== '') {
+      const updatedCommunitiesList = communitiesList.filter((comunity) => {
+        return comunity.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+      });
+      setCommunities(updatedCommunitiesList);
+    } else {
+      setCommunities(communitiesList);
+    }
   }
 
-  useEffect(() => {
-    async function getCommunities() {
-      setIsLoading(true)
-      await fetch(`${process.env.REACT_APP_API_URL}/daos/`)
-        .then(async response => {
-          if (!response.status) {
-            setError(true)
-            return
-          }
-
-          const records = await response.json()
-          setCommunities(records)
-          setIsLoading(false)
-        })
-        .catch(err => {
-          setIsLoading(false)
+  const getCommunities = () => {
+    setIsLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/daos/`)
+      .then((response) => {
+        if (!response.status) {
           setError(true)
-        })
-    }
-    getCommunities()
-    return
-  }, [communities.length])
+          return
+        }
+        setCommunities(response.data);
+        setCommunitiesList(response.data);
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setIsLoading(false)
+        setError(true)
+      });
+  };
+
+  useEffect(() => {
+    getCommunities();
+  }, []);
 
   useEffect(() => {
     setCommunities([])
