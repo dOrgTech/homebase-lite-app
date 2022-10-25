@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { Choices } from "modules/explorer/components/Choices"
-import { Proposal } from "models/Proposal"
 import { useHistory, useParams } from "react-router-dom"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
@@ -24,6 +23,7 @@ import { useTezos } from "services/beacon/hooks/useTezos"
 import { getCurrentBlock, getTotalSupplyAtReferenceBlock } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
+import "modules/explorer/pages/CreateProposal/DataTimePickerCustom.css"
 
 const ProposalContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -240,6 +240,8 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDate={dayjs()}
+                        maxDate={getIn(values, "endTime")}
                       />
                     )}
                   </Field>
@@ -259,6 +261,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDate={getIn(values, "startTime")}
                       />
                     )}
                   </Field>
@@ -288,6 +291,8 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minDate={dayjs()}
+                      maxDate={getIn(values, "endTime")}
                     />
                   )}
                 </Field>
@@ -307,6 +312,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minDate={getIn(values, "startTime")}
                     />
                   )}
                 </Field>
