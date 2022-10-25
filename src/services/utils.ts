@@ -2,33 +2,34 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale'
+import { Choice } from 'models/Choice';
 import { networkNameMap } from "./bakingBad"
 import { Network } from "./beacon"
 
 export const getCurrentBlock = async (network: Network) => {
-    const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/head`
-    const response = await fetch(url)
-  
-    if (!response.ok) {
-      throw new Error("Failed to fetch contract current block")
-    }
-  
-    const result = await response.json()
-  
-    return result.level
+  const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/head`
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract current block")
+  }
+
+  const result = await response.json()
+
+  return result.level
 }
 
 export const getTotalSupplyAtReferenceBlock = async (network: Network, address: string, level: number) => {
-    const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/contracts/${address}/bigmaps/token_total_supply/historical_keys/${level}`
-    const response = await fetch(url)
-  
-    if (!response.ok) {
-      throw new Error("Failed to fetch contract current block")
-    }
-  
-    const result = await response.json()
-    
-    return result[0].value
+  const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/contracts/${address}/bigmaps/token_total_supply/historical_keys/${level}`
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract current block")
+  }
+
+  const result = await response.json()
+
+  return result[0].value
 }
 
 export const getUserTotalSupplyAtReferenceBlock = async (network: Network, address: string, level: number, userAddress: string) => {
@@ -47,7 +48,7 @@ export const getUserTotalSupplyAtReferenceBlock = async (network: Network, addre
     userBalance = result.find((elem: any) => elem.key.address === userAddress)
     return userBalance.value;
   }
-  
+
   return 0;
 
 }
@@ -77,4 +78,36 @@ export const isProposalActive = (date: number) => {
   })
   const remainingDate = dayjs(date).fromNow();
   return remainingDate;
+}
+
+export const calculateWeight = (totalSupply: string, balance: string) => {
+  return (Number(balance) * 100) / Number(totalSupply)
+}
+
+export const calculateChoiceTotal = (choices: any[]) => {
+  let total = 0;
+  choices.map((choice: any) => {
+    total += Number(choice.balanceAtReferenceBlock)
+  })
+  return total;
+}
+
+const SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
+
+export const nFormatter = (num: number, digits: number) => {
+  // what tier? (determines SI symbol)
+  const tier = Math.log10(Math.abs(num)) / 3 | 0;
+
+  // if zero, we don't need a suffix
+  if (tier == 0) return num;
+
+  // get suffix and determine scale
+  const suffix = SI_SYMBOL[tier];
+  const scale = Math.pow(10, tier * 3);
+
+  // scale the number
+  const scaled = num / scale;
+
+  // format number and add suffix
+  return scaled.toFixed(1) + suffix;
 }

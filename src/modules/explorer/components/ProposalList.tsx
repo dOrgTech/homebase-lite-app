@@ -100,7 +100,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
         polls.map((poll, i) => {
           return (
             <div key={`poll-${i}`}>
-              <ProposalTableRow poll={poll} proposal={ProposalStatus.ACTIVE} />
+              <ProposalTableRow poll={poll}/>
               {polls.length - 1 !== i ? <StyledDivider key={`divider-${i}`} /> : null}
             </div>
           )

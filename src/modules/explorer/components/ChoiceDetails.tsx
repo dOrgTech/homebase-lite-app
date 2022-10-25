@@ -1,32 +1,43 @@
 import React, { useEffect, useState } from "react"
 import { Grid, LinearProgress, styled, Typography } from "@material-ui/core"
 import { Choice } from "models/Choice"
+import { Poll } from "models/Polls"
+import { calculateChoiceTotal, calculateWeight, nFormatter } from "services/utils"
 
 const LightText = styled(Typography)({
   fontWeight: 300,
   textAlign: "center"
 })
 
-export const ChoiceDetails: React.FC<{ choice: Choice; index: number }> = ({ choice, index }) => {
+export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll }> = ({ choice, index, poll }) => {
+  const balance = calculateChoiceTotal(choice.walletAddresses);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, String(balance))
+  const [, updateState] = React.useState<any>();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
+  setTimeout(()=> {
+    forceUpdate();
+  }, 500)
 
   return (
-    <Grid style={{ gap: 19, display: index > 2 ? "none" : "block", marginBottom: 16 }} container key={index}>
+    <Grid style={{ gap: 19, display: index > 2 ? "none" : "block", marginBottom: 16 }} container>
       <Grid container direction="row" spacing={2} alignItems="center">
-        <Grid item xs={12} lg={5} md={4} sm={4} container direction="row" justifyContent="space-between">
+        <Grid item xs={12} lg={6} md={6} sm={4} container direction="row" justifyContent="space-between">
           <Grid item xs>
             <Typography color="textPrimary"> {choice.name} </Typography>
           </Grid>
           <Grid item xs>
-            <LightText color="textPrimary"> 0 </LightText>
+            <LightText color="textPrimary"> {nFormatter(balance, 5)} </LightText>
           </Grid>
-          <Grid item xs={2}>
-            <LightText color="textPrimary"> TOKN </LightText>
+          <Grid item xs>
+            <LightText color="textPrimary"> {poll.tokenSymbol} </LightText>
           </Grid>
         </Grid>
         <Grid
           xs={12}
-          lg={7}
-          md={8}
+          lg={6}
+          md={6}
           sm={8}
           spacing={1}
           container
@@ -35,16 +46,18 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number }> = ({ cho
           justifyContent="space-around"
           alignItems="center"
         >
-          <Grid item xs={10}>
+          <Grid item xs={8} container>
             <LinearProgress
               style={{ width: "100%", marginRight: "4px" }}
               color={index & 1 ? "primary" : "secondary"}
-              value={1}
+              value={individualBalance}
               variant="determinate"
             />
           </Grid>
-          <Grid item>
-            <Typography color="textPrimary">0%</Typography>
+          <Grid item xs>
+            <Typography color="textPrimary">
+              {individualBalance.toFixed(1)}%
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

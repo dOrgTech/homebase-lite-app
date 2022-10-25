@@ -43,7 +43,7 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
   }
 }))
 
-export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }> = ({ proposal, poll }) => {
+export const ProposalTableRow: React.FC<{ poll: Poll }> = ({ poll }) => {
   const navigate = useHistory()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"))
@@ -87,7 +87,7 @@ export const ProposalTableRow: React.FC<{ proposal: ProposalStatus; poll: Poll }
 
       {choices && choices.length > 0
         ? choices.map((choice: Choice, index: number) => (
-          <ChoiceDetails key={`'choice-'${index}`} choice={choice} index={index}></ChoiceDetails>
+          <ChoiceDetails key={`'choice-'${index}`} poll={poll} choice={choice} index={index}></ChoiceDetails>
           ))
         : null}
     </RowContainer>

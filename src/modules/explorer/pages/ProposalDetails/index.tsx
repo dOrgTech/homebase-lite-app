@@ -13,6 +13,7 @@ import { getCurrentBlock, getUserTotalSupplyAtReferenceBlock } from "services/ut
 import { useNotification } from "modules/common/hooks/useNotification"
 import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
 import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
+import { usePollChoices } from "modules/explorer/hooks/usePollChoices"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -54,9 +55,11 @@ export const ProposalDetails: React.FC = () => {
   const { setUpdateChoices } = useContext(DashboardContext)
   const [refresh, setRefresh] = useState<number>()
   const { hasVoted, vote } = useHasVoted(refresh)
-
   const poll = state.poll
-  const choices = state.choices
+  const choices = usePollChoices(poll)
+
+
+  // const choices = state.choices
 
   useEffect(() => {
     if (state === undefined) {
@@ -71,7 +74,6 @@ export const ProposalDetails: React.FC = () => {
   })
 
   const saveVote = async () => {
-    console.log(selectedVote)
     const block = await getCurrentBlock(network)
     // eslint-disable-next-line
     const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
@@ -95,14 +97,12 @@ export const ProposalDetails: React.FC = () => {
         })
         setUpdateChoices(true)
         setRefresh(Math.random())
-        console.log(choices)
       })
     } else {
       const data = {
         oldVote: vote,
         newVote: walletVote
       }
-      console.log(vote);
       await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
         method: "POST",
         body: JSON.stringify(data),
@@ -117,7 +117,6 @@ export const ProposalDetails: React.FC = () => {
         })
         setUpdateChoices(true)
         setRefresh(Math.random())
-        console.log(choices)
       })
     }
   }
