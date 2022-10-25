@@ -41,7 +41,6 @@ export const VotesDialog: React.FC<{ open: boolean; handleClose: any }> = ({ ope
   return (
     <div>
       <Dialog
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
         open={open}
         onClose={handleClose}

@@ -13,5 +13,7 @@ export interface Poll {
     externalLink: "",
     author: string,
     isActive?: ProposalStatus;
-    timeFormatted?: string
+    timeFormatted?: string;
+    tokenSymbol?: string;
+    tokenAddress?: string;
   }

@@ -31,6 +31,27 @@ export const getTotalSupplyAtReferenceBlock = async (network: Network, address: 
     return result[0].value
 }
 
+export const getUserTotalSupplyAtReferenceBlock = async (network: Network, address: string, level: number, userAddress: string) => {
+  const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/contracts/${address}/bigmaps/ledger/historical_keys/${level}`
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract current block")
+  }
+
+  const result = await response.json()
+
+  let userBalance;
+
+  if (result && result.length > 0) {
+    userBalance = result.find((elem: any) => elem.key.address === userAddress)
+    return userBalance.value;
+  }
+  
+  return 0;
+
+}
+
 export const isProposalActive = (date: number) => {
   const config = {
     rounding: Math.floor

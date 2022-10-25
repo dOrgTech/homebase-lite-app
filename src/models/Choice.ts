@@ -3,6 +3,7 @@ export interface Choice {
     name: string
     pollID: string
     walletAddresses: WalletAddress[]
+    selected?: boolean
 }
 
 export interface WalletAddress {

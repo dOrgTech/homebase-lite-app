@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "react-query"
 import mixpanel from "mixpanel-browser"
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AppContextProvider } from "modules/explorer/context/ActionSheets/explorer"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +71,7 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
           <ActionSheetProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <AppContextProvider>
             <Router>
               <Toolbar />
               <ScrollToTop />
@@ -83,6 +85,7 @@ const App: React.FC = () => {
                 <Redirect to="/explorer" />
               </Switch>
             </Router>
+            </AppContextProvider>
             </LocalizationProvider>
           </ActionSheetProvider>
         </QueryClientProvider>

@@ -34,7 +34,7 @@ const StyledLink = styled(Link)({
   marginLeft: 8
 })
 
-export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
+export const ProposalDetailCard: React.FC<{ poll: Poll }> = ({ poll }) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -54,7 +54,7 @@ export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
               {poll.name}
             </Typography>
           </Grid>
-          <Grid item >
+          <Grid item>
             <Grid container style={{ gap: 18 }} direction="row">
               <Grid style={{ cursor: "pointer" }}>
                 <MoreHoriz color="secondary" />
@@ -75,7 +75,7 @@ export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
           <Grid item>
             <Grid container justifyContent={isMobileSmall ? "space-evenly" : "flex-start"} style={{ gap: 23 }}>
               <Grid item>
-                <TableStatusBadge status={ProposalStatus.ACTIVE} />
+                <TableStatusBadge status={poll.isActive || ProposalStatus.ACTIVE} />
               </Grid>
               <Grid item>
                 <CommunityBadge />
@@ -93,7 +93,7 @@ export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
             </TextContainer>
             <Typography variant="body2" color="textPrimary">
               {" "}
-              {dayjs(Number(poll.startTime)).format('ll')}
+              {dayjs(Number(poll.startTime)).format("ll")}
             </Typography>
             <Divider color="textPrimary">-</Divider>
             <TextContainer color="textPrimary" variant="body1">
@@ -113,12 +113,14 @@ export const ProposalDetailCard: React.FC<{poll: Poll}> = ({poll}) => {
           </Typography>
         </Grid>
 
-        <Grid container alignItems="center">
-          <LogoItem src={LinkIcon} />
-          <StyledLink color="secondary" href="#">
-           {poll.externalLink}
-          </StyledLink>
-        </Grid>
+        {poll.externalLink ? (
+          <Grid container alignItems="center">
+            <LogoItem src={LinkIcon} />
+            <StyledLink color="secondary" href="#">
+              {poll.externalLink}
+            </StyledLink>
+          </Grid>
+        ) : null}
       </Grid>
     </GridContainer>
   )

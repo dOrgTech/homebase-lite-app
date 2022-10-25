@@ -1,10 +1,12 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo } from "react"
 import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { Dropdown } from "modules/common/Dropdown"
 import { ProposalTableRow } from "./ProposalTableRow"
 import { ProposalStatus } from "./ProposalTableRowStatusBadge"
 import { Poll } from "models/Polls"
 import { isProposalActive } from "services/utils"
+import { useParams } from "react-router-dom"
+import { CommunityToken } from "models/Community"
 
 const ProposalListContainer = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -26,8 +28,12 @@ const NoProposalsText = styled(Typography)({
 })
 
 export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
+  const { id } = useParams<{
+    id: string
+  }>()
+ const communityId = id.toString()
 
-  useEffect(() => {
+  useMemo(() => {
     async function formatPolls() {
         if (polls && polls.length > 0) {
           polls.forEach((poll) => {
@@ -41,6 +47,34 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
     formatPolls()
     return
   }, [polls])
+
+  useMemo(() => {
+    async function getPollToken() {
+        if (polls && polls.length > 0) {
+          polls.forEach(async (poll) => {
+              await fetch(`${process.env.REACT_APP_API_URL}/token/${communityId}`).then(async response => {
+                if (!response.ok) {
+                  const message = `An error has occurred: ${response.statusText}`
+                  console.log(message)
+                  return
+                }
+          
+                const record: CommunityToken = await response.json()
+                if (!record) {
+                  console.log(`Record with id ${id} not found`)
+                  return
+                }
+
+                poll.tokenAddress = record.tokenAddress
+                poll.tokenSymbol = record.symbol
+                return;
+              })
+          })
+        }
+    }
+    getPollToken()
+    return
+  }, [polls, id, communityId])
 
   return (
     <ProposalListContainer container direction="column">

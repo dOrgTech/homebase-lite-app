@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Button, Grid, styled, useMediaQuery, useTheme } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard"
@@ -8,6 +8,11 @@ import { VoteDetails } from "modules/explorer/components/VoteDetails"
 import { useHistory, useLocation, useParams } from "react-router-dom"
 import { Poll } from "models/Polls"
 import { Choice } from "models/Choice"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { getCurrentBlock, getUserTotalSupplyAtReferenceBlock } from "services/utils"
+import { useNotification } from "modules/common/hooks/useNotification"
+import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
+import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -42,7 +47,16 @@ export const ProposalDetails: React.FC = () => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
   const navigate = useHistory()
-  const { state } = useLocation<{poll: Poll, choices: Choice[]}>();
+  const { state } = useLocation<{ poll: Poll; choices: Choice[] }>()
+  const [selectedVote, setSelectedVote] = useState<Choice>()
+  const { network, account } = useTezos()
+  const openNotification = useNotification()
+  const { setUpdateChoices } = useContext(DashboardContext)
+  const [refresh, setRefresh] = useState<number>()
+  const { hasVoted, vote } = useHasVoted(refresh)
+
+  const poll = state.poll
+  const choices = state.choices
 
   useEffect(() => {
     if (state === undefined) {
@@ -50,8 +64,63 @@ export const ProposalDetails: React.FC = () => {
     }
   })
 
-  const poll = state.poll;
-  const choices = state.choices;
+  useEffect(() => {
+    choices.map(elem => {
+      return (elem.selected = false)
+    })
+  })
+
+  const saveVote = async () => {
+    console.log(selectedVote)
+    const block = await getCurrentBlock(network)
+    // eslint-disable-next-line
+    const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
+
+    const walletVote = {
+      address: account,
+      balanceAtReferenceBlock: total
+    }
+    if (!hasVoted) {
+      await fetch(`${process.env.REACT_APP_API_URL}/update/${selectedVote?._id}/choice`, {
+        method: "POST",
+        body: JSON.stringify(walletVote),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(() => {
+        openNotification({
+          message: "Your vote has been submitted",
+          autoHideDuration: 3000,
+          variant: "success"
+        })
+        setUpdateChoices(true)
+        setRefresh(Math.random())
+        console.log(choices)
+      })
+    } else {
+      const data = {
+        oldVote: vote,
+        newVote: walletVote
+      }
+      console.log(vote);
+      await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(() => {
+        openNotification({
+          message: "Your vote has been submitted",
+          autoHideDuration: 3000,
+          variant: "success"
+        })
+        setUpdateChoices(true)
+        setRefresh(Math.random())
+        console.log(choices)
+      })
+    }
+  }
 
   return (
     <PageContainer style={{ gap: 30 }}>
@@ -72,11 +141,10 @@ export const ProposalDetails: React.FC = () => {
               style={{ gap: 30 }}
             >
               {choices.map((choice, index) => {
-              return <ChoiceItemSelected key={index} choice={choice} />
+                return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
               })}
-
             </Grid>
-            <Button variant="contained" color="secondary">
+            <Button variant="contained" color="secondary" onClick={() => saveVote()}>
               Cast your vote
             </Button>
           </GridContainer>
