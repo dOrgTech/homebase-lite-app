@@ -62,6 +62,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider
+       autoHideDuration={5000}
         classes={{
           variantSuccess: classes.success,
           variantError: classes.error,

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useMemo, useState } from "react"
 import { SearchInput } from "./components/SearchBar"
 import { DaoCard } from "../../components/DaoCard"
 import { useHistory } from "react-router"
 import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme, CircularProgress } from "@material-ui/core"
 import { Community } from "models/Community"
-import axios from 'axios'
+import axios from "axios"
+import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -57,44 +58,61 @@ export const CommunityList: React.FC = () => {
   const [error, setError] = useState(false)
   const [isUpdated, setIsUpdated] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const { isConnected } = useContext(DashboardContext)
+
+  const filterData = (list: Community[]) => {
+    if (!isConnected) {
+      return list.filter(elem => elem.allowPublicAccess)
+    }
+    return list
+  }
 
   const search = (filter: any) => {
-    if (filter !== '') {
-      const updatedCommunitiesList = communitiesList.filter((comunity) => {
-        return comunity.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-      });
-      setCommunities(updatedCommunitiesList);
+    if (filter !== "") {
+      const updatedCommunitiesList = filterData(communitiesList).filter((community: Community) => {
+        return community.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      })
+      setCommunities(updatedCommunitiesList)
     } else {
-      setCommunities(communitiesList);
+      setCommunities(filterData(communitiesList))
     }
   }
 
   const getCommunities = () => {
-    setIsLoading(true);
+    setIsLoading(true)
     axios
       .get(`${process.env.REACT_APP_API_URL}/daos/`)
-      .then((response) => {
+      .then(response => {
         if (!response.status) {
           setError(true)
           return
         }
-        setCommunities(response.data);
-        setCommunitiesList(response.data);
+        setCommunities(response.data)
+        setCommunitiesList(response.data)
         setIsLoading(false)
       })
-      .catch((err) => {
+      .catch(err => {
         setIsLoading(false)
         setError(true)
-      });
-  };
+      })
+  }
 
   useEffect(() => {
-    getCommunities();
-  }, []);
+    getCommunities()
+  }, [])
 
   useEffect(() => {
-    setCommunities([])
+    getCommunities()
   }, [isUpdated])
+
+  useEffect(() => {
+    if (!isConnected) {
+      const filteredCommunities = communitiesList.filter(elem => elem.allowPublicAccess)
+      setCommunities(filteredCommunities)
+    } else {
+      setCommunities(communitiesList)
+    }
+  }, [isConnected, communitiesList])
 
   return (
     <PageContainer>
@@ -135,7 +153,6 @@ export const CommunityList: React.FC = () => {
             <CircularProgress color="secondary" />
           </Grid>
         ) : null}
-
         <Grid container spacing={3}>
           {!isLoading &&
             communities &&

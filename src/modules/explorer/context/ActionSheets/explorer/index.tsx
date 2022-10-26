@@ -1,24 +1,27 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { useTezos } from "services/beacon/hooks/useTezos";
 
 interface ContextProps {
-  updateChoices: string;
-  setUpdateChoices: any;
+  isConnected: boolean;
+  setIsConnected: any;
   }
 
 export const DashboardContext = createContext({} as ContextProps);
 
 export const AppContextProvider = ({ children }: any) => {
-  const tokenInitialState = ""
-
-  const [updateChoices, setUpdateChoices] = useState(tokenInitialState);
+  const { account } = useTezos()
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    console.log(`store: "${updateChoices}" to localstorage`);
-  }, [updateChoices]);
+      if (account === undefined || !account) {
+          return setIsConnected(false)
+      }
+      return setIsConnected(true)
+  }, [account]);
 
   const values = {
-    updateChoices,
-    setUpdateChoices,
+    isConnected,
+    setIsConnected,
   };
 
   return (

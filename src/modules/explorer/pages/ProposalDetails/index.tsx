@@ -52,7 +52,6 @@ export const ProposalDetails: React.FC = () => {
   const [selectedVote, setSelectedVote] = useState<Choice>()
   const { network, account } = useTezos()
   const openNotification = useNotification()
-  const { setUpdateChoices } = useContext(DashboardContext)
   const [refresh, setRefresh] = useState<number>()
   const { hasVoted, vote } = useHasVoted(refresh)
   const poll = state.poll
@@ -95,7 +94,6 @@ export const ProposalDetails: React.FC = () => {
           autoHideDuration: 3000,
           variant: "success"
         })
-        setUpdateChoices(true)
         setRefresh(Math.random())
       })
     } else {
@@ -115,7 +113,6 @@ export const ProposalDetails: React.FC = () => {
           autoHideDuration: 3000,
           variant: "success"
         })
-        setUpdateChoices(true)
         setRefresh(Math.random())
       })
     }

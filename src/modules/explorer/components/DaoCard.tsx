@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
 import { useHistory } from "react-router"
 import { Community } from "models/Community"
 import { useTezos } from "services/beacon/hooks/useTezos"
 import { JoinButton } from "./JoinButton"
+import { DashboardContext } from "../context/ActionSheets/explorer"
 
 const StyledAvatar = styled(Avatar)({
   height: 84,
@@ -39,6 +40,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({ community, setIsUpdated }) => {
   const navigate = useHistory()
   const { account } = useTezos()
+  const { isConnected } = useContext(DashboardContext)
 
   return (
     <DaoCardContainer
@@ -59,13 +61,11 @@ export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({
           {community.members?.length} members
         </MembersText>
       </Grid>
-      <Grid item>
-        <JoinButton
-          account={account}
-          setIsUpdated={setIsUpdated}
-          community={community}
-        />
-      </Grid>
+      {isConnected ? (
+        <Grid item>
+          <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} />
+        </Grid>
+      ) : null}
     </DaoCardContainer>
   )
 }

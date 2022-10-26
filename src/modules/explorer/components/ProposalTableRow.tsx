@@ -7,9 +7,7 @@ import { Blockie } from "modules/common/Blockie"
 import { toShortAddress } from "services/contracts/utils"
 import { Choice } from "models/Choice"
 import { Poll } from "models/Polls"
-import { isProposalActive } from "services/utils"
 import { ChoiceDetails } from "./ChoiceDetails"
-import { DashboardContext } from "../context/ActionSheets/explorer"
 import { usePollChoices } from "../hooks/usePollChoices"
 
 export interface ProposalTableRowData {

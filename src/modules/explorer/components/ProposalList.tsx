@@ -58,13 +58,10 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
                   console.log(message)
                   return
                 }
-          
                 const record: CommunityToken = await response.json()
                 if (!record) {
-                  console.log(`Record with id ${id} not found`)
                   return
                 }
-
                 poll.tokenAddress = record.tokenAddress
                 poll.tokenSymbol = record.symbol
                 return;
@@ -74,7 +71,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
     }
     getPollToken()
     return
-  }, [polls, id, communityId])
+  }, [polls, communityId])
 
   return (
     <ProposalListContainer container direction="column">

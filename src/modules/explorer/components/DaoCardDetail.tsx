@@ -1,8 +1,10 @@
 import { Avatar, Button, Grid, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import { Community } from "models/Community"
-import React from "react"
+import React, { useContext } from "react"
 import { useHistory } from "react-router"
 import { useTezos } from "services/beacon/hooks/useTezos"
+import { DashboardContext } from "../context/ActionSheets/explorer"
+import { useIsMembers } from "../hooks/useIsMember"
 import { JoinButton } from "./JoinButton"
 
 const StyledAvatar = styled(Avatar)({
@@ -53,8 +55,9 @@ interface DaoCardDetailProps {
 export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUpdated }) => {
   const navigate = useHistory()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   const { account } = useTezos()
+  const { isConnected } = useContext(DashboardContext)
+  const isMember = useIsMembers(account, community?.members)
 
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
@@ -67,7 +70,7 @@ export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUp
           <MembersText variant={"body1"} color="textPrimary">
             {community?.members?.length} members
           </MembersText>
-          <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} />
+          {isConnected ? <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} /> : null}
         </Grid>
       </Grid>
 
@@ -77,16 +80,18 @@ export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUp
         </CommunityDescription>
       </Grid>
 
-      <Grid item>
-        <ProposalButton
-          variant="contained"
-          color="secondary"
-          size="small"
-          onClick={() => navigate.push(`/explorer/community/${community?._id}/proposal`)}
-        >
-          New Proposal
-        </ProposalButton>
-      </Grid>
+      {isConnected && isMember ? (
+        <Grid item>
+          <ProposalButton
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={() => navigate.push(`/explorer/community/${community?._id}/proposal`)}
+          >
+            New Proposal
+          </ProposalButton>
+        </Grid>
+      ) : null}
     </DaoCardContainer>
   )
 }

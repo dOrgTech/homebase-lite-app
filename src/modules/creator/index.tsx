@@ -394,7 +394,11 @@ export const CommunityCreator: React.FC = () => {
           navigate.push("/explore/communities")
         })
         .catch(error => {
-          console.log("entra en error", error)
+          openNotification({
+            message: "Community could not be created!",
+            autoHideDuration: 3000,
+            variant: "error"
+          })
           return
         })
     },

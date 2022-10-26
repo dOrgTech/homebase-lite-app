@@ -48,8 +48,32 @@ export const getUserTotalSupplyAtReferenceBlock = async (network: Network, addre
     userBalance = result.find((elem: any) => elem.key.address === userAddress)
     return userBalance.value;
   }
-
   return 0;
+}
+
+export const hasTokenBalance = async (network: Network,account: string, contract: any) => {
+  const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/tokens/balances?account=${account}&token.contract=${contract}`
+  const response = await fetch(url)
+  
+  if (!response.ok) {
+    throw new Error("Failed to fetch contract current block")
+  }
+
+  const result = await response.json()
+  
+  let hasBalance = false;
+
+  if (result && result[0]) {
+    if (result[0].balance > 0) {
+      hasBalance = true;
+    } else {
+      hasBalance = false;
+    }
+  } else {
+    hasBalance = false;
+  }
+
+  return hasBalance;
 
 }
 
