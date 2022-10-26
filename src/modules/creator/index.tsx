@@ -188,7 +188,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
   useEffect(() => {
     if (tokenMetadata) {
-      setFieldValue("tokenID", tokenMetadata.token_id)
+      setFieldValue("tokenID", tokenMetadata.tokenId)
     }
 
     if (error) {
@@ -196,7 +196,15 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
     }
 
     if (tokenMetadata) {
-      setFieldValue("symbol", tokenMetadata.symbol)
+      setFieldValue("tokenType", tokenMetadata.standard)
+    }
+
+    if (error) {
+      setFieldValue("tokenType", undefined)
+    }
+
+    if (tokenMetadata) {
+      setFieldValue("symbol", tokenMetadata.metadata.symbol)
     }
 
     if (error) {
@@ -246,7 +254,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           {tokenMetadata && !loading && (
             <MetadataContainer item xs={12}>
               <Typography variant="subtitle2" color="secondary">
-                {tokenMetadata.name}
+                {tokenMetadata.metadata.name}
               </Typography>
             </MetadataContainer>
           )}
@@ -278,8 +286,8 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
                   setFieldValue("tokenType", newValue.target.value)
                 }}
               >
-                <option value={"FA2"}>FA2</option>
-                <option value={"NFT"}>NFT</option>
+                <option value={"fa2"}>FA2</option>
+                <option value={"nft"}>NFT</option>
               </CustomSelect>
             )}
           </Field>
