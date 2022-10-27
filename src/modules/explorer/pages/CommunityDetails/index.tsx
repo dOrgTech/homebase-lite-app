@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react"
 import { Grid, styled, CircularProgress, Typography } from "@material-ui/core"
 import { ProposalList } from "../../components/ProposalList"
@@ -5,6 +6,7 @@ import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
 import { useParams } from "react-router-dom"
 import { Poll } from "models/Polls"
 import { useCommunity } from "modules/explorer/hooks/useCommunity"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -48,6 +50,7 @@ export const CommunityDetails: React.FC = () => {
   const [isUpdated, setIsUpdated] = useState(1)
 
   const community = useCommunity(isUpdated)
+  const openNotification = useNotification()
 
   useEffect(() => {
     async function fetchPoll() {
@@ -56,14 +59,16 @@ export const CommunityDetails: React.FC = () => {
         pollList.forEach(async elem => {
           await fetch(`${process.env.REACT_APP_API_URL}/polls/${elem}/polls`).then(async response => {
             if (!response.ok) {
-              const message = `An error has occurred: ${response.statusText}`
-              console.log(message)
+              openNotification({
+                message: 'An error has occurred',
+                autoHideDuration: 2000,
+                variant: "error"
+              })
               return
             }
 
             const record: Poll = await response.json()
             if (!record) {
-              console.log(`Record with id ${id} not found`)
               return
             }
             setPolls(p => [...p, record])

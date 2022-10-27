@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from "react"
 import {
   Grid,
@@ -189,27 +190,17 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
   useEffect(() => {
     if (tokenMetadata) {
       setFieldValue("tokenID", tokenMetadata.tokenId)
+      setFieldValue("tokenType", tokenMetadata.standard)
+      setFieldValue("symbol", tokenMetadata.metadata.symbol)
+      setFieldValue("decimals", tokenMetadata.metadata.decimals)
     }
 
     if (error) {
       setFieldValue("tokenID", undefined)
-    }
-
-    if (tokenMetadata) {
-      setFieldValue("tokenType", tokenMetadata.standard)
-    }
-
-    if (error) {
       setFieldValue("tokenType", undefined)
-    }
-
-    if (tokenMetadata) {
-      setFieldValue("symbol", tokenMetadata.metadata.symbol)
-    }
-
-    if (error) {
       setFieldValue("symbol", undefined)
     }
+
   }, [error, setFieldValue, tokenMetadata])
 
   return (
@@ -402,7 +393,7 @@ export const CommunityCreator: React.FC = () => {
           return
         })
     },
-    [navigate, openNotification]
+    [navigate]
   )
 
   return (

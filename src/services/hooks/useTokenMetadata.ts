@@ -1,4 +1,3 @@
-import { Token } from "models/Token";
 import { useQuery } from "react-query";
 import { getTokenMetadata } from "services/bakingBad/tokenBalances";
 

@@ -6,12 +6,7 @@ export const useIsMembers = (account: string, members: any) => {
   useEffect(() => {
     async function isCommunityMember() {
       const member = members?.find((elem: any) => elem === account)
-      if (member) {
-        setIsMember(true)
-        return
-      } else {
-        setIsMember(false)
-      }
+      return member ?  setIsMember(true) : setIsMember(false)
     }
     isCommunityMember()
     return

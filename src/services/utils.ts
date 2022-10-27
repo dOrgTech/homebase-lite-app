@@ -51,16 +51,16 @@ export const getUserTotalSupplyAtReferenceBlock = async (network: Network, addre
   return 0;
 }
 
-export const hasTokenBalance = async (network: Network,account: string, contract: any) => {
+export const hasTokenBalance = async (network: Network, account: string, contract: any) => {
   const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/tokens/balances?account=${account}&token.contract=${contract}`
   const response = await fetch(url)
-  
+
   if (!response.ok) {
     throw new Error("Failed to fetch contract current block")
   }
 
   const result = await response.json()
-  
+
   let hasBalance = false;
 
   if (result && result[0]) {
@@ -121,26 +121,31 @@ export const isProposalActive = (date: number) => {
   return remainingDate;
 }
 
-export const calculateWeight = (totalSupply: string, balance: string) => {
-  return (Number(balance) * 100) / Number(totalSupply)
+export const calculateWeight = (totalSupply: string, balance: string, decimals: any) => {
+  const formattedTotalSupply = Number(totalSupply) / (Number(decimals) ** 10)
+  return (Number(balance) * 100) /formattedTotalSupply
 }
 
-export const calculateChoiceTotal = (choices: any[]) => {
+export const calculateChoiceTotal = (choices: any[], decimals: any) => {
   let total = 0;
   choices.map((choice: any) => {
     total += Number(choice.balanceAtReferenceBlock)
   })
-  return total;
+  const result = total / (Number(decimals) ** 10)
+
+  return result;
 }
 
-export const calculateProposalTotal = (choices: Choice[]) => {
+export const calculateProposalTotal = (choices: Choice[], decimals: any) => {
   let total = 0;
   choices.map((choice: any) => {
     choice.walletAddresses.map((elem: any) => {
       total += Number(elem.balanceAtReferenceBlock)
     })
   })
-  return total;
+  const result = total / (Number(decimals) ** 10)
+
+  return result;
 }
 
 export const getTotalVoters = (choices: Choice[]) => {
@@ -152,7 +157,9 @@ export const getTotalVoters = (choices: Choice[]) => {
 }
 
 export const getTreasuryPercentage = (proposalTotal: number, totalSupply: number) => {
-  return (Number(proposalTotal) * 100) / Number(totalSupply)
+  const value = (Number(proposalTotal) * 100) / Number(totalSupply)
+
+  return value;
 }
 
 export const numberWithCommas = (x: number) => {
@@ -166,7 +173,7 @@ export const nFormatter = (num: number, digits: number) => {
   const tier = Math.log10(Math.abs(num)) / 3 | 0;
 
   // if zero, we don't need a suffix
-  if (tier == 0) return num;
+  if (tier == 0) return num.toFixed(1);
 
   // get suffix and determine scale
   const suffix = SI_SYMBOL[tier];
@@ -177,4 +184,8 @@ export const nFormatter = (num: number, digits: number) => {
 
   // format number and add suffix
   return scaled.toFixed(1) + suffix;
+}
+
+export const formatByDecimals = (value: string, decimals: string) => {
+  return   nFormatter(Number(value) / (Number(decimals) ** 10), 1)
 }

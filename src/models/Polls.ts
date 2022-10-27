@@ -16,4 +16,5 @@ export interface Poll {
     timeFormatted?: string;
     tokenSymbol?: string;
     tokenAddress?: string;
+    tokenDecimals?: string;
   }

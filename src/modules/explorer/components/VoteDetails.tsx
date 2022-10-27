@@ -11,7 +11,8 @@ import {
   calculateWeight,
   getTotalVoters,
   getTreasuryPercentage,
-  getTurnoutValue
+  getTurnoutValue,
+  nFormatter
 } from "services/utils"
 import { useTezos } from "services/beacon/hooks/useTezos"
 
@@ -48,11 +49,14 @@ const GraphicsContainer = styled(Grid)({
 export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll, choices }) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("xs"))
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [open, setOpen] = React.useState(false)
   const { network } = useTezos()
   const [turnout, setTurnout] = useState(0)
+  const [votes, setVotes] = useState<Choice[]>([])
   const handleClickOpen = () => {
+    setVotes(choices.filter(elem => elem.walletAddresses.length > 0))
+
     if (!isMobile) {
       setOpen(true)
     }
@@ -92,7 +96,7 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                 <Grid item xs={12} lg={6} sm={6} container justifyContent={isMobileSmall ? "flex-start" : "flex-end"}>
                   <Typography color="textPrimary" variant="body2">
                     {choice.walletAddresses.length} Voters -{" "}
-                    {calculateChoiceTotal(choice.walletAddresses).toLocaleString()} {poll.tokenSymbol}
+                    {nFormatter(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals), 1)} {poll.tokenSymbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -103,7 +107,8 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                     color="secondary"
                     value={calculateWeight(
                       poll.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses))
+                      String(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)),
+                      poll.tokenDecimals
                     )}
                     variant="determinate"
                   />
@@ -112,7 +117,8 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                   <Typography color="textPrimary" variant="body2">
                     {calculateWeight(
                       poll.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses))
+                      String(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)),
+                      poll.tokenDecimals
                     ).toFixed(1)}
                     %
                   </Typography>
@@ -146,22 +152,25 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
             justifyContent={isMobileSmall ? "flex-start" : "flex-end"}
           >
             <Typography color="textPrimary" variant="body1">
-              {calculateProposalTotal(choices).toLocaleString()}
+              {nFormatter(calculateProposalTotal(choices, poll.tokenDecimals), 1)}
             </Typography>
             <Typography color="textPrimary" variant="body1">
               {poll.tokenSymbol}
             </Typography>
             <Typography color="textPrimary" variant="body2">
               (
-              {getTreasuryPercentage(calculateProposalTotal(choices), Number(poll.totalSupplyAtReferenceBlock)).toFixed(
-                2
-              )}
+              {getTreasuryPercentage(
+                calculateProposalTotal(choices, poll.tokenDecimals),
+                Number(poll.totalSupplyAtReferenceBlock) / Number(poll.tokenDecimals) ** 10
+              ).toFixed(2)}
               % of Treasury)
             </Typography>
           </Grid>
         </LegendContainer>
-
-        <VotesDialog open={open} handleClose={handleClose} />
+        <VotesDialog 
+        decimals={poll.tokenDecimals ? poll.tokenDecimals : ''}
+        symbol={poll.tokenSymbol ? poll.tokenSymbol : ''} 
+        choices={votes} open={open} handleClose={handleClose} />
       </GraphicsContainer>
     </Container>
   )

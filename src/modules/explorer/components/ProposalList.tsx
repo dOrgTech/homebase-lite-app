@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo } from "react"
 import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { Dropdown } from "modules/common/Dropdown"
@@ -7,6 +8,7 @@ import { Poll } from "models/Polls"
 import { isProposalActive } from "services/utils"
 import { useParams } from "react-router-dom"
 import { CommunityToken } from "models/Community"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const ProposalListContainer = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -32,6 +34,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
     id: string
   }>()
  const communityId = id.toString()
+ const openNotification = useNotification()
 
   useMemo(() => {
     async function formatPolls() {
@@ -54,8 +57,11 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
           polls.forEach(async (poll) => {
               await fetch(`${process.env.REACT_APP_API_URL}/token/${communityId}`).then(async response => {
                 if (!response.ok) {
-                  const message = `An error has occurred: ${response.statusText}`
-                  console.log(message)
+                  openNotification({
+                    message: 'An error has occurred',
+                    autoHideDuration: 2000,
+                    variant: "error"
+                  })
                   return
                 }
                 const record: CommunityToken = await response.json()
@@ -64,6 +70,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
                 }
                 poll.tokenAddress = record.tokenAddress
                 poll.tokenSymbol = record.symbol
+                poll.tokenDecimals = record.decimals
                 return;
               })
           })

@@ -14,6 +14,8 @@ import { useNotification } from "modules/common/hooks/useNotification"
 import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
 import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
 import { usePollChoices } from "modules/explorer/hooks/usePollChoices"
+import { useCommunity } from "modules/explorer/hooks/useCommunity"
+import { useIsMembers } from "modules/explorer/hooks/useIsMember"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -56,9 +58,8 @@ export const ProposalDetails: React.FC = () => {
   const { hasVoted, vote } = useHasVoted(refresh)
   const poll = state.poll
   const choices = usePollChoices(poll, refresh)
-
-
-  // const choices = state.choices
+  const community = useCommunity()
+  const isMember = useIsMembers(account, community?.members)
 
   useEffect(() => {
     if (state === undefined) {
@@ -140,13 +141,15 @@ export const ProposalDetails: React.FC = () => {
                 return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
               })}
             </Grid>
-            <Button variant="contained" color="secondary" onClick={() => saveVote()}>
-              Cast your vote
-            </Button>
+            {isMember ? (
+              <Button variant="contained" color="secondary" onClick={() => saveVote()}>
+                Cast your vote
+              </Button>
+            ) : null}
           </GridContainer>
         </Grid>
         <Grid item xs={12}>
-          <VoteDetails poll={poll} choices={choices}/>
+          <VoteDetails poll={poll} choices={choices} />
         </Grid>
       </Grid>
     </PageContainer>

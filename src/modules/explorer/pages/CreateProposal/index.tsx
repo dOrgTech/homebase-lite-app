@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from "react"
 import {
   Grid,
@@ -342,14 +343,16 @@ export const ProposalCreator: React.FC = () => {
       const communityId = id.toString()
       await fetch(`${process.env.REACT_APP_API_URL}/token/${communityId}`).then(async response => {
         if (!response.ok) {
-          const message = `An error has occurred: ${response.statusText}`
-          console.log(message)
+          openNotification({
+            message: 'An error has occurred',
+            autoHideDuration: 2000,
+            variant: "error"
+          })
           return
         }
 
         const record = await response.json()
         if (!record) {
-          console.log(`Record with id ${id} not found`)
           return
         }
         setTokenAddress(record.tokenAddress)
@@ -410,7 +413,7 @@ export const ProposalCreator: React.FC = () => {
           return
         })
     },
-    [navigate, openNotification, id, network, tokenAddress]
+    [navigate, id, network, tokenAddress]
   )
 
   return (

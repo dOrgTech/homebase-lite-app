@@ -12,6 +12,7 @@ export interface Community {
     picUri: string
     requiredTokenOwnership: boolean
     allowPublicAccess: boolean
+    decimals?: string;
   }
 
 export interface CommunityToken {
@@ -20,4 +21,5 @@ export interface CommunityToken {
   tokenID: number
   symbol: string
   tokenAddress: string
+  decimals: string
 }

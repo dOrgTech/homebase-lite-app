@@ -54,7 +54,7 @@ export const ProposalTableRow: React.FC<{ poll: Poll }> = ({ poll }) => {
       container
       alignItems="center"
       onClick={() => navigate.push(`/explorer/community/${poll.daoID}/proposal/${poll._id}`, 
-      { poll: poll, choices: choices })}
+      { poll: poll })}
     >
       <BlockieContainer container direction="row">
         <Blockie address={"tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB"} size={24} />

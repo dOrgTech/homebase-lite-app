@@ -1,9 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Community } from "models/Community"
+import { useNotification } from "modules/common/hooks/useNotification"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 export const useCommunity = (isUpdated?: number) => {
   const [community, setCommunity] = useState<Community>()
+  const openNotification = useNotification()
 
   const { id } = useParams<{
     id: string
@@ -14,14 +17,16 @@ export const useCommunity = (isUpdated?: number) => {
       const communityId = id.toString()
       await fetch(`${process.env.REACT_APP_API_URL}/daos/${communityId}`).then(async response => {
         if (!response.ok) {
-          const message = `An error has occurred: ${response.statusText}`
-          console.log(message)
+          openNotification({
+            message: 'An error has occurred',
+            autoHideDuration: 2000,
+            variant: "error"
+          })
           return
         }
 
         const record = await response.json()
         if (!record) {
-          console.log(`Record with id ${id} not found`)
           return
         }
         setCommunity(record)

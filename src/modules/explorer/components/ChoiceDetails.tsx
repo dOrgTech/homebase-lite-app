@@ -10,9 +10,9 @@ const LightText = styled(Typography)({
 })
 
 export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll }> = ({ choice, index, poll }) => {
-  const balance = calculateChoiceTotal(choice.walletAddresses);
+  const balance = calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, String(balance))
+  const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, String(balance), poll.tokenDecimals)
   const [, updateState] = React.useState<any>();
   const forceUpdate = React.useCallback(() => updateState({}), []);
 
@@ -28,7 +28,7 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll
             <Typography color="textPrimary"> {choice.name} </Typography>
           </Grid>
           <Grid item xs>
-            <LightText color="textPrimary"> {nFormatter(balance, 5)} </LightText>
+            <LightText color="textPrimary"> {nFormatter(balance, 1)} </LightText>
           </Grid>
           <Grid item xs>
             <LightText color="textPrimary"> {poll.tokenSymbol} </LightText>
