@@ -13,6 +13,7 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@airgap/beacon-sdk": "^3.3.0",
     "@date-io/dayjs": "1.x",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
