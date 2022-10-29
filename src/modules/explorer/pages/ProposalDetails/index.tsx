@@ -74,7 +74,11 @@ export const ProposalDetails: React.FC = () => {
   })
 
   const saveVote = async () => {
-    const signature = await getSignature(account, wallet)
+    if (!wallet) {
+      return
+    }
+
+    const { signature, payloadBytes } = await getSignature(account, wallet)
     const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
     if (!signature) {
       openNotification({
@@ -99,7 +103,8 @@ export const ProposalDetails: React.FC = () => {
           walletAddresses: walletVote,
           signature,
           userAddress: account,
-          publicKey
+          publicKey,
+          payloadBytes
         }),
         headers: {
           "Content-Type": "application/json"
@@ -132,7 +137,8 @@ export const ProposalDetails: React.FC = () => {
           data,
           signature,
           userAddress: account,
-          publicKey
+          publicKey,
+          payloadBytes
         }),
         headers: {
           "Content-Type": "application/json"

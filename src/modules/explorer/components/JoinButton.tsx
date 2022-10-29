@@ -31,7 +31,11 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
   const joinCommunity = async () => {
     try {
       if (await hasTokenBalance(network, account, community?.tokenAddress)) {
-        const signature = await getSignature(account, wallet)
+        if (!wallet) {
+          return
+        }
+
+        const { signature, payloadBytes } = await getSignature(account, wallet)
         const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
         if (!signature) {
           openNotification({
@@ -53,7 +57,8 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
             updatedArray,
             signature,
             userAddress: account,
-            publicKey
+            publicKey,
+            payloadBytes
           }),
           headers: {
             "Content-Type": "application/json"

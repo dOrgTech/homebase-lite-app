@@ -195,14 +195,11 @@ export const formatByDecimals = (value: string, decimals: string) => {
   return nFormatter(Number(value) / Number(decimals) ** 10, 1)
 }
 
-export const getSignature = async (userAddress: string, wallet: BeaconWallet | undefined) => {
-  if (!wallet) {
-    return
-  }
+export const getSignature = async (userAddress: string, wallet: BeaconWallet) => {
   const formattedInput: string = [
     "Tezos Signed Message:",
-    // "http://localhost:3000",
-    // new Date().toISOString(),
+    process.env.BASE_URL,
+    new Date().toISOString(),
     `Tezos Homebase Lite - I am ${userAddress}`
   ].join(" ")
 
@@ -215,8 +212,8 @@ export const getSignature = async (userAddress: string, wallet: BeaconWallet | u
     sourceAddress: userAddress
   }
 
-  const signedPayload = await wallet.client.requestSignPayload(payload)
+  const signedPayload = await wallet?.client.requestSignPayload(payload)
   const { signature } = signedPayload
 
-  return signature
+  return { signature, payloadBytes }
 }

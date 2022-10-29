@@ -371,7 +371,11 @@ export const CommunityCreator: React.FC = () => {
 
   const saveCommunity = useCallback(
     async (values: Community) => {
-      const signature = await getSignature(account, wallet)
+      if (!wallet) {
+        return
+      }
+
+      const { signature, payloadBytes } = await getSignature(account, wallet)
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
       if (!signature) {
         openNotification({
@@ -391,7 +395,8 @@ export const CommunityCreator: React.FC = () => {
           values,
           signature,
           userAddress: account,
-          publicKey
+          publicKey,
+          payloadBytes
         })
       })
         .then(async res => {
