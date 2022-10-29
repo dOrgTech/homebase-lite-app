@@ -410,7 +410,6 @@ export const ProposalCreator: React.FC = () => {
         body: JSON.stringify({
           values,
           signature,
-          userAddress: account,
           publicKey,
           payloadBytes
         })

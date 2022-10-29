@@ -56,7 +56,6 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
           body: JSON.stringify({
             updatedArray,
             signature,
-            userAddress: account,
             publicKey,
             payloadBytes
           }),

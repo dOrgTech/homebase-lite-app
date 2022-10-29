@@ -102,7 +102,6 @@ export const ProposalDetails: React.FC = () => {
         body: JSON.stringify({
           walletAddresses: walletVote,
           signature,
-          userAddress: account,
           publicKey,
           payloadBytes
         }),
@@ -136,7 +135,6 @@ export const ProposalDetails: React.FC = () => {
         body: JSON.stringify({
           data,
           signature,
-          userAddress: account,
           publicKey,
           payloadBytes
         }),
