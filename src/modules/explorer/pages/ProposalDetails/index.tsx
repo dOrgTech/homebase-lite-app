@@ -9,7 +9,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom"
 import { Poll } from "models/Polls"
 import { Choice } from "models/Choice"
 import { useTezos } from "services/beacon/hooks/useTezos"
-import { getCurrentBlock, getUserTotalSupplyAtReferenceBlock } from "services/utils"
+import { getCurrentBlock, getSignature, getUserTotalSupplyAtReferenceBlock } from "services/utils"
 import { useNotification } from "modules/common/hooks/useNotification"
 import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
 import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
@@ -52,7 +52,7 @@ export const ProposalDetails: React.FC = () => {
   const navigate = useHistory()
   const { state } = useLocation<{ poll: Poll; choices: Choice[] }>()
   const [selectedVote, setSelectedVote] = useState<Choice>()
-  const { network, account } = useTezos()
+  const { network, account, wallet } = useTezos()
   const openNotification = useNotification()
   const [refresh, setRefresh] = useState<number>()
   const { hasVoted, vote } = useHasVoted(refresh)
@@ -74,6 +74,20 @@ export const ProposalDetails: React.FC = () => {
   })
 
   const saveVote = async () => {
+    if (!wallet) {
+      return
+    }
+
+    const { signature, payloadBytes } = await getSignature(account, wallet)
+    const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+    if (!signature) {
+      openNotification({
+        message: `Issue with Signature`,
+        autoHideDuration: 3000,
+        variant: "error"
+      })
+      return
+    }
     const block = await getCurrentBlock(network)
     // eslint-disable-next-line
     const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
@@ -85,17 +99,31 @@ export const ProposalDetails: React.FC = () => {
     if (!hasVoted) {
       await fetch(`${process.env.REACT_APP_API_URL}/update/${selectedVote?._id}/choice`, {
         method: "POST",
-        body: JSON.stringify(walletVote),
+        body: JSON.stringify({
+          walletAddresses: walletVote,
+          signature,
+          publicKey,
+          payloadBytes
+        }),
         headers: {
           "Content-Type": "application/json"
         }
-      }).then(() => {
-        openNotification({
-          message: "Your vote has been submitted",
-          autoHideDuration: 3000,
-          variant: "success"
-        })
-        setRefresh(Math.random())
+      }).then(resp => {
+        if (resp.ok) {
+          openNotification({
+            message: "Your vote has been submitted",
+            autoHideDuration: 3000,
+            variant: "success"
+          })
+          setRefresh(Math.random())
+        } else {
+          openNotification({
+            message: `Something went wrong!!`,
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          return
+        }
       })
     } else {
       const data = {
@@ -104,17 +132,31 @@ export const ProposalDetails: React.FC = () => {
       }
       await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          data,
+          signature,
+          publicKey,
+          payloadBytes
+        }),
         headers: {
           "Content-Type": "application/json"
         }
-      }).then(() => {
-        openNotification({
-          message: "Your vote has been submitted",
-          autoHideDuration: 3000,
-          variant: "success"
-        })
-        setRefresh(Math.random())
+      }).then(resp => {
+        if (resp.ok) {
+          openNotification({
+            message: "Your vote has been submitted",
+            autoHideDuration: 3000,
+            variant: "success"
+          })
+          setRefresh(Math.random())
+        } else {
+          openNotification({
+            message: `Something went wrong!!`,
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          return
+        }
       })
     }
   }

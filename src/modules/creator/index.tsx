@@ -22,6 +22,8 @@ import { useHistory } from "react-router"
 import { validateContractAddress } from "@taquito/utils"
 import { useTokenMetadata } from "services/hooks/useTokenMetadata"
 import { useNotification } from "modules/common/hooks/useNotification"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { getSignature } from "services/utils"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -200,7 +202,6 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
       setFieldValue("tokenType", undefined)
       setFieldValue("symbol", undefined)
     }
-
   }, [error, setFieldValue, tokenMetadata])
 
   return (
@@ -350,6 +351,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
 export const CommunityCreator: React.FC = () => {
   const navigate = useHistory()
+  const { network, account, wallet } = useTezos()
   const openNotification = useNotification()
 
   const initialState: Community = {
@@ -369,20 +371,49 @@ export const CommunityCreator: React.FC = () => {
 
   const saveCommunity = useCallback(
     async (values: Community) => {
+      if (!wallet) {
+        return
+      }
+
+      const { signature, payloadBytes } = await getSignature(account, wallet)
+      const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+      if (!signature) {
+        openNotification({
+          message: `Issue with Signature`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      }
+
       await fetch(`${process.env.REACT_APP_API_URL}/dao/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(values)
+        body: JSON.stringify({
+          values,
+          signature,
+          publicKey,
+          payloadBytes
+        })
       })
         .then(async res => {
-          openNotification({
-            message: "Community created!",
-            autoHideDuration: 3000,
-            variant: "success"
-          })
-          navigate.push("/explore/communities")
+          if (res.ok) {
+            openNotification({
+              message: "Community created!",
+              autoHideDuration: 3000,
+              variant: "success"
+            })
+            navigate.push("/explore/communities")
+          } else {
+            openNotification({
+              message: "Community could not be created!",
+              autoHideDuration: 3000,
+              variant: "error"
+            })
+            return
+          }
         })
         .catch(error => {
           openNotification({

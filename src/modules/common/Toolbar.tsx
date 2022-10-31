@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   AppBar,
   Toolbar,
@@ -10,50 +10,50 @@ import {
   useTheme,
   Popover,
   useMediaQuery,
-  Theme,
-} from "@material-ui/core";
-import { useHistory } from "react-router";
-import { TezosToolkit } from "@taquito/taquito";
+  Theme
+} from "@material-ui/core"
+import { useHistory } from "react-router"
+import { TezosToolkit } from "@taquito/taquito"
 
-import HomeButton from "assets/logos/homebase_logo.svg";
-import { useTezos } from "services/beacon/hooks/useTezos";
-import { toShortAddress } from "services/contracts/utils";
-import { ExitToAppOutlined, FileCopyOutlined } from "@material-ui/icons";
-import { Network } from "services/beacon";
-import { UserProfileName } from "modules/explorer/components/UserProfileName";
-import { ProfileAvatar } from "modules/explorer/components/styled/ProfileAvatar";
-import { SmallButton } from "./SmallButton";
-import { ChangeNetworkButton } from "./ChangeNetworkButton";
+import HomeButton from "assets/logos/homebase_logo.svg"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { toShortAddress } from "services/contracts/utils"
+import { ExitToAppOutlined, FileCopyOutlined } from "@material-ui/icons"
+import { Network } from "services/beacon"
+import { UserProfileName } from "modules/explorer/components/UserProfileName"
+import { ProfileAvatar } from "modules/explorer/components/styled/ProfileAvatar"
+import { SmallButton } from "./SmallButton"
+import { ChangeNetworkButton } from "./ChangeNetworkButton"
 
-import { ArrowBackIos } from "@material-ui/icons";
+import { ArrowBackIos } from "@material-ui/icons"
 
 const AddressMenu = styled(Box)(() => ({
   width: 264,
   borderRadius: 4,
-  backgroundColor: "#282B31",
-}));
+  backgroundColor: "#282B31"
+}))
 
 const AddressMenuItem = styled(Grid)(({ theme }) => ({
   cursor: "pointer",
   boxSizing: "border-box",
   color: theme.palette.text.secondary,
-  padding: "20px 3px",
-}));
+  padding: "20px 3px"
+}))
 
 const AddressMenuIcon = styled(Grid)({
   paddingRight: "12px",
-  marginBottom: "-4px",
-});
+  marginBottom: "-4px"
+})
 
 const StyledUserProfileName = styled(Typography)({
-  color: "#ddd",
-});
+  color: "#ddd"
+})
 
 const StyledPopover = styled(Popover)({
   ".MuiPaper-root": {
-    borderRadius: 4,
-  },
-});
+    borderRadius: 4
+  }
+})
 
 const Header = styled(Grid)(({ theme }) => ({
   width: "1000px",
@@ -67,7 +67,7 @@ const Header = styled(Grid)(({ theme }) => ({
   ["@media (max-width:1335px)"]: {},
 
   ["@media (max-width:1167px)"]: {
-    width: "86vw",
+    width: "86vw"
   },
 
   ["@media (max-width:1030px)"]: {},
@@ -75,9 +75,9 @@ const Header = styled(Grid)(({ theme }) => ({
   ["@media (max-width:960px)"]: {},
 
   ["@media (max-width:645px)"]: {
-    flexDirection: "column",
-  },
-}));
+    flexDirection: "column"
+  }
+}))
 
 const StyledAppBar = styled(AppBar)(({ theme }: { theme: Theme }) => ({
   boxShadow: "none",
@@ -85,21 +85,21 @@ const StyledAppBar = styled(AppBar)(({ theme }: { theme: Theme }) => ({
   position: "sticky",
 
   ["@media (max-height:750px)"]: {
-    position: "sticky",
-  },
-}));
+    position: "sticky"
+  }
+}))
 
 const StyledToolbar = styled(Toolbar)({
   width: "100%",
   padding: 0,
   boxSizing: "border-box",
   justifyContent: "space-between",
-  flexWrap: "wrap",
-});
+  flexWrap: "wrap"
+})
 
 const AddressContainer = styled(Grid)({
-  cursor: "pointer",
-});
+  cursor: "pointer"
+})
 
 const LogoText = styled(Grid)({
   fontWeight: "bold",
@@ -109,125 +109,112 @@ const LogoText = styled(Grid)({
   letterSpacing: "initial",
   display: "flex",
   alignItems: "center"
-});
+})
 
 const LiteText = styled(Typography)({
-    fontFamily: 'Roboto',
-    fontWeight: 200,
-    fontSize: 23.7,
-    lineHeight: "146.3%",
-    display: "flex",
-    alignItems: "center",
-    marginLeft: 3
+  fontFamily: "Roboto",
+  fontWeight: 200,
+  fontSize: 23.7,
+  lineHeight: "146.3%",
+  display: "flex",
+  alignItems: "center",
+  marginLeft: 3
 })
 
 const AddressBarWrapper = styled(Grid)({
-  boxSizing: "border-box",
-  padding: "8px 16px",
-  borderRadius: 4,
+  "boxSizing": "border-box",
+  "padding": "8px 16px",
+  "borderRadius": 4,
   "&:hover": {
-    background: "rgba(129, 254, 183, 0.03)",
-  },
-});
+    background: "rgba(129, 254, 183, 0.03)"
+  }
+})
 
 const LogoItem = styled("img")({
   height: "30px",
   cursor: "pointer",
-  paddingTop: 8,
-});
+  paddingTop: 8
+})
 
 const ToolbarContainer = styled(Grid)(({ theme }) => ({
   ["@media (max-width: 645px)"]: {
-    marginBottom: "20px",
-  },
-}));
+    marginBottom: "20px"
+  }
+}))
 
 const BackButtonContainer = styled(Grid)({
   marginTop: 28,
-  alignItems: "baseline",
-
-});
+  alignItems: "baseline"
+})
 
 const BackButton = styled(Typography)(({ theme }) => ({
   color: theme.palette.secondary.light,
-  fontSize: 18,
-}));
+  fontSize: 18
+}))
 
 const BackButtonIcon = styled(ArrowBackIos)(({ theme }) => ({
   color: theme.palette.secondary.light,
   fontSize: 12,
-  marginRight: 15,
-}));
+  marginRight: 15
+}))
 
 const BackButtonText = styled(Grid)({
   cursor: "pointer",
   alignItems: "baseline"
-});
+})
 
-export const ConnectWalletButton = ({
-  connect,
-}: {
-  connect: () => Promise<TezosToolkit>;
-}) => (
+export const ConnectWalletButton = ({ connect }: { connect: () => Promise<TezosToolkit> }) => (
   <SmallButton variant="outlined" onClick={() => connect()}>
     Connect Wallet
   </SmallButton>
-);
+)
 
 export const Navbar: React.FC<{
-  disableMobileMenu?: boolean;
+  disableMobileMenu?: boolean
 }> = ({ children, disableMobileMenu }) => {
-  const { connect, account, reset, changeNetwork, network } = useTezos();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
-  const [popperOpen, setPopperOpen] = useState(false);
-  const theme = useTheme();
-  const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("xs"));
-  const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const { connect, account, reset, changeNetwork, network } = useTezos()
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [popperOpen, setPopperOpen] = useState(false)
+  const theme = useTheme()
+  const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("xs"))
+  const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
-  const [networkAnchorEl, setNetworkAnchorEl] =
-    React.useState<HTMLButtonElement | null>(null);
-  const [networkPopperOpen, setNetworkPopperOpen] = useState(false);
+  const [networkAnchorEl, setNetworkAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [networkPopperOpen, setNetworkPopperOpen] = useState(false)
 
   const handleNetworkClick = (event: React.MouseEvent<any>) => {
-    setNetworkAnchorEl(event.currentTarget);
-    setNetworkPopperOpen(!networkPopperOpen);
-  };
+    setNetworkAnchorEl(event.currentTarget)
+    setNetworkPopperOpen(!networkPopperOpen)
+  }
 
   const handleNetworkChange = (network: Network) => {
-    changeNetwork(network);
-    setPopperOpen(!popperOpen);
-    setNetworkPopperOpen(!networkPopperOpen);
-    history.push("/explorer");
-  };
+    changeNetwork(network)
+    setPopperOpen(!popperOpen)
+    setNetworkPopperOpen(!networkPopperOpen)
+    history.push("/explorer")
+  }
 
   const handleClick = (event: React.MouseEvent<any>) => {
-    setAnchorEl(event.currentTarget);
-    setPopperOpen(!popperOpen);
-  };
+    setAnchorEl(event.currentTarget)
+    setPopperOpen(!popperOpen)
+  }
 
   const handleLogout = () => {
-    reset();
-    setPopperOpen(false);
-  };
+    reset()
+    setPopperOpen(false)
+  }
 
   const handleCopy = (address: string) => {
-    navigator.clipboard.writeText(address);
-    setPopperOpen(false);
-  };
+    navigator.clipboard.writeText(address)
+    setPopperOpen(false)
+  }
 
-  const history = useHistory();
+  const history = useHistory()
 
   return (
     <StyledAppBar>
       <StyledToolbar>
-        <Header
-          container
-          alignItems="center"
-          wrap="wrap"
-          justifyContent={"space-between"}
-        >
+        <Header container alignItems="center" wrap="wrap" justifyContent={"space-between"}>
           <Grid item>
             <Box onClick={() => history.push("/explorer")}>
               <ToolbarContainer container alignItems="center" wrap="nowrap">
@@ -236,7 +223,9 @@ export const Navbar: React.FC<{
                 </Grid>
                 <Grid item>
                   <Box paddingLeft="10px">
-                    <LogoText color="textSecondary">Homebase <LiteText>lite</LiteText></LogoText>
+                    <LogoText color="textSecondary">
+                      Homebase <LiteText>lite</LiteText>
+                    </LogoText>
                   </Box>
                 </Grid>
               </ToolbarContainer>
@@ -244,10 +233,7 @@ export const Navbar: React.FC<{
           </Grid>
 
           <Grid item>
-            <Grid
-              container
-              justifyContent={isMobileExtraSmall ? "center" : "flex-end"}
-            >
+            <Grid container justifyContent={isMobileExtraSmall ? "center" : "flex-end"}>
               {account ? (
                 <Grid
                   container
@@ -288,26 +274,19 @@ export const Navbar: React.FC<{
                     anchorEl={anchorEl}
                     style={{ zIndex: 1500, borderRadius: 4 }}
                     onClose={() => {
-                      setPopperOpen(false);
+                      setPopperOpen(false)
                     }}
                     PaperProps={{
                       style: {
                         borderRadius: 4,
-                        backgroundColor: "transparent",
-                      },
+                        backgroundColor: "transparent"
+                      }
                     }}
                   >
                     <AddressMenu>
-                      <AddressMenuItem
-                        container
-                        alignItems="center"
-                        onClick={() => handleCopy(account)}
-                      >
+                      <AddressMenuItem container alignItems="center" onClick={() => handleCopy(account)}>
                         <AddressMenuIcon item>
-                          <FileCopyOutlined
-                            color="inherit"
-                            fontSize="inherit"
-                          />
+                          <FileCopyOutlined color="inherit" fontSize="inherit" />
                         </AddressMenuIcon>
                         <Grid item>
                           <Typography variant="subtitle2" color="textSecondary">
@@ -315,11 +294,7 @@ export const Navbar: React.FC<{
                           </Typography>
                         </Grid>
                       </AddressMenuItem>
-                      <AddressMenuItem
-                        container
-                        alignItems="center"
-                        onClick={handleNetworkClick}
-                      >
+                      <AddressMenuItem container alignItems="center" onClick={handleNetworkClick}>
                         <Grid item>
                           <Typography variant="subtitle2" color="textSecondary">
                             Change network ({network})
@@ -328,17 +303,14 @@ export const Navbar: React.FC<{
                       </AddressMenuItem>
                       <AddressMenuItem
                         style={{
-                          borderTop: "2px solid rgba(255, 255, 255, 0.2)",
+                          borderTop: "2px solid rgba(255, 255, 255, 0.2)"
                         }}
                         container
                         alignItems="center"
                         onClick={handleLogout}
                       >
                         <AddressMenuIcon item>
-                          <ExitToAppOutlined
-                            color="inherit"
-                            fontSize="inherit"
-                          />
+                          <ExitToAppOutlined color="inherit" fontSize="inherit" />
                         </AddressMenuIcon>
                         <Grid item>
                           <Typography variant="subtitle2" color="textSecondary">
@@ -350,13 +322,7 @@ export const Navbar: React.FC<{
                   </StyledPopover>
                 </Grid>
               ) : (
-                <Grid
-                  container
-                  justifyContent="flex-end"
-                  alignItems="center"
-                  wrap="nowrap"
-                  style={{ gap: 8 }}
-                >
+                <Grid container justifyContent="flex-end" alignItems="center" wrap="nowrap" style={{ gap: 8 }}>
                   <Grid item>
                     <ChangeNetworkButton />
                   </Grid>
@@ -386,5 +352,5 @@ export const Navbar: React.FC<{
         </Header>
       </StyledToolbar>
     </StyledAppBar>
-  );
-};
+  )
+}

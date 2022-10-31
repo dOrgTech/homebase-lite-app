@@ -3,7 +3,7 @@ import { Button, styled, Typography } from "@material-ui/core"
 import { useIsMembers } from "../hooks/useIsMember"
 import { useNotification } from "modules/common/hooks/useNotification"
 import { Community } from "models/Community"
-import { hasTokenBalance } from "services/utils"
+import { getSignature, hasTokenBalance } from "services/utils"
 import { useTezos } from "services/beacon/hooks/useTezos"
 import { useCommunityToken } from "../hooks/useCommunityToken"
 
@@ -25,34 +25,71 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
   const isMember = useIsMembers(account, community?.members)
   const [hover, setHover] = useState(false)
   const openNotification = useNotification()
-  const { network } = useTezos()
+  const { network, wallet } = useTezos()
   const token = useCommunityToken(community?._id)
 
   const joinCommunity = async () => {
-    if (await hasTokenBalance(network, account, community?.tokenAddress)) {
-      let updatedArray = community?.members
-      if (!isMember && updatedArray) {
-        updatedArray.push(account)
-      } else {
-        updatedArray = updatedArray?.filter(elem => elem !== account)
-      }
-      await fetch(`${process.env.REACT_APP_API_URL}/update/${community?._id}`, {
-        method: "POST",
-        body: JSON.stringify(updatedArray),
-        headers: {
-          "Content-Type": "application/json"
+    try {
+      if (await hasTokenBalance(network, account, community?.tokenAddress)) {
+        if (!wallet) {
+          return
         }
-      }).then(() => {
-        setIsUpdated(Math.random())
-        openNotification({
-          message: `You just ${!isMember ? "joined" : "left"} ${community?.name}!`,
-          autoHideDuration: 3000,
-          variant: "info"
+
+        const { signature, payloadBytes } = await getSignature(account, wallet)
+        const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+        if (!signature) {
+          openNotification({
+            message: `Issue with Signature`,
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          return
+        }
+        let updatedArray = community?.members
+        if (!isMember && updatedArray) {
+          updatedArray.push(account)
+        } else {
+          updatedArray = updatedArray?.filter(elem => elem !== account)
+        }
+        await fetch(`${process.env.REACT_APP_API_URL}/update/${community?._id}`, {
+          method: "POST",
+          body: JSON.stringify({
+            updatedArray,
+            signature,
+            publicKey,
+            payloadBytes
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(resp => {
+          if (resp.ok) {
+            setIsUpdated(Math.random())
+            openNotification({
+              message: `You just ${!isMember ? "joined" : "left"} ${community?.name}!`,
+              autoHideDuration: 3000,
+              variant: "info"
+            })
+          } else {
+            openNotification({
+              message: `Something went wrong!!`,
+              autoHideDuration: 3000,
+              variant: "error"
+            })
+            return
+          }
         })
-      })
-    } else {
+      } else {
+        openNotification({
+          message: `To join ${community?.name} your balance of ${token?.symbol} must be more than zero!`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      }
+    } catch (error) {
       openNotification({
-        message: `To join ${community?.name} your balance of ${token?.symbol} must be more than zero!`,
+        message: `Something went wrong!!`,
         autoHideDuration: 3000,
         variant: "error"
       })

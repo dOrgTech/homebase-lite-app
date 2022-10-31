@@ -21,7 +21,7 @@ import TextField from "@mui/material/TextField"
 import { DateRange } from "@material-ui/icons"
 import { Poll } from "models/Polls"
 import { useTezos } from "services/beacon/hooks/useTezos"
-import { getCurrentBlock, getTotalSupplyAtReferenceBlock } from "services/utils"
+import { getCurrentBlock, getSignature, getTotalSupplyAtReferenceBlock } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
 import "modules/explorer/pages/CreateProposal/DataTimePickerCustom.css"
@@ -329,7 +329,7 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
 
 export const ProposalCreator: React.FC = () => {
   const navigate = useHistory()
-  const { network, account } = useTezos()
+  const { network, account, wallet } = useTezos()
   const [tokenAddress, setTokenAddress] = useState<string>("")
   const openNotification = useNotification()
   const [isLoading, setIsLoading] = useState(false)
@@ -344,7 +344,7 @@ export const ProposalCreator: React.FC = () => {
       await fetch(`${process.env.REACT_APP_API_URL}/token/${communityId}`).then(async response => {
         if (!response.ok) {
           openNotification({
-            message: 'An error has occurred',
+            message: "An error has occurred",
             autoHideDuration: 2000,
             variant: "error"
           })
@@ -376,8 +376,22 @@ export const ProposalCreator: React.FC = () => {
 
   const saveProposal = useCallback(
     async (values: Poll) => {
-      setIsLoading(true);
-  
+      setIsLoading(true)
+      if (!wallet) {
+        return
+      }
+
+      const { signature, payloadBytes } = await getSignature(account, wallet)
+      const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+      if (!signature) {
+        openNotification({
+          message: `Issue with Signature`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      }
+
       const block = await getCurrentBlock(network)
       const total = await getTotalSupplyAtReferenceBlock(network, tokenAddress, block)
 
@@ -393,9 +407,14 @@ export const ProposalCreator: React.FC = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(values)
-      })
-        .then(async res => {
+        body: JSON.stringify({
+          values,
+          signature,
+          publicKey,
+          payloadBytes
+        })
+      }).then(async res => {
+        if (res.ok) {
           openNotification({
             message: "Proposal created!",
             autoHideDuration: 3000,
@@ -403,15 +422,15 @@ export const ProposalCreator: React.FC = () => {
           })
           setIsLoading(false)
           navigate.push(`/explore/community/${id}`)
-        })
-        .catch(error => {
+        } else {
           openNotification({
             message: "Proposal could not be created",
             autoHideDuration: 3000,
             variant: "error"
           })
           return
-        })
+        }
+      })
     },
     [navigate, id, network, tokenAddress]
   )
