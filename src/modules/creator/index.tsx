@@ -366,7 +366,8 @@ export const CommunityCreator: React.FC = () => {
     tokenID: "",
     tokenType: "FA2",
     requiredTokenOwnership: false,
-    allowPublicAccess: false
+    allowPublicAccess: false,
+    network
   }
 
   const saveCommunity = useCallback(
@@ -375,7 +376,7 @@ export const CommunityCreator: React.FC = () => {
         return
       }
 
-      const { signature, payloadBytes } = await getSignature(account, wallet)
+      const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(values))
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
       if (!signature) {
         openNotification({
@@ -392,7 +393,6 @@ export const CommunityCreator: React.FC = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          values,
           signature,
           publicKey,
           payloadBytes

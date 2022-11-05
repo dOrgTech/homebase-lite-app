@@ -167,10 +167,13 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
             </Typography>
           </Grid>
         </LegendContainer>
-        <VotesDialog 
-        decimals={poll.tokenDecimals ? poll.tokenDecimals : ''}
-        symbol={poll.tokenSymbol ? poll.tokenSymbol : ''} 
-        choices={votes} open={open} handleClose={handleClose} />
+        <VotesDialog
+          decimals={poll.tokenDecimals ? poll.tokenDecimals : ""}
+          symbol={poll.tokenSymbol ? poll.tokenSymbol : ""}
+          choices={votes}
+          open={open}
+          handleClose={handleClose}
+        />
       </GraphicsContainer>
     </Container>
   )

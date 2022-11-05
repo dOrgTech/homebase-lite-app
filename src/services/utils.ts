@@ -1,4 +1,4 @@
-import { char2Bytes } from "@taquito/tzip16"
+import { bytes2Char, char2Bytes } from "@taquito/tzip16"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import updateLocale from "dayjs/plugin/updateLocale"
@@ -195,12 +195,12 @@ export const formatByDecimals = (value: string, decimals: string) => {
   return nFormatter(Number(value) / Number(decimals) ** 10, 1)
 }
 
-export const getSignature = async (userAddress: string, wallet: BeaconWallet) => {
+export const getSignature = async (userAddress: string, wallet: BeaconWallet, data?: string) => {
   const formattedInput: string = [
     "Tezos Signed Message:",
-    process.env.BASE_URL,
+    process.env.REACT_APP_BASE_URL,
     new Date().toISOString(),
-    `Tezos Homebase Lite - I am ${userAddress}`
+    data
   ].join(" ")
 
   const bytes = char2Bytes(formattedInput)

@@ -60,7 +60,7 @@ export const CommunityDetails: React.FC = () => {
           await fetch(`${process.env.REACT_APP_API_URL}/polls/${elem}/polls`).then(async response => {
             if (!response.ok) {
               openNotification({
-                message: 'An error has occurred',
+                message: "An error has occurred",
                 autoHideDuration: 2000,
                 variant: "error"
               })

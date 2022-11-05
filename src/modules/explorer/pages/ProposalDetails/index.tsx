@@ -78,8 +78,25 @@ export const ProposalDetails: React.FC = () => {
       return
     }
 
-    const { signature, payloadBytes } = await getSignature(account, wallet)
     const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+
+    // const block = await getCurrentBlock(network)
+    // eslint-disable-next-line
+    // const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
+
+    // const walletVote = {
+    //   address: account,
+    //   balanceAtReferenceBlock: total
+    // }
+    const { signature, payloadBytes } = await getSignature(
+      account,
+      wallet,
+      JSON.stringify({
+        address: account,
+        choice: selectedVote?.name,
+        choiceId: selectedVote?._id
+      })
+    )
     if (!signature) {
       openNotification({
         message: `Issue with Signature`,
@@ -88,60 +105,18 @@ export const ProposalDetails: React.FC = () => {
       })
       return
     }
-    const block = await getCurrentBlock(network)
-    // eslint-disable-next-line
-    const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
-
-    const walletVote = {
-      address: account,
-      balanceAtReferenceBlock: total
-    }
-    if (!hasVoted) {
-      await fetch(`${process.env.REACT_APP_API_URL}/update/${selectedVote?._id}/choice`, {
-        method: "POST",
-        body: JSON.stringify({
-          walletAddresses: walletVote,
-          signature,
-          publicKey,
-          payloadBytes
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(resp => {
-        if (resp.ok) {
-          openNotification({
-            message: "Your vote has been submitted",
-            autoHideDuration: 3000,
-            variant: "success"
-          })
-          setRefresh(Math.random())
-        } else {
-          openNotification({
-            message: `Something went wrong!!`,
-            autoHideDuration: 3000,
-            variant: "error"
-          })
-          return
-        }
-      })
-    } else {
-      const data = {
-        oldVote: vote,
-        newVote: walletVote
+    await fetch(`${process.env.REACT_APP_API_URL}/update/${selectedVote?._id}/choice`, {
+      method: "POST",
+      body: JSON.stringify({
+        signature,
+        publicKey,
+        payloadBytes
+      }),
+      headers: {
+        "Content-Type": "application/json"
       }
-      await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
-        method: "POST",
-        body: JSON.stringify({
-          data,
-          signature,
-          publicKey,
-          payloadBytes
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(resp => {
+    })
+      .then(resp => {
         if (resp.ok) {
           openNotification({
             message: "Your vote has been submitted",
@@ -158,7 +133,65 @@ export const ProposalDetails: React.FC = () => {
           return
         }
       })
-    }
+      .catch(err => {
+        openNotification({
+          message: `Something went wrong!!`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      })
+    // } else {
+    //   const data = {
+    //     oldVote: vote,
+    //     newVote: walletVote
+    //   }
+
+    //   const { signature, payloadBytes } = await getSignature(
+    //     account,
+    //     wallet,
+    //     JSON.stringify({
+    //       values: data
+    //     })
+    //   )
+    //   if (!signature) {
+    //     openNotification({
+    //       message: `Issue with Signature`,
+    //       autoHideDuration: 3000,
+    //       variant: "error"
+    //     })
+    //     return
+    //   }
+
+    //   await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       data,
+    //       signature,
+    //       publicKey,
+    //       payloadBytes
+    //     }),
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   }).then(resp => {
+    //     if (resp.ok) {
+    //       openNotification({
+    //         message: "Your vote has been submitted",
+    //         autoHideDuration: 3000,
+    //         variant: "success"
+    //       })
+    //       setRefresh(Math.random())
+    //     } else {
+    //       openNotification({
+    //         message: `Something went wrong!!`,
+    //         autoHideDuration: 3000,
+    //         variant: "error"
+    //       })
+    //       return
+    //     }
+    //   })
+    // }
   }
 
   return (
