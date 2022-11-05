@@ -35,7 +35,11 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
           return
         }
 
-        const { signature, payloadBytes } = await getSignature(account, wallet)
+        const { signature, payloadBytes } = await getSignature(
+          account,
+          wallet,
+          JSON.stringify({ address: account, dao: community?.name, daoId: community?._id })
+        )
         const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
         if (!signature) {
           openNotification({
@@ -45,16 +49,10 @@ export const JoinButton: React.FC<JoinButtonProps> = ({ account, setIsUpdated, c
           })
           return
         }
-        let updatedArray = community?.members
-        if (!isMember && updatedArray) {
-          updatedArray.push(account)
-        } else {
-          updatedArray = updatedArray?.filter(elem => elem !== account)
-        }
-        await fetch(`${process.env.REACT_APP_API_URL}/update/${community?._id}`, {
+
+        await fetch(`${process.env.REACT_APP_API_URL}/daos/join`, {
           method: "POST",
           body: JSON.stringify({
-            updatedArray,
             signature,
             publicKey,
             payloadBytes

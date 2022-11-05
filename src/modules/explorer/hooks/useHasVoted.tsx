@@ -17,10 +17,10 @@ export const useHasVoted = (refresh?: number) => {
         await fetch(`${process.env.REACT_APP_API_URL}/choices/${String(account)}/user`).then(async response => {
           if (!response.ok) {
             openNotification({
-              message: 'An error has occurred',
+              message: "An error has occurred",
               autoHideDuration: 2000,
               variant: "error"
-            })   
+            })
             return
           }
 

@@ -381,7 +381,12 @@ export const ProposalCreator: React.FC = () => {
         return
       }
 
-      const { signature, payloadBytes } = await getSignature(account, wallet)
+      const data = values
+      data.daoID = id
+      data.startTime = String(dayjs(values.startTime).valueOf())
+      data.endTime = String(dayjs(values.endTime).valueOf())
+
+      const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(data))
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
       if (!signature) {
         openNotification({
@@ -392,45 +397,45 @@ export const ProposalCreator: React.FC = () => {
         return
       }
 
-      const block = await getCurrentBlock(network)
-      const total = await getTotalSupplyAtReferenceBlock(network, tokenAddress, block)
-
-      const data = values
-      data.daoID = id
-      data.referenceBlock = String(block)
-      data.totalSupplyAtReferenceBlock = total
-      data.startTime = String(dayjs(values.startTime).valueOf())
-      data.endTime = String(dayjs(values.endTime).valueOf())
-
       await fetch(`${process.env.REACT_APP_API_URL}/poll/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          values,
           signature,
           publicKey,
           payloadBytes
         })
-      }).then(async res => {
-        if (res.ok) {
-          openNotification({
-            message: "Proposal created!",
-            autoHideDuration: 3000,
-            variant: "success"
-          })
-          setIsLoading(false)
-          navigate.push(`/explore/community/${id}`)
-        } else {
+      })
+        .then(async res => {
+          if (res.ok) {
+            openNotification({
+              message: "Proposal created!",
+              autoHideDuration: 3000,
+              variant: "success"
+            })
+            setIsLoading(false)
+            navigate.push(`/explore/community/${id}`)
+          } else {
+            openNotification({
+              message: "Proposal could not be created",
+              autoHideDuration: 3000,
+              variant: "error"
+            })
+            setIsLoading(false)
+            return
+          }
+        })
+        .catch(err => {
           openNotification({
             message: "Proposal could not be created",
             autoHideDuration: 3000,
             variant: "error"
           })
+          setIsLoading(false)
           return
-        }
-      })
+        })
     },
     [navigate, id, network, tokenAddress]
   )
