@@ -1,7 +1,3 @@
-.Mui-selected {
-  color: rgba(0, 0, 0, 0.87) !important;
-  background-color: #81FEB7 !important;
-}
 
 .css-rdq5h4-MuiClockPointer-root {
   background-color: #81FEB7 !important;
@@ -30,4 +26,60 @@
 
 .css-rjqbug-MuiButtonBase-root-MuiIconButton-root-MuiClock-pmButton {
   background-color: #81FEB7 !important;
+}
+
+.css-169iwlq-MuiCalendarPicker-root {
+  background: hwb(207deg 18% 78% / 90%);
+}
+.css-bkrceb-MuiButtonBase-root-MuiPickersDay-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  opacity: 0.5;
+}
+
+.css-195y93z-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected) {
+  border: 3px solid #81feb7 !important;
+}
+
+.css-bkrceb-MuiButtonBase-root-MuiPickersDay-root {
+  border: 2px solid !important;
+}
+
+.css-raiqh1-MuiTypography-root-MuiDayPicker-weekDayLabel {
+  font-weight: 900 !important;
+}
+
+.css-dplwbx-MuiPickersCalendarHeader-label {
+  color: white;
+}
+
+.css-nk89i7-MuiPickersCalendarHeader-root {
+  background: rgb(0 0 0 / 20%)
+}
+
+.css-1jm66jt-MuiClockPicker-root {
+  background: hwb(207deg 18% 78% / 90%);
+}
+
+.css-4f0ona-MuiClock-clock {
+  background: #2f3438 !important
+}
+.css-zddqwy-MuiClockNumber-root {
+  color: #fff !important
+}
+
+.css-zddqwy-MuiClockNumber-root.Mui-disabled {
+  color: rgb(255 255 255 / 30%) !important
+}
+
+.css-1sn4lm3-MuiTypography-root {
+  color: #fff !important;
+}
+
+.css-195y93z-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  background: #81feb7 !important;
+  border-color: #81feb7 !important;
+}
+
+.css-12t0dn4-MuiClockPointer-thumb {
+  border: 16px solid #81feb7 !important
 }
