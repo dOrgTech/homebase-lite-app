@@ -21,10 +21,12 @@ import TextField from "@mui/material/TextField"
 import { DateRange } from "@material-ui/icons"
 import { Poll } from "models/Polls"
 import { useTezos } from "services/beacon/hooks/useTezos"
-import { getCurrentBlock, getSignature, getTotalSupplyAtReferenceBlock } from "services/utils"
+import { getSignature } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
 import "modules/explorer/pages/CreateProposal/DataTimePickerCustom.css"
+import duration from "dayjs/plugin/duration"
+dayjs.extend(duration)
 
 const ProposalContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -181,14 +183,36 @@ const validateForm = (values: Poll) => {
     errors.startTime = "Required"
   }
 
+  if (values.startTime && dayjs().diff(values.startTime) > 0) {
+    errors.startTime = "Start date can't be a past date"
+  }
+
   if (!values.endTime) {
     errors.endTime = "Required"
   }
 
+  if (values.startTime && values.endTime) {
+    if (dayjs(values.startTime).isAfter(dayjs(values.endTime))) {
+      errors.startTime = "Start date must be before end date"
+    }
+
+    if (dayjs(values.startTime).isBefore(dayjs(values.endTime))) {
+      const result = dayjs(values.endTime).diff(dayjs(values.startTime), "minute")
+      result < 5 ? (errors.startTime = `Can't allow less than 5 minutes for voting`) : null
+    }
+  }
   return errors
 }
 
-export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touched, isSubmitting }: any) => {
+export const ProposalForm = ({
+  submitForm,
+  values,
+  setFieldValue,
+  errors,
+  touched,
+  isSubmitting,
+  setFieldTouched
+}: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
@@ -236,13 +260,15 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         value={getIn(values, "startTime")}
                         onChange={(newValue: any) => {
                           setFieldValue("startTime", newValue.$d)
+                          setFieldTouched("startTime")
                         }}
                         components={{
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                        minDate={dayjs()}
-                        maxDate={getIn(values, "endTime")}
+                        minDateTime={dayjs()}
+                        maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
+                        disableIgnoringDatePartForTimeValidation={true}
                       />
                     )}
                   </Field>
@@ -257,12 +283,16 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                         value={getIn(values, "endTime")}
                         onChange={(newValue: any) => {
                           setFieldValue("endTime", newValue.$d)
+                          setFieldTouched("endTime")
                         }}
                         components={{
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
                         minDate={getIn(values, "startTime")}
+                        maxDateTime={dayjs().add(2, "w")}
+                        disablePast
+                        disableIgnoringDatePartForTimeValidation={true}
                       />
                     )}
                   </Field>
@@ -287,13 +317,17 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                       value={getIn(values, "startTime")}
                       onChange={(newValue: any) => {
                         setFieldValue("startTime", newValue.$d)
+                        setFieldTouched("startTime")
                       }}
                       components={{
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                      minDate={dayjs()}
-                      maxDate={getIn(values, "endTime")}
+                      minTime={dayjs()}
+                      minDateTime={dayjs()}
+                      maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
+                      disableIgnoringDatePartForTimeValidation={true}
+
                     />
                   )}
                 </Field>
@@ -308,12 +342,16 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
                       value={getIn(values, "endTime")}
                       onChange={(newValue: any) => {
                         setFieldValue("endTime", newValue.$d)
+                        setFieldTouched("endTime")
                       }}
                       components={{
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
                       minDate={getIn(values, "startTime")}
+                      maxDateTime={dayjs().add(2, "w")}
+                      disablePast
+                      disableIgnoringDatePartForTimeValidation={true}
                     />
                   )}
                 </Field>
