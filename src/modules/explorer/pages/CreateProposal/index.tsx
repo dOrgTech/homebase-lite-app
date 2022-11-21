@@ -24,7 +24,6 @@ import { useTezos } from "services/beacon/hooks/useTezos"
 import { getSignature } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
-import "modules/explorer/pages/CreateProposal/DataTimePickerCustom.css"
 import duration from "dayjs/plugin/duration"
 dayjs.extend(duration)
 
