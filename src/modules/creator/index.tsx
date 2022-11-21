@@ -375,6 +375,8 @@ export const CommunityCreator: React.FC = () => {
       if (!wallet) {
         return
       }
+      
+      values.members.push(account)
 
       const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(values))
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
