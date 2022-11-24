@@ -9,7 +9,8 @@ import {
   TextareaAutosize,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Avatar
 } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { Choices } from "modules/explorer/components/Choices"
@@ -25,6 +26,7 @@ import { getSignature } from "services/utils"
 import dayjs from "dayjs"
 import { useNotification } from "modules/common/hooks/useNotification"
 import duration from "dayjs/plugin/duration"
+import { CommunityBadge } from "modules/explorer/components/CommunityBadge"
 dayjs.extend(duration)
 
 const ProposalContainer = styled(Grid)(({ theme }) => ({
@@ -149,6 +151,15 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   }
 }))
 
+const CommunityLabel = styled(Grid)({
+  width: 212,
+  height: 54,
+  background: '#2F3438',
+  borderRadius: 4,
+  display: 'inline-grid',
+  marginBottom: 25
+})
+
 const ErrorText = styled(Typography)({
   fontSize: 14,
   color: "red",
@@ -163,6 +174,11 @@ const ErrorTextChoices = styled(Typography)({
   marginTop: -66
 })
 
+const hasDuplicates = (options: string[]) => {
+  const trimOptions = options.map(option => option.trim());
+  return (new Set(trimOptions)).size !== trimOptions.length;
+}
+
 const validateForm = (values: Poll) => {
   const errors: FormikErrors<Poll> = {}
 
@@ -176,6 +192,10 @@ const validateForm = (values: Poll) => {
 
   if (values.choices.length > 0 && values.choices.includes("")) {
     errors.choices = "Please enter an option value"
+  }
+
+  if (values.choices.length > 0 && hasDuplicates(values.choices)) {
+    errors.choices = "Duplicate options are not allowed"
   }
 
   if (!values.startTime) {
@@ -218,7 +238,10 @@ export const ProposalForm = ({
   return (
     <PageContainer>
       <Grid container>
-        <Header container direction="row">
+        <Header container direction="column">
+          <CommunityLabel direction="row" justifyContent="center" alignItems="center">
+            <CommunityBadge />
+          </CommunityLabel>
           <Typography color="textPrimary" variant="subtitle1">
             New Proposal
           </Typography>

@@ -157,7 +157,7 @@ export const CommunityList: React.FC = () => {
           {!isLoading &&
             communities &&
             communities.map(elem => (
-              <Grid item xs={6} md={4} lg={3} xl={2} key={elem._id}>
+              <Grid item xs={6} md={4} lg={3} xl={3} key={elem._id}>
                 <DaoCard community={elem} setIsUpdated={setIsUpdated} />
               </Grid>
             ))}
