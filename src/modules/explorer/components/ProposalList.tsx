@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Divider, Grid, Typography, styled } from "@material-ui/core"
 import { Dropdown } from "modules/common/Dropdown"
 import { ProposalTableRow } from "./ProposalTableRow"
@@ -35,6 +35,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
   }>()
  const communityId = id.toString()
  const openNotification = useNotification()
+ const [communityPolls, setCommunityPolls] = useState<Poll[]>([]);
 
   useMemo(() => {
     async function formatPolls() {
@@ -44,6 +45,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
              poll.isActive = !poll.timeFormatted.includes("ago") ? ProposalStatus.ACTIVE : ProposalStatus.CLOSED
              return
           })
+          setCommunityPolls(polls)
         }
     }
 
@@ -80,6 +82,15 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
     return
   }, [polls, communityId])
 
+  const filterProposals = (status: any) => {
+    if (status === 'all') {
+      setCommunityPolls(polls)
+      return
+    }
+    const formatted = polls.filter((poll: Poll) => poll.isActive === status)
+    setCommunityPolls(formatted)
+  }
+
   return (
     <ProposalListContainer container direction="column">
       <Header container justifyContent="space-between" alignItems="center">
@@ -96,16 +107,17 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
               { name: "Closed", value: "closed" }
             ]}
             value={"all"}
+            onSelected={filterProposals}
           />
         </Grid>
       </Header>
       <StyledDivider />
-      {polls && polls.length > 0 ?
-        polls.map((poll, i) => {
+      {communityPolls && communityPolls.length > 0 ?
+        communityPolls.map((poll, i) => {
           return (
             <div key={`poll-${i}`}>
               <ProposalTableRow poll={poll}/>
-              {polls.length - 1 !== i ? <StyledDivider key={`divider-${i}`} /> : null}
+              {communityPolls.length - 1 !== i ? <StyledDivider key={`divider-${i}`} /> : null}
             </div>
           )
         }) : (

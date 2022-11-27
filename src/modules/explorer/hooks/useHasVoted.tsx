@@ -14,29 +14,38 @@ export const useHasVoted = (refresh?: number) => {
   useEffect(() => {
     async function fetchHasVoted() {
       if (account) {
-        await fetch(`${process.env.REACT_APP_API_URL}/choices/${String(account)}/user`).then(async response => {
-          if (!response.ok) {
-            openNotification({
-              message: "An error has occurred",
-              autoHideDuration: 2000,
-              variant: "error"
-            })
-            return
-          }
+        try {
+          await fetch(`${process.env.REACT_APP_API_URL}/choices/${String(account)}/user`).then(async response => {
+            if (!response.ok) {
+              openNotification({
+                message: "An error has occurred",
+                autoHideDuration: 2000,
+                variant: "error"
+              })
+              return
+            }
 
-          const record = await response.json()
-          if (!record) {
-            setHasVoted(false)
+            const record = await response.json()
+            if (!record) {
+              setHasVoted(false)
+              return
+            }
+            if (record === null) {
+              setHasVoted(false)
+              return
+            }
+            setVote(record)
+            setHasVoted(true)
             return
-          }
-          if (record === null) {
-            setHasVoted(false)
-            return
-          }
-          setVote(record)
-          setHasVoted(true)
+          })
+        } catch {
+          openNotification({
+            message: "An error has occurred",
+            autoHideDuration: 2000,
+            variant: "error"
+          })
           return
-        })
+        }
       }
     }
     fetchHasVoted()

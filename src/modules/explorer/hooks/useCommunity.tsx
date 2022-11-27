@@ -15,6 +15,7 @@ export const useCommunity = (isUpdated?: number) => {
   useEffect(() => {
     async function fetchData() {
       const communityId = id.toString()
+      try {
       await fetch(`${process.env.REACT_APP_API_URL}/daos/${communityId}`).then(async response => {
         if (!response.ok) {
           openNotification({
@@ -31,6 +32,9 @@ export const useCommunity = (isUpdated?: number) => {
         }
         setCommunity(record)
       })
+    } catch {
+      return
+    }
     }
     fetchData()
 

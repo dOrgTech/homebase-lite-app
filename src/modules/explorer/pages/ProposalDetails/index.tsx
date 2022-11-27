@@ -16,6 +16,7 @@ import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
 import { usePollChoices } from "modules/explorer/hooks/usePollChoices"
 import { useCommunity } from "modules/explorer/hooks/useCommunity"
 import { useIsMembers } from "modules/explorer/hooks/useIsMember"
+import { useSinglePoll } from "modules/explorer/hooks/usePoll"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -44,9 +45,11 @@ const PageContainer = styled("div")({
 })
 
 export const ProposalDetails: React.FC = () => {
-  const { id } = useParams<{
-    id: string
+  const { id, proposalId } = useParams<{
+    id: string,
+    proposalId: string
   }>()
+
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
   const navigate = useHistory()
@@ -56,16 +59,10 @@ export const ProposalDetails: React.FC = () => {
   const openNotification = useNotification()
   const [refresh, setRefresh] = useState<number>()
   const { hasVoted, vote } = useHasVoted(refresh)
-  const poll = state.poll
-  const choices = usePollChoices(poll, refresh)
   const community = useCommunity()
+  const poll = useSinglePoll(proposalId, id, community)
+  const choices = usePollChoices(poll, refresh)
   const isMember = useIsMembers(account, community?.members)
-
-  useEffect(() => {
-    if (state === undefined) {
-      navigate.push(`/explorer/community/${id}`)
-    }
-  })
 
   useEffect(() => {
     choices.map(elem => {
@@ -204,27 +201,32 @@ export const ProposalDetails: React.FC = () => {
           <ProposalDetailCard poll={poll} />
         </Grid>
         <Grid container item xs={12}>
+          {choices && choices.length > 0 ? (
           <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
-            <Grid
-              container
-              item
-              justifyContent={isMobileSmall ? "center" : "space-between"}
-              direction="row"
-              style={{ gap: 30 }}
-            >
-              {choices.map((choice, index) => {
-                return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
-              })}
-            </Grid>
-            {isMember ? (
-              <Button variant="contained" color="secondary" onClick={() => saveVote()}>
-                Cast your vote
-              </Button>
-            ) : null}
-          </GridContainer>
+          <Grid
+            container
+            item
+            justifyContent={isMobileSmall ? "center" : "space-between"}
+            direction="row"
+            style={{ gap: 30 }}
+          >
+            {choices.map((choice, index) => {
+              return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
+            })}
+          </Grid>
+          {isMember ? (
+            <Button variant="contained" color="secondary" onClick={() => saveVote()}>
+              Cast your vote
+            </Button>
+          ) : null}
+        </GridContainer>
+          ) : null}
+
         </Grid>
         <Grid item xs={12}>
-          <VoteDetails poll={poll} choices={choices} />
+          {poll && poll !== undefined ? (
+            <VoteDetails poll={poll} choices={choices}  token={community?.tokenAddress} communityId={community?._id} />
+          ) : null}
         </Grid>
       </Grid>
     </PageContainer>

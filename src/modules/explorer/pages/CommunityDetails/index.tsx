@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom"
 import { Poll } from "models/Polls"
 import { useCommunity } from "modules/explorer/hooks/useCommunity"
 import { useNotification } from "modules/common/hooks/useNotification"
+import { usePolls } from "modules/explorer/hooks/usePolls"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -46,40 +47,9 @@ export const CommunityDetails: React.FC = () => {
   const { id } = useParams<{
     id: string
   }>()
-  const [polls, setPolls] = useState<Poll[]>([])
   const [isUpdated, setIsUpdated] = useState(1)
-
   const community = useCommunity(isUpdated)
-  const openNotification = useNotification()
-
-  useEffect(() => {
-    async function fetchPoll() {
-      const pollList = community?.polls
-      if (pollList && pollList.length > 0) {
-        pollList.forEach(async elem => {
-          await fetch(`${process.env.REACT_APP_API_URL}/polls/${elem}/polls`).then(async response => {
-            if (!response.ok) {
-              openNotification({
-                message: "An error has occurred",
-                autoHideDuration: 2000,
-                variant: "error"
-              })
-              return
-            }
-
-            const record: Poll = await response.json()
-            if (!record) {
-              return
-            }
-            setPolls(p => [...p, record])
-            return
-          })
-        })
-      }
-    }
-    fetchPoll()
-    return
-  }, [id, community])
+  const polls = usePolls(community?.polls, id, community)
 
   return (
     <PageContainer>

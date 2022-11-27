@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useMemo, useState } from "react"
 import { Grid, LinearProgress, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
@@ -15,6 +16,7 @@ import {
   nFormatter
 } from "services/utils"
 import { useTezos } from "services/beacon/hooks/useTezos"
+import { useCommunityToken } from "../hooks/useCommunityToken"
 
 const Container = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.light,
@@ -46,7 +48,12 @@ const GraphicsContainer = styled(Grid)({
   paddingBottom: 25
 })
 
-export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll, choices }) => {
+export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; token: any; communityId: any }> = ({
+  poll,
+  choices,
+  token,
+  communityId
+}) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("xs"))
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
@@ -54,6 +61,8 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
   const { network } = useTezos()
   const [turnout, setTurnout] = useState(0)
   const [votes, setVotes] = useState<Choice[]>([])
+  const tokenData = useCommunityToken(communityId)
+
   const handleClickOpen = () => {
     setVotes(choices.filter(elem => elem.walletAddresses.length > 0))
 
@@ -67,14 +76,11 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
   }
 
   useMemo(async () => {
-    const value = await getTurnoutValue(
-      network,
-      poll.tokenAddress!,
-      Number(poll.referenceBlock),
-      getTotalVoters(choices)
-    )
-    setTurnout(value)
-  }, [poll, choices, network])
+    if (token && token !== undefined) {
+      const value = await getTurnoutValue(network, token, Number(poll?.referenceBlock), getTotalVoters(choices))
+      setTurnout(value)
+    }
+  }, [poll, choices, network, token])
 
   return (
     <Container container direction="column">
@@ -96,7 +102,8 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                 <Grid item xs={12} lg={6} sm={6} container justifyContent={isMobileSmall ? "flex-start" : "flex-end"}>
                   <Typography color="textPrimary" variant="body2">
                     {choice.walletAddresses.length} Voters -{" "}
-                    {nFormatter(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals), 1)} {poll.tokenSymbol}
+                    {nFormatter(calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals), 1)}{" "}
+                    {tokenData?.symbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -106,9 +113,9 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                     style={{ width: "100%", marginRight: "4px" }}
                     color="secondary"
                     value={calculateWeight(
-                      poll.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)),
-                      poll.tokenDecimals
+                      poll?.totalSupplyAtReferenceBlock!,
+                      String(calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals)),
+                      tokenData?.decimals
                     )}
                     variant="determinate"
                   />
@@ -116,9 +123,9 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
                 <Grid item xs={2} lg={1} sm={1} container justifyContent="flex-end">
                   <Typography color="textPrimary" variant="body2">
                     {calculateWeight(
-                      poll.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)),
-                      poll.tokenDecimals
+                      poll?.totalSupplyAtReferenceBlock!,
+                      String(calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals)),
+                      tokenData?.decimals
                     ).toFixed(1)}
                     %
                   </Typography>
@@ -152,24 +159,24 @@ export const VoteDetails: React.FC<{ poll: Poll; choices: Choice[] }> = ({ poll,
             justifyContent={isMobileSmall ? "flex-start" : "flex-end"}
           >
             <Typography color="textPrimary" variant="body1">
-              {nFormatter(calculateProposalTotal(choices, poll.tokenDecimals), 1)}
+              {nFormatter(calculateProposalTotal(choices, tokenData?.decimals), 1)}
             </Typography>
             <Typography color="textPrimary" variant="body1">
-              {poll.tokenSymbol}
+              {poll?.tokenSymbol}
             </Typography>
             <Typography color="textPrimary" variant="body2">
               (
               {getTreasuryPercentage(
-                calculateProposalTotal(choices, poll.tokenDecimals),
-                Number(poll.totalSupplyAtReferenceBlock) / Number(poll.tokenDecimals) ** 10
+                calculateProposalTotal(choices, tokenData?.decimals),
+                Number(poll?.totalSupplyAtReferenceBlock) / Number(tokenData?.decimals) ** 10
               ).toFixed(2)}
               % of Treasury)
             </Typography>
           </Grid>
         </LegendContainer>
         <VotesDialog
-          decimals={poll.tokenDecimals ? poll.tokenDecimals : ""}
-          symbol={poll.tokenSymbol ? poll.tokenSymbol : ""}
+          decimals={tokenData?.decimals ? tokenData?.decimals : ""}
+          symbol={tokenData?.symbol ? tokenData?.symbol : ""}
           choices={votes}
           open={open}
           handleClose={handleClose}

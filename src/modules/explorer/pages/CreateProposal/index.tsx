@@ -239,7 +239,7 @@ export const ProposalForm = ({
     <PageContainer>
       <Grid container>
         <Header container direction="column">
-          <CommunityLabel direction="row" justifyContent="center" alignItems="center">
+          <CommunityLabel container direction="row" justifyContent="center" alignItems="center">
             <CommunityBadge />
           </CommunityLabel>
           <Typography color="textPrimary" variant="subtitle1">
