@@ -1,14 +1,15 @@
 import React from "react"
-import { Grid, styled, Typography, Link, useTheme, useMediaQuery } from "@material-ui/core"
+import { Grid, styled, Typography, Link, useTheme, useMediaQuery, Popover } from "@material-ui/core"
 import { GridContainer } from "modules/common/GridContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
 import { CreatorBadge } from "./CreatorBadge"
-import { MoreHoriz } from "@material-ui/icons"
+import { FileCopyOutlined, MoreHoriz, ShareOutlined } from "@material-ui/icons"
 import Share from "assets/img/share.svg"
 import { CommunityBadge } from "./CommunityBadge"
 import LinkIcon from "assets/img/link.svg"
 import { Poll } from "models/Polls"
 import dayjs from "dayjs"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const LogoItem = styled("img")({
   height: 18,
@@ -34,9 +35,38 @@ const StyledLink = styled(Link)({
   marginLeft: 8
 })
 
+const CopyIcon = styled(FileCopyOutlined)({
+  marginRight: 8,
+  cursor: "pointer"
+})
+
 export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll }) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const openNotification = useNotification()
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? "simple-popper" : undefined
+
+  const handleCopy = () => {
+    const url = location.href
+    navigator.clipboard.writeText(url)
+    openNotification({
+      message: "Proposal link copied to clipboard!",
+      autoHideDuration: 3000,
+      variant: "success"
+    })
+    handleClose()
+  }
 
   return (
     <>
@@ -62,12 +92,33 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                     <MoreHoriz color="secondary" />
                   </Grid>
                   <Grid item>
-                    <Grid container style={{ gap: 12, cursor: "pointer" }} alignItems="center">
+                    <Grid
+                      container
+                      style={{ gap: 12, cursor: "pointer" }}
+                      alignItems="center"
+                      aria-describedby={id}
+                      onClick={handleClick}
+                    >
                       <LogoItem src={Share} />
                       <Typography color="secondary" variant="h5">
                         Share
                       </Typography>
                     </Grid>
+                    <Popover
+                      id={id}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left"
+                      }}
+                    >
+                      <Grid container direction="row" onClick={handleCopy}>
+                        <CopyIcon />
+                        <Typography variant="subtitle2">Copy link</Typography>
+                      </Grid>
+                    </Popover>
                   </Grid>
                 </Grid>
               </Grid>
