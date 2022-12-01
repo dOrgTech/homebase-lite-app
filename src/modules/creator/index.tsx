@@ -407,7 +407,7 @@ export const CommunityCreator: React.FC = () => {
               autoHideDuration: 3000,
               variant: "success"
             })
-            navigate.push("/explore/communities")
+            navigate.push("/explorer/communities")
           } else {
             openNotification({
               message: "Community could not be created!",

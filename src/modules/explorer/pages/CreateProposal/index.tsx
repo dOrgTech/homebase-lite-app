@@ -476,7 +476,7 @@ export const ProposalCreator: React.FC = () => {
               variant: "success"
             })
             setIsLoading(false)
-            navigate.push(`/explore/community/${id}`)
+            navigate.push(`/explorer/community/${id}`)
           } else {
             openNotification({
               message: "Proposal could not be created",
