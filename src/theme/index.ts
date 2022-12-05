@@ -467,16 +467,6 @@ export const theme = createTheme({
       },
 
     },
-    MuiPopover: {
-      paper: {
-        marginTop: 10,
-        padding: 8,
-        cursor: 'pointer',
-        '&:hover': {
-          background: '#81feb76b !important'
-        }
-      }
-    },
     MuiTextField: {
       root: {
         borderRadius: 8

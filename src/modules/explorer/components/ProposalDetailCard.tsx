@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, styled, Typography, Link, useTheme, useMediaQuery, Popover } from "@material-ui/core"
+import { Grid, styled, Typography, Link, useTheme, useMediaQuery, Popover, withStyles } from "@material-ui/core"
 import { GridContainer } from "modules/common/GridContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
 import { CreatorBadge } from "./CreatorBadge"
@@ -39,6 +39,17 @@ const CopyIcon = styled(FileCopyOutlined)({
   marginRight: 8,
   cursor: "pointer"
 })
+
+const CustomPopover = withStyles({
+  paper: {
+    "marginTop": 10,
+    "padding": 8,
+    "cursor": "pointer",
+    "&:hover": {
+      background: "#81feb76b !important"
+    }
+  }
+})(Popover)
 
 export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll }) => {
   const theme = useTheme()
@@ -88,7 +99,7 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
               </Grid>
               <Grid item>
                 <Grid container style={{ gap: 18 }} direction="row">
-                  <Grid style={{ cursor: "pointer" }}>
+                  <Grid style={{ cursor: "pointer", visibility: "hidden" }}>
                     <MoreHoriz color="secondary" />
                   </Grid>
                   <Grid item>
@@ -104,7 +115,7 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                         Share
                       </Typography>
                     </Grid>
-                    <Popover
+                    <CustomPopover
                       id={id}
                       open={open}
                       anchorEl={anchorEl}
@@ -118,7 +129,7 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                         <CopyIcon />
                         <Typography variant="subtitle2">Copy link</Typography>
                       </Grid>
-                    </Popover>
+                    </CustomPopover>
                   </Grid>
                 </Grid>
               </Grid>
