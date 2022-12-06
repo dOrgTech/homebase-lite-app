@@ -1,5 +1,14 @@
 import React, { useState } from "react"
-import { Button, Grid, IconButton, InputAdornment, styled, Typography, withStyles } from "@material-ui/core"
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  InputAdornment,
+  styled,
+  Typography,
+  withStyles
+} from "@material-ui/core"
 import { theme } from "theme"
 
 import { AddCircleOutline, RemoveCircleOutline } from "@material-ui/icons"
@@ -50,8 +59,7 @@ const CustomFormikTextField = withStyles({
   }
 })(FormikTextField)
 
-export const Choices: React.FC<any> = ({ choices }) => {
-  
+export const Choices: React.FC<any> = ({ choices, submitForm, isLoading }) => {
   return (
     <>
       <ChoicesContainer container direction="column">
@@ -110,10 +118,14 @@ export const Choices: React.FC<any> = ({ choices }) => {
           )}
         />
       </ChoicesContainer>
-      <Grid container  style={{ gap: 10, marginTop: 31 }}>
-        <Button variant="contained" color="secondary">
-          Create Proposal
-        </Button>
+      <Grid container style={{ gap: 10, marginTop: 31 }}>
+        {!isLoading ? (
+          <Button variant="contained" color="secondary" onClick={submitForm}>
+            Create Proposal
+          </Button>
+        ) : (
+          <CircularProgress color="secondary" />
+        )}
       </Grid>
     </>
   )

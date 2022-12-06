@@ -1,6 +1,10 @@
+import React, { useContext, useEffect, useState } from "react"
 import { Avatar, Button, Grid, styled, Typography } from "@material-ui/core"
-import React from "react"
 import { useHistory } from "react-router"
+import { Community } from "models/Community"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { JoinButton } from "./JoinButton"
+import { DashboardContext } from "../context/ActionSheets/explorer"
 
 const StyledAvatar = styled(Avatar)({
   height: 84,
@@ -25,42 +29,43 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   cursor: "pointer"
 }))
 
-export const DaoCard: React.FC = () => {
+const CustomButton = styled(Button)(({ theme }) => ({
+  "width": 67,
+  "height": 34,
+  ".MuiButton-containedSecondary:hover": {
+    backgroundColor: `${theme.palette.secondary.main} !important`
+  }
+}))
+
+export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({ community, setIsUpdated }) => {
   const navigate = useHistory()
+  const { account } = useTezos()
+  const { isConnected } = useContext(DashboardContext)
+
   return (
-    <DaoCardContainer container style={{ gap: 10 }} onClick={() => navigate.push("/explorer/community/1")}>
+    <DaoCardContainer
+      container
+      style={{ gap: 10 }}
+      onClick={() => navigate.push(`/explorer/community/${community._id}`)}
+    >
       <Grid item>
-        <StyledAvatar> </StyledAvatar>
+        <StyledAvatar src={community.picUri}> </StyledAvatar>
       </Grid>
       <Grid item style={{ cursor: "pointer" }}>
         <Typography variant={"body1"} color="textPrimary">
-          TEZDAO
+          {community.name}
         </Typography>
       </Grid>
       <Grid item>
         <MembersText variant={"body2"} color="textPrimary">
-          300 members
+          {community.members?.length} members
         </MembersText>
       </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="small"
-          onClick={e => {
-            console.log("Button")
-            if (!e) {
-              const e = window.event;
-              if (e) {
-                e.cancelBubble = true
-              }
-            }
-            if (e.stopPropagation) e.stopPropagation()
-          }}
-        >
-          Join
-        </Button>
-      </Grid>
+      {isConnected ? (
+        <Grid item>
+          <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} />
+        </Grid>
+      ) : null}
     </DaoCardContainer>
   )
 }

@@ -1,12 +1,15 @@
 import React from "react"
-import { Grid, styled, Typography, Link, useTheme, useMediaQuery } from "@material-ui/core"
+import { Grid, styled, Typography, Link, useTheme, useMediaQuery, Popover, withStyles } from "@material-ui/core"
 import { GridContainer } from "modules/common/GridContainer"
 import { ProposalStatus, TableStatusBadge } from "./ProposalTableRowStatusBadge"
 import { CreatorBadge } from "./CreatorBadge"
-import { MoreHoriz } from "@material-ui/icons"
+import { FileCopyOutlined, MoreHoriz, ShareOutlined } from "@material-ui/icons"
 import Share from "assets/img/share.svg"
 import { CommunityBadge } from "./CommunityBadge"
 import LinkIcon from "assets/img/link.svg"
+import { Poll } from "models/Polls"
+import dayjs from "dayjs"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const LogoItem = styled("img")({
   height: 18,
@@ -32,93 +35,163 @@ const StyledLink = styled(Link)({
   marginLeft: 8
 })
 
-export const ProposalDetailCard: React.FC = () => {
+const CopyIcon = styled(FileCopyOutlined)({
+  marginRight: 8,
+  cursor: "pointer"
+})
+
+const CustomPopover = withStyles({
+  paper: {
+    "marginTop": 10,
+    "padding": 8,
+    "cursor": "pointer",
+    "&:hover": {
+      background: "#81feb76b !important"
+    }
+  }
+})(Popover)
+
+export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll }) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const openNotification = useNotification()
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? "simple-popper" : undefined
+
+  const handleCopy = () => {
+    const url = location.href
+    navigator.clipboard.writeText(url)
+    openNotification({
+      message: "Proposal link copied to clipboard!",
+      autoHideDuration: 3000,
+      variant: "success"
+    })
+    handleClose()
+  }
 
   return (
-    <GridContainer container style={{ gap: 50 }}>
-      <Grid container style={{ gap: 25 }}>
-        <Grid
-          item
-          container
-          alignItems="flex-end"
-          direction="row"
-          style={{ gap: isMobileSmall ? 25 : 0 }}
-          justifyContent="space-between"
-        >
-          <Grid item>
-            <Typography variant="h1" color="textPrimary">
-              Should the DAO fund a new project?
-            </Typography>
-          </Grid>
-          <Grid item >
-            <Grid container style={{ gap: 18 }} direction="row">
-              <Grid style={{ cursor: "pointer" }}>
-                <MoreHoriz color="secondary" />
+    <>
+      {poll && poll !== undefined ? (
+        <GridContainer container style={{ gap: 50 }}>
+          <Grid container style={{ gap: 25 }}>
+            <Grid
+              item
+              container
+              alignItems="flex-end"
+              direction="row"
+              style={{ gap: isMobileSmall ? 25 : 0 }}
+              justifyContent="space-between"
+            >
+              <Grid item>
+                <Typography variant="h1" color="textPrimary">
+                  {poll?.name}
+                </Typography>
               </Grid>
               <Grid item>
-                <Grid container style={{ gap: 12, cursor: "pointer" }} alignItems="center">
-                  <LogoItem src={Share} />
-                  <Typography color="secondary" variant="h5">
-                    Share
-                  </Typography>
+                <Grid container style={{ gap: 18 }} direction="row">
+                  <Grid style={{ cursor: "pointer", visibility: "hidden" }}>
+                    <MoreHoriz color="secondary" />
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      container
+                      style={{ gap: 12, cursor: "pointer" }}
+                      alignItems="center"
+                      aria-describedby={id}
+                      onClick={handleClick}
+                    >
+                      <LogoItem src={Share} />
+                      <Typography color="secondary" variant="h5">
+                        Share
+                      </Typography>
+                    </Grid>
+                    <CustomPopover
+                      id={id}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left"
+                      }}
+                    >
+                      <Grid container direction="row" onClick={handleCopy}>
+                        <CopyIcon />
+                        <Typography variant="subtitle2">Copy link</Typography>
+                      </Grid>
+                    </CustomPopover>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
 
-        <Grid container justifyContent={"space-between"} alignItems={"center"}>
-          <Grid item>
-            <Grid container justifyContent={isMobileSmall ? "space-evenly" : "flex-start"} style={{ gap: 23 }}>
+            <Grid container justifyContent={"space-between"} alignItems={"center"}>
               <Grid item>
-                <TableStatusBadge status={ProposalStatus.ACTIVE} />
-              </Grid>
-              <Grid item>
-                <CommunityBadge />
-              </Grid>
-              <Grid item>
-                <CreatorBadge address="tz1WF58LWoYY5SqSNiAQMp6nw2PHjSEAwjWy" />
+                <Grid container justifyContent={isMobileSmall ? "space-evenly" : "flex-start"} style={{ gap: 23 }}>
+                  <Grid item>
+                    <TableStatusBadge status={poll?.isActive || ProposalStatus.ACTIVE} />
+                  </Grid>
+                  <Grid item>
+                    <CommunityBadge />
+                  </Grid>
+                  <Grid item>
+                    <CreatorBadge address={poll?.author} />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid container direction="row">
+              <Grid item container direction="row" spacing={2} alignItems="center">
+                <TextContainer color="textPrimary" variant="body1">
+                  Start date:{" "}
+                </TextContainer>
+                <Typography variant="body2" color="textPrimary">
+                  {" "}
+                  {dayjs(Number(poll?.startTime)).format("ll")}
+                </Typography>
+                <Divider color="textPrimary">-</Divider>
+                <TextContainer color="textPrimary" variant="body1">
+                  {" "}
+                  End date:{" "}
+                </TextContainer>
+                <Typography variant="body2" color="textPrimary">
+                  {" "}
+                  {dayjs(Number(poll?.endTime)).format("ll")}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container>
+              <Typography variant="body2" color="textPrimary">
+                {poll?.description}
+              </Typography>
+            </Grid>
+
+            {poll?.externalLink ? (
+              <Grid container alignItems="center">
+                <LogoItem src={LinkIcon} />
+                <StyledLink color="secondary" href="#">
+                  {poll?.externalLink}
+                </StyledLink>
+              </Grid>
+            ) : null}
           </Grid>
-        </Grid>
+        </GridContainer>
+      ) : (
         <Grid container direction="row">
-          <Grid item container direction="row" spacing={2} alignItems="center">
-            <TextContainer color="textPrimary" variant="body1">
-              Start date:{" "}
-            </TextContainer>
-            <Typography variant="body2" color="textPrimary">
-              {" "}
-              Aug. 16, 2022
-            </Typography>
-            <Divider color="textPrimary">-</Divider>
-            <TextContainer color="textPrimary" variant="body1">
-              {" "}
-              End date:{" "}
-            </TextContainer>
-            <Typography variant="body2" color="textPrimary">
-              {" "}
-              Sep. 16, 2022{" "}
-            </Typography>
-          </Grid>
+          <Typography color="textPrimary">Could not load the requested proposal</Typography>
         </Grid>
-
-        <Grid container>
-          <Typography variant="body2" color="textPrimary">
-            This Proposal was created to fund a new project as the governing body of such and such and such and other
-            can go here.
-          </Typography>
-        </Grid>
-
-        <Grid container alignItems="center">
-          <LogoItem src={LinkIcon} />
-          <StyledLink color="secondary" href="#">
-            https://example.com/
-          </StyledLink>
-        </Grid>
-      </Grid>
-    </GridContainer>
+      )}
+    </>
   )
 }

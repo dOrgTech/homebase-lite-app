@@ -23,12 +23,6 @@ export const ActionSheetProvider: React.FC<any> = ({ children }) => {
     setOpenedModal(ActionSheet.None)
   }, [])
 
-  useEffect(() => {
-    if (openedModal === ActionSheet.None) {
-      console.log("ALL CLOSED")
-    }
-  }, [openedModal])
-
   return (
     <ActionSheetContext.Provider value={{ openedModal, setOpenedModal, onClose }}>
       {children}

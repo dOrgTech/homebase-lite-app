@@ -12,6 +12,9 @@ import {
 } from "@material-ui/core"
 import { toShortAddress } from "services/contracts/utils"
 import { FileCopyOutlined } from "@material-ui/icons"
+import { Choice } from "models/Choice"
+import { formatByDecimals } from "services/utils"
+import { useNotification } from "modules/common/hooks/useNotification"
 
 const CustomContent = styled(DialogContent)({
   padding: "0px 54px 22px 54px !important"
@@ -27,8 +30,16 @@ const CustomTitle = styled(Typography)(({ theme }) => ({
   paddingBottom: 16
 }))
 
-export const VotesDialog: React.FC<{ open: boolean; handleClose: any }> = ({ open, handleClose }) => {
+export const VotesDialog: React.FC<{
+  open: boolean
+  handleClose: any
+  choices: Choice[]
+  symbol: string
+  decimals: string
+}> = ({ open, handleClose, choices, symbol, decimals }) => {
   const descriptionElementRef = React.useRef<HTMLElement>(null)
+  const openNotification = useNotification()
+
   React.useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef
@@ -38,10 +49,18 @@ export const VotesDialog: React.FC<{ open: boolean; handleClose: any }> = ({ ope
     }
   }, [open])
 
+  const copyAddress = (address: string) => {
+    navigator.clipboard.writeText(address)
+    openNotification({
+      message: "Address copied!",
+      autoHideDuration: 2000,
+      variant: "info"
+    })
+  }
+
   return (
     <div>
       <Dialog
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
         open={open}
         onClose={handleClose}
@@ -52,29 +71,40 @@ export const VotesDialog: React.FC<{ open: boolean; handleClose: any }> = ({ ope
         <DialogTitle id="scroll-dialog-title">
           {" "}
           <CustomTitle color="textPrimary" variant="body2">
-            30 Votes:
+            {choices.length} Votes:
           </CustomTitle>
         </DialogTitle>
         <CustomContent>
           <DialogContentText id="scroll-dialog-description" ref={descriptionElementRef} tabIndex={-1}>
-            {[...Array(30).keys()].map(elem => (
-              <Grid container direction="row" alignItems="baseline" key={elem}>
-                <Grid item xs={6} md={4} lg={4} xl={4} key={elem} container direction="row" alignItems="center">
-                  <Typography> {toShortAddress("tz1bQgEea45ciBpYdFj4y4P3hNyDM8aMF6WB")}</Typography>
-                  <CopyIcon color="secondary" fontSize="inherit" />
-                </Grid>
-                <Grid item xs={6} md={4} lg={4} xl={4} key={elem} container justifyContent="center">
-                  <Typography variant="body1"> Choice 1 </Typography>
-                </Grid>
-                <Grid item xs={6} md={4} lg={4} xl={4} key={elem} container justifyContent="center">
-                  <Typography variant="body1"> 14290 TKN </Typography>
-                </Grid>
-              </Grid>
-            ))}
+            {choices.map((elem: Choice, index: number) => {
+              {
+                return elem.walletAddresses.map((choice, num) => {
+                  return (
+                    <Grid container direction="row" alignItems="baseline" key={`'row-'${index}${num}`}>
+                      <Grid item xs={6} md={4} lg={4} xl={4} container direction="row" alignItems="center">
+                        <Typography> {toShortAddress(choice.address)}</Typography>
+                        <CopyIcon onClick={() => copyAddress(choice.address)} color="secondary" fontSize="inherit"  />
+                      </Grid>
+                      <Grid item xs={6} md={4} lg={4} xl={4} container justifyContent="center">
+                        <Typography variant="body1"> {elem.name} </Typography>
+                      </Grid>
+                      <Grid item xs={6} md={4} lg={4} xl={4} container justifyContent="flex-end">
+                        <Typography variant="body1">
+                          {" "}
+                          {formatByDecimals(choice.balanceAtReferenceBlock, decimals)} {symbol}{" "}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )
+                })
+              }
+            })}
           </DialogContentText>
         </CustomContent>
         <DialogActions>
-          <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+          <Button variant="contained" color="secondary" onClick={handleClose}>
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

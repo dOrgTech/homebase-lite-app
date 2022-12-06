@@ -28,7 +28,7 @@ const AvatarBox = styled(Grid)(({ theme }) => ({
   alignItems: "center"
 }))
 
-export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
+export const UploadAvatar: React.FC<any> = ({ setFieldValue, values, disabled }) => {
   const [avatarPreview, setAvatarPreview] = useState<any>("")
 
   return (
@@ -44,10 +44,10 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
         </Grid>
 
         <Grid item>
-          <Button variant="contained" color="secondary" component="label">
+          <Button variant="contained" color="secondary" component="label" disabled={disabled}>
             Upload
             <input
-              name="avatar_url"
+              name="picUri"
               accept="image/*"
               type="file"
               hidden
@@ -55,7 +55,7 @@ export const UploadAvatar: React.FC<any> = ({ setFieldValue, values }) => {
                 const fileReader = new FileReader()
                 fileReader.onload = () => {
                   if (fileReader.readyState === 2) {
-                    setFieldValue("avatar_url", fileReader.result)
+                    setFieldValue("picUri", fileReader.result)
                     setAvatarPreview(fileReader.result)
                   }
                 }

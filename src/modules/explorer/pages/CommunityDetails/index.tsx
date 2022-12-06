@@ -1,10 +1,17 @@
-import React from "react"
-import { Grid, styled } from "@material-ui/core"
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react"
+import { Grid, styled, CircularProgress, Typography } from "@material-ui/core"
 import { ProposalList } from "../../components/ProposalList"
 import { DaoCardDetail } from "modules/explorer/components/DaoCardDetail"
+import { useParams } from "react-router-dom"
+import { Poll } from "models/Polls"
+import { useCommunity } from "modules/explorer/hooks/useCommunity"
+import { useNotification } from "modules/common/hooks/useNotification"
+import { usePolls } from "modules/explorer/hooks/usePolls"
 
 const CommunityDetailsContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
+  height: "fit-content",
   [theme.breakpoints.down("md")]: {
     marginTop: 0
   }
@@ -37,14 +44,27 @@ const PageContainer = styled("div")({
 })
 
 export const CommunityDetails: React.FC = () => {
+  const { id } = useParams<{
+    id: string
+  }>()
+  const [isUpdated, setIsUpdated] = useState(1)
+  const community = useCommunity(isUpdated)
+  const polls = usePolls(community?.polls, id, community)
+
   return (
     <PageContainer>
       <Grid container spacing={3}>
         <CommunityDetailsContainer item xs={12} lg={4} md={4}>
-          <DaoCardDetail />
+          <DaoCardDetail community={community} setIsUpdated={setIsUpdated} />
         </CommunityDetailsContainer>
-        <CommunityDetailsContainer item xs={12} lg={8} md={8}>
-          <ProposalList />
+        <CommunityDetailsContainer container justifyContent="center" item xs={12} lg={8} md={8}>
+          {polls.length > 0 ? (
+            <ProposalList polls={polls} />
+          ) : (
+            <Typography style={{ width: "inherit" }} color="textPrimary">
+              0 proposals found
+            </Typography>
+          )}
         </CommunityDetailsContainer>
       </Grid>
     </PageContainer>

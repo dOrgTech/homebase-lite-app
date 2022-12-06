@@ -2,10 +2,12 @@ export interface Proposal {
     id?: string
     title: string
     description: string
-    link: string
+    externalLink: string
     choices: string[]
-    start_date: string
-    end_date: string
+    startTime: number
+    endTime: number
+    daoID: string
+
   }
 
 interface Choice {

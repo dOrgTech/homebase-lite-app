@@ -140,12 +140,91 @@ export const theme = createTheme({
     MuiPickersDay: {
       styleOverrides: {
         root: {
-          color: 'red !important',
+          backgroundColor: 'red !important',
         },
       }
     }
   },
   overrides: {
+    MuiPaper: {
+      elevation8: {
+        background: 'rgb(47, 52, 56) !important',
+        '& .MuiCalendarPicker-root': {
+          background:'hwb(207deg 18% 78% / 90%)'
+        },
+        '& .MuiPickersCalendarHeader-root': {
+          background: 'rgb(0 0 0 / 20%)'
+        },
+        '& .MuiClockPicker-root' : {
+          background: 'hwb(207deg 18% 78% / 90%)'
+        },
+        '& .MuiClock-clock' : {
+          background: '#2f3438 !important'
+        },
+        '& .MuiClockNumber-root' : {
+          color: '#fff'
+        },
+        '& .MuiClockNumber-root.Mui-disabled': {
+          color: 'rgb(255 255 255 / 30%) !important'
+        },
+        '& .MuiTypography-root' : {
+          color: '#fff !important'
+        },
+        '& .MuiPickersDay-root.Mui-selected': {
+          background: '#81feb7 !important',
+          borderColor: '#81feb7 !important',
+          color: 'black'
+        },
+        '& .MuiClockPointer-thumb': {
+          backgroundColor: '#81FEB7 !important',
+          border: '16px solid #81FEB7 !important'        },
+        '& .MuiClockPointer-root' : {
+          backgroundColor: '#81FEB7 !important'
+        },
+        '& .MuiClock-pin': {
+          backgroundColor: '#81FEB7 !important'
+        },
+        '& .MuiClock-amButton' :{
+          backgroundColor: '#81FEB7 !important'
+        },
+        '& .MuiPickersPopper-paper': {
+          background: 'rgb(47, 52, 56) !important'
+        },
+        '& .MuiClock-pmButton':{
+          backgroundColor: '#81FEB7 !important'
+        },
+        '& .MuiPickersDay-root.Mui-disabled': {
+          color: 'rgba(0, 0, 0, 0.38)',
+          opacity: 0.5,
+          border: '3px solid rgb(0 0 0 / 87%) !important'
+        },
+        '& .MuiPickersDay-root:not(.Mui-selected)' : {
+          border: '3px solid #81FEB7',
+          '&:hover': {
+            color: 'white'
+          },
+          '&:focus': {
+            color: '#81feb7'
+          }
+        },
+        '& .MuiPickersDay-root':{
+          border: '2px solid #81FEB7'
+        },
+        '& .MuiDayPicker-weekDayLabel': {
+          fontWeight: '900 !important'
+        },
+        '& .MuiPickersCalendarHeader-label' :{
+          color: 'white'
+        }
+      },
+      root:{
+        '& .MuiPickersPopper': {
+          paper: {
+            background: 'rgb(47, 52, 56) !important'
+          }
+        }
+      }
+    },
     MuiSlider: {
       root: {
         color: "#3D3D3D"
@@ -299,6 +378,15 @@ export const theme = createTheme({
         "fontWeight": 500,
         "fontSize": 18
       },
+      colorInherit: {
+        "&$disabled": {
+          border: "2px solid #3d3d3d"
+        },
+        background: "#81feb7",
+        "&:hover": {
+          background: "#ff486e"
+        }
+      },
       outlined: {
         "&$disabled": {
           border: "2px solid #3d3d3d"
@@ -315,6 +403,12 @@ export const theme = createTheme({
       }
     },
     MuiLinearProgress: {
+      colorSecondary: {
+        backgroundColor: "rgba(125,140,139, 0.2) !important"
+      },
+      colorPrimary:{
+        backgroundColor: "rgba(125,140,139, 0.2) !important"
+      },
       barColorSecondary: {
         backgroundColor: "#3FE888"
       },

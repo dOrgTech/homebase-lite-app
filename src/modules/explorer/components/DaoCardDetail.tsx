@@ -1,6 +1,11 @@
 import { Avatar, Button, Grid, styled, Typography, useMediaQuery, useTheme } from "@material-ui/core"
-import React from "react"
+import { Community } from "models/Community"
+import React, { useContext } from "react"
 import { useHistory } from "react-router"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { DashboardContext } from "../context/ActionSheets/explorer"
+import { useIsMembers } from "../hooks/useIsMember"
+import { JoinButton } from "./JoinButton"
 
 const StyledAvatar = styled(Avatar)({
   height: 159,
@@ -10,29 +15,21 @@ const StyledAvatar = styled(Avatar)({
 const MembersText = styled(Typography)({
   fontWeight: 300,
   fontSize: 18,
-  letterSpacing: "-0.01em"
+  letterSpacing: "-0.01em",
+  marginBottom: 10
 })
 
 const CommunityText = styled(Typography)({
   fontWeight: 500,
-  fontSize: 34,
+  fontSize: 30,
   lineHeight: "146.3%"
 })
-
-const JoinButton = styled(Button)(({ theme }) => ({
-  width: 74,
-  padding: 7,
-  fontSize: 15,
-  [theme.breakpoints.down("md")]: {
-    marginTop: 8,
-    marginBottom: 4
-  }
-}))
 
 const CommunityDescription = styled(Typography)({
   marginBottom: 22,
   maxHeight: 124,
-  overflowY: "scroll"
+  overflowY: "scroll",
+  marginTop: 10
 })
 
 const ProposalButton = styled(Button)({
@@ -47,51 +44,54 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   justifyContent: "center",
   flexDirection: "column",
   marginBottom: 15,
-  padding: "33px 43px"
+  padding: "33px 40px"
 }))
 
-export const DaoCardDetail: React.FC = () => {
-  const navigate = useHistory();
+interface DaoCardDetailProps {
+  community?: Community
+  setIsUpdated: any
+}
+
+export const DaoCardDetail: React.FC<DaoCardDetailProps> = ({ community, setIsUpdated }) => {
+  const navigate = useHistory()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+  const { account } = useTezos()
+  const { isConnected } = useContext(DashboardContext)
+  const isMember = useIsMembers(account, community?.members)
 
   return (
     <DaoCardContainer container style={{ gap: 10 }} direction="column">
       <Grid item>
-        <StyledAvatar> </StyledAvatar>
+        <StyledAvatar src={community?.picUri}> </StyledAvatar>
       </Grid>
-      <Grid item container direction="row" justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
-        <Grid item direction="column" container xs={12} md={12} lg={6} alignItems={isMobile ? "center" : "stretch"}>
-          <CommunityText color="textPrimary">TEZDAO</CommunityText>
+      <Grid item container direction="column" justifyContent="center" alignItems="center">
+        <Grid item direction="column" container alignItems="center">
+          <CommunityText color="textPrimary">{community?.name}</CommunityText>
           <MembersText variant={"body1"} color="textPrimary">
-            300 members
+            {community?.members?.length} members
           </MembersText>
-        </Grid>
-        <Grid item>
-          <JoinButton variant="contained" color="secondary" size="small" onClick={() => console.log("Button")}>
-            Join
-          </JoinButton>
+          {isConnected ? <JoinButton account={account} setIsUpdated={setIsUpdated} community={community} /> : null}
         </Grid>
       </Grid>
 
       <Grid container direction="row">
         <CommunityDescription variant="body2" color="textPrimary">
-          The TezDAO was founded as a partnership between some of the most known Tezos Influencers. The purpose of this
-          DAO is allow creativity.
+          {community?.description}
         </CommunityDescription>
       </Grid>
 
+      {isConnected && isMember ? (
         <Grid item>
           <ProposalButton
             variant="contained"
             color="secondary"
             size="small"
-            onClick={() => navigate.push("/explorer/community/1/proposal")}
+            onClick={() => navigate.push(`/explorer/community/${community?._id}/proposal`)}
           >
             New Proposal
           </ProposalButton>
         </Grid>
-
+      ) : null}
     </DaoCardContainer>
   )
 }

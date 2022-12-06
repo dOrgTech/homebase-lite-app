@@ -1,4 +1,5 @@
-import React from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Grid,
   styled,
@@ -8,17 +9,25 @@ import {
   TextareaAutosize,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Avatar
 } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { Choices } from "modules/explorer/components/Choices"
-import { Proposal } from "models/Proposal"
-import { useHistory } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
 import { DateTimePicker } from "@mui/x-date-pickers"
 import TextField from "@mui/material/TextField"
 import { DateRange } from "@material-ui/icons"
+import { Poll } from "models/Polls"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { getSignature } from "services/utils"
+import dayjs from "dayjs"
+import { useNotification } from "modules/common/hooks/useNotification"
+import duration from "dayjs/plugin/duration"
+import { CommunityBadge } from "modules/explorer/components/CommunityBadge"
+dayjs.extend(duration)
 
 const ProposalContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -76,7 +85,7 @@ const PageContainer = styled("div")({
 
 const Header = styled(Grid)(({ theme }) => ({
   marginBottom: 26,
-  [theme.breakpoints.down("sm")] :{
+  [theme.breakpoints.down("sm")]: {
     marginBottom: 6
   }
 }))
@@ -142,24 +151,97 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   }
 }))
 
-const validateForm = (values: Proposal) => {
-  const errors: FormikErrors<Proposal> = {}
+const CommunityLabel = styled(Grid)({
+  width: 212,
+  height: 54,
+  background: '#2F3438',
+  borderRadius: 4,
+  display: 'inline-grid',
+  marginBottom: 25
+})
 
-  if (!values.title) {
-    errors.title = "Required"
+const ErrorText = styled(Typography)({
+  fontSize: 14,
+  color: "red",
+  marginBottom: -21,
+  marginTop: 2
+})
+
+const ErrorTextChoices = styled(Typography)({
+  fontSize: 14,
+  color: "red",
+  marginBottom: -21,
+  marginTop: -66
+})
+
+const hasDuplicates = (options: string[]) => {
+  const trimOptions = options.map(option => option.trim());
+  return (new Set(trimOptions)).size !== trimOptions.length;
+}
+
+const validateForm = (values: Poll) => {
+  const errors: FormikErrors<Poll> = {}
+
+  if (!values.name) {
+    errors.name = "Required"
   }
 
+  if (values.choices.length === 0 || values.choices.length === 1) {
+    errors.choices = "Two options at least are required"
+  }
+
+  if (values.choices.length > 0 && values.choices.includes("")) {
+    errors.choices = "Please enter an option value"
+  }
+
+  if (values.choices.length > 0 && hasDuplicates(values.choices)) {
+    errors.choices = "Duplicate options are not allowed"
+  }
+
+  if (!values.startTime) {
+    errors.startTime = "Required"
+  }
+
+  if (values.startTime && dayjs().diff(values.startTime) > 0) {
+    errors.startTime = "Start date can't be a past date"
+  }
+
+  if (!values.endTime) {
+    errors.endTime = "Required"
+  }
+
+  if (values.startTime && values.endTime) {
+    if (dayjs(values.startTime).isAfter(dayjs(values.endTime))) {
+      errors.startTime = "Start date must be before end date"
+    }
+
+    if (dayjs(values.startTime).isBefore(dayjs(values.endTime))) {
+      const result = dayjs(values.endTime).diff(dayjs(values.startTime), "minute")
+      result < 5 ? (errors.startTime = `Can't allow less than 5 minutes for voting`) : null
+    }
+  }
   return errors
 }
 
-export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched }: any) => {
+export const ProposalForm = ({
+  submitForm,
+  values,
+  setFieldValue,
+  errors,
+  touched,
+  isSubmitting,
+  setFieldTouched
+}: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
   return (
     <PageContainer>
       <Grid container>
-        <Header container direction="row">
+        <Header container direction="column">
+          <CommunityLabel container direction="row" justifyContent="center" alignItems="center">
+            <CommunityBadge />
+          </CommunityLabel>
           <Typography color="textPrimary" variant="subtitle1">
             New Proposal
           </Typography>
@@ -167,7 +249,8 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
         <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 30 }}>
           <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
             <Grid item>
-              <Field name="title" type="text" placeholder="Proposal Title*" component={CustomFormikTextField} />
+              <Field name="name" type="text" placeholder="Proposal Title*" component={CustomFormikTextField} />
+              {errors?.name && touched.name ? <ErrorText>{errors.name}</ErrorText> : null}
             </Grid>
             <Grid item>
               <Field name="description">
@@ -185,91 +268,116 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
               </Field>
             </Grid>
             <Grid item>
-              <Field name="link" type="text" placeholder="External Link" component={CustomFormikTextField} />
+              <Field name="externalLink" type="text" placeholder="External Link" component={CustomFormikTextField} />
             </Grid>
 
             {isMobileSmall ? (
               <>
                 <Grid item>
-                  <Field name="start_date">
+                  <Field name="startTime">
                     {() => (
                       <DateTimePicker
-                        inputFormat="DD/MM/YYYY hh:mm a"
-                        label={getIn(values, "start_date") ? "" : "Start date"}
-                        value={getIn(values, "start_date")}
+                        inputFormat="MM/DD/YYYY hh:mm a"
+                        label={getIn(values, "startTime") ? "" : "Start date"}
+                        value={getIn(values, "startTime")}
                         onChange={(newValue: any) => {
-                          setFieldValue("start_date", newValue)
+                          setFieldValue("startTime", newValue.$d)
+                          setFieldTouched("startTime")
                         }}
                         components={{
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDateTime={dayjs()}
+                        maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
+                        disableIgnoringDatePartForTimeValidation={true}
                       />
                     )}
                   </Field>
+                  {errors?.startTime && touched.startTime ? <ErrorText>{errors.startTime}</ErrorText> : null}
                 </Grid>
                 <Grid item>
-                  <Field name="end_date">
+                  <Field name="endTime">
                     {() => (
                       <DateTimePicker
-                        inputFormat="DD/MM/YYYY hh:mm a"
-                        label={getIn(values, "end_date") ? "" : "End date"}
-                        value={getIn(values, "end_date")}
+                        inputFormat="MM/DD/YYYY hh:mm a"
+                        label={getIn(values, "endTime") ? "" : "End date"}
+                        value={getIn(values, "endTime")}
                         onChange={(newValue: any) => {
-                          setFieldValue("end_date", newValue)
+                          setFieldValue("endTime", newValue.$d)
+                          setFieldTouched("endTime")
                         }}
                         components={{
                           OpenPickerIcon: DateRange
                         }}
                         renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                        minDate={getIn(values, "startTime")}
+                        maxDateTime={dayjs().add(2, "w")}
+                        disablePast
+                        disableIgnoringDatePartForTimeValidation={true}
                       />
                     )}
                   </Field>
+                  {errors?.endTime && touched.endTime ? <ErrorText>{errors.endTime}</ErrorText> : null}
                 </Grid>
               </>
             ) : null}
             <ProposalChoices>
-              <Choices choices={getIn(values, "choices")} />
+              <Choices choices={getIn(values, "choices")} isLoading={isSubmitting} submitForm={submitForm} />
+              {errors?.choices && touched.choices ? <ErrorTextChoices>{errors.choices}</ErrorTextChoices> : null}
             </ProposalChoices>
           </ProposalContainer>
 
           {!isMobileSmall ? (
             <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={4}>
               <Grid item>
-                <Field name="start_date">
+                <Field name="startTime">
                   {() => (
                     <DateTimePicker
-                      inputFormat="DD/MM/YYYY hh:mm a"
-                      label={getIn(values, "start_date") ? "" : "Start date"}
-                      value={getIn(values, "start_date")}
+                      inputFormat="MM/DD/YYYY hh:mm a"
+                      label={getIn(values, "startTime") ? "" : "Start date"}
+                      value={getIn(values, "startTime")}
                       onChange={(newValue: any) => {
-                        setFieldValue("start_date", newValue)
+                        setFieldValue("startTime", newValue.$d)
+                        setFieldTouched("startTime")
                       }}
                       components={{
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minTime={dayjs()}
+                      minDateTime={dayjs()}
+                      maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
+                      disableIgnoringDatePartForTimeValidation={true}
+
                     />
                   )}
                 </Field>
+                {errors?.startTime && touched.startTime ? <ErrorText>{errors.startTime}</ErrorText> : null}
               </Grid>
               <Grid item>
-                <Field name="end_date">
+                <Field name="endTime">
                   {() => (
                     <DateTimePicker
-                      inputFormat="DD/MM/YYYY hh:mm a"
-                      label={getIn(values, "end_date") ? "" : "End date"}
-                      value={getIn(values, "end_date")}
+                      inputFormat="MM/DD/YYYY hh:mm a"
+                      label={getIn(values, "endTime") ? "" : "End date"}
+                      value={getIn(values, "endTime")}
                       onChange={(newValue: any) => {
-                        setFieldValue("end_date", newValue)
+                        setFieldValue("endTime", newValue.$d)
+                        setFieldTouched("endTime")
                       }}
                       components={{
                         OpenPickerIcon: DateRange
                       }}
                       renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
+                      minDate={getIn(values, "startTime")}
+                      maxDateTime={dayjs().add(2, "w")}
+                      disablePast
+                      disableIgnoringDatePartForTimeValidation={true}
                     />
                   )}
                 </Field>
+                {errors?.endTime && touched.endTime ? <ErrorText>{errors.endTime}</ErrorText> : null}
               </Grid>
             </ProposalContainer>
           ) : null}
@@ -281,21 +389,116 @@ export const ProposalForm = ({ submitForm, values, setFieldValue, errors, touche
 
 export const ProposalCreator: React.FC = () => {
   const navigate = useHistory()
+  const { network, account, wallet } = useTezos()
+  const [tokenAddress, setTokenAddress] = useState<string>("")
+  const openNotification = useNotification()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const initialState: Proposal = {
-    title: "",
+  const { id } = useParams<{
+    id: string
+  }>()
+
+  useEffect(() => {
+    async function fetchData() {
+      const communityId = id.toString()
+      await fetch(`${process.env.REACT_APP_API_URL}/token/${communityId}`).then(async response => {
+        if (!response.ok) {
+          openNotification({
+            message: "An error has occurred",
+            autoHideDuration: 2000,
+            variant: "error"
+          })
+          return
+        }
+
+        const record = await response.json()
+        if (!record) {
+          return
+        }
+        setTokenAddress(record.tokenAddress)
+      })
+    }
+    fetchData()
+
+    return
+  }, [id, network])
+
+  const initialState: Poll = {
+    name: "",
     description: "",
-    link: "",
+    externalLink: "",
     choices: [""],
-    start_date: "",
-    end_date: ""
+    startTime: "",
+    endTime: "",
+    daoID: "",
+    author: account
   }
 
-  const saveCommunity = (values: Proposal, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
-    setSubmitting(true)
+  const saveProposal = useCallback(
+    async (values: Poll) => {
+      setIsLoading(true)
+      if (!wallet) {
+        return
+      }
 
-    navigate.push("/explore/communities")
-  }
+      const data = values
+      data.daoID = id
+      data.startTime = String(dayjs(values.startTime).valueOf())
+      data.endTime = String(dayjs(values.endTime).valueOf())
+
+      const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(data))
+      const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+      if (!signature) {
+        openNotification({
+          message: `Issue with Signature`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      }
+
+      await fetch(`${process.env.REACT_APP_API_URL}/poll/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          signature,
+          publicKey,
+          payloadBytes
+        })
+      })
+        .then(async res => {
+          if (res.ok) {
+            openNotification({
+              message: "Proposal created!",
+              autoHideDuration: 3000,
+              variant: "success"
+            })
+            setIsLoading(false)
+            navigate.push(`/explorer/community/${id}`)
+          } else {
+            openNotification({
+              message: "Proposal could not be created",
+              autoHideDuration: 3000,
+              variant: "error"
+            })
+            setIsLoading(false)
+            return
+          }
+        })
+        .catch(err => {
+          openNotification({
+            message: "Proposal could not be created",
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          setIsLoading(false)
+          return
+        })
+    },
+    [navigate, id, network, tokenAddress]
+  )
 
   return (
     <PageContainer>
@@ -308,7 +511,7 @@ export const ProposalCreator: React.FC = () => {
         validateOnChange={true}
         validateOnBlur={false}
         validate={validateForm}
-        onSubmit={saveCommunity}
+        onSubmit={saveProposal}
         initialValues={initialState}
       >
         {({ submitForm, isSubmitting, setFieldValue, values, errors, touched, setFieldTouched }) => {
@@ -316,7 +519,7 @@ export const ProposalCreator: React.FC = () => {
             <Form style={{ width: "100%" }}>
               <ProposalForm
                 submitForm={submitForm}
-                isSubmitting={isSubmitting}
+                isSubmitting={isLoading}
                 setFieldValue={setFieldValue}
                 errors={errors}
                 touched={touched}

@@ -36,7 +36,7 @@ export const useNotification = () => {
   const open = ({ message, detailsLink, ...options }: NotificationParams) => {
     const key = enqueueSnackbar(message, {
       ...options,
-      persist: true,
+      persist: false,
       action: <NotificationActions detailsLink={detailsLink} onClose={() => closeSnackbar(key)} />
     })
 

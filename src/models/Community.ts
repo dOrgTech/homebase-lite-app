@@ -1,13 +1,26 @@
 export interface Community {
-    id?: string
-    name: string
-    description: string
-    link: string
-    token_address: string
-    token_symbol: string
-    token_id: string
-    token_standard: string
-    avatar_url: string
-    required_token: boolean
-    allow_access: boolean
-  }
+  _id?: string
+  name: string
+  description: string
+  linkToTerms: string
+  members: string[]
+  tokenAddress: string
+  polls: string[]
+  tokenType?: string
+  symbol: string
+  tokenID: string
+  picUri: string
+  requiredTokenOwnership: boolean
+  allowPublicAccess: boolean
+  decimals?: string
+  network: string
+}
+
+export interface CommunityToken {
+  _id?: string
+  daoID: string
+  tokenID: number
+  symbol: string
+  tokenAddress: string
+  decimals: string
+}

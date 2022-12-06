@@ -1,10 +1,22 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Button, Grid, styled, useMediaQuery, useTheme } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { ProposalDetailCard } from "modules/explorer/components/ProposalDetailCard"
 import { GridContainer } from "modules/common/GridContainer"
 import { ChoiceItemSelected } from "modules/explorer/components/ChoiceItemSelected"
 import { VoteDetails } from "modules/explorer/components/VoteDetails"
+import { useHistory, useLocation, useParams } from "react-router-dom"
+import { Poll } from "models/Polls"
+import { Choice } from "models/Choice"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { getCurrentBlock, getSignature, getUserTotalSupplyAtReferenceBlock } from "services/utils"
+import { useNotification } from "modules/common/hooks/useNotification"
+import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
+import { useHasVoted } from "modules/explorer/hooks/useHasVoted"
+import { usePollChoices } from "modules/explorer/hooks/usePollChoices"
+import { useCommunity } from "modules/explorer/hooks/useCommunity"
+import { useIsMembers } from "modules/explorer/hooks/useIsMember"
+import { useSinglePoll } from "modules/explorer/hooks/usePoll"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -33,10 +45,152 @@ const PageContainer = styled("div")({
 })
 
 export const ProposalDetails: React.FC = () => {
+  const { id, proposalId } = useParams<{
+    id: string,
+    proposalId: string
+  }>()
 
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
-  
+  const navigate = useHistory()
+  const { state } = useLocation<{ poll: Poll; choices: Choice[] }>()
+  const [selectedVote, setSelectedVote] = useState<Choice>()
+  const { network, account, wallet } = useTezos()
+  const openNotification = useNotification()
+  const [refresh, setRefresh] = useState<number>()
+  const { hasVoted, vote } = useHasVoted(refresh)
+  const community = useCommunity()
+  const poll = useSinglePoll(proposalId, id, community)
+  const choices = usePollChoices(poll, refresh)
+  const isMember = useIsMembers(account, community?.members)
+
+  useEffect(() => {
+    choices.map(elem => {
+      return (elem.selected = false)
+    })
+  })
+
+  const saveVote = async () => {
+    if (!wallet) {
+      return
+    }
+
+    const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+
+    // const block = await getCurrentBlock(network)
+    // eslint-disable-next-line
+    // const total = await getUserTotalSupplyAtReferenceBlock(network, poll.tokenAddress!, block, account)
+
+    // const walletVote = {
+    //   address: account,
+    //   balanceAtReferenceBlock: total
+    // }
+    const { signature, payloadBytes } = await getSignature(
+      account,
+      wallet,
+      JSON.stringify({
+        address: account,
+        choice: selectedVote?.name,
+        choiceId: selectedVote?._id
+      })
+    )
+    if (!signature) {
+      openNotification({
+        message: `Issue with Signature`,
+        autoHideDuration: 3000,
+        variant: "error"
+      })
+      return
+    }
+    await fetch(`${process.env.REACT_APP_API_URL}/update/${selectedVote?._id}/choice`, {
+      method: "POST",
+      body: JSON.stringify({
+        signature,
+        publicKey,
+        payloadBytes
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(resp => {
+        if (resp.ok) {
+          openNotification({
+            message: "Your vote has been submitted",
+            autoHideDuration: 3000,
+            variant: "success"
+          })
+          setRefresh(Math.random())
+        } else {
+          openNotification({
+            message: `Something went wrong!!`,
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          return
+        }
+      })
+      .catch(err => {
+        openNotification({
+          message: `Something went wrong!!`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      })
+    // } else {
+    //   const data = {
+    //     oldVote: vote,
+    //     newVote: walletVote
+    //   }
+
+    //   const { signature, payloadBytes } = await getSignature(
+    //     account,
+    //     wallet,
+    //     JSON.stringify({
+    //       values: data
+    //     })
+    //   )
+    //   if (!signature) {
+    //     openNotification({
+    //       message: `Issue with Signature`,
+    //       autoHideDuration: 3000,
+    //       variant: "error"
+    //     })
+    //     return
+    //   }
+
+    //   await fetch(`${process.env.REACT_APP_API_URL}/choices/${selectedVote?._id}/add`, {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       data,
+    //       signature,
+    //       publicKey,
+    //       payloadBytes
+    //     }),
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   }).then(resp => {
+    //     if (resp.ok) {
+    //       openNotification({
+    //         message: "Your vote has been submitted",
+    //         autoHideDuration: 3000,
+    //         variant: "success"
+    //       })
+    //       setRefresh(Math.random())
+    //     } else {
+    //       openNotification({
+    //         message: `Something went wrong!!`,
+    //         autoHideDuration: 3000,
+    //         variant: "error"
+    //       })
+    //       return
+    //     }
+    //   })
+    // }
+  }
+
   return (
     <PageContainer style={{ gap: 30 }}>
       <Grid container>
@@ -44,22 +198,35 @@ export const ProposalDetails: React.FC = () => {
       </Grid>
       <Grid container style={{ gap: 30 }}>
         <Grid item>
-          <ProposalDetailCard />
+          <ProposalDetailCard poll={poll} />
         </Grid>
         <Grid container item xs={12}>
+          {choices && choices.length > 0 ? (
           <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
-            <Grid container item justifyContent={isMobileSmall ? "center" : "space-between"} direction="row" style={{ gap: 30 }}>
-              <ChoiceItemSelected description="This is choice 1" />
-              <ChoiceItemSelected description="This is choice 2" />
-              <ChoiceItemSelected description="This is choice 3" />
-            </Grid>
-            <Button variant="contained" color="secondary">
+          <Grid
+            container
+            item
+            justifyContent={isMobileSmall ? "center" : "space-between"}
+            direction="row"
+            style={{ gap: 30 }}
+          >
+            {choices.map((choice, index) => {
+              return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
+            })}
+          </Grid>
+          {isMember ? (
+            <Button variant="contained" color="secondary" onClick={() => saveVote()}>
               Cast your vote
             </Button>
-          </GridContainer>
+          ) : null}
+        </GridContainer>
+          ) : null}
+
         </Grid>
         <Grid item xs={12}>
-          <VoteDetails />
+          {poll && poll !== undefined ? (
+            <VoteDetails poll={poll} choices={choices}  token={community?.tokenAddress} communityId={community?._id} />
+          ) : null}
         </Grid>
       </Grid>
     </PageContainer>

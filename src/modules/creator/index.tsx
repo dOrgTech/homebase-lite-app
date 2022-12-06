@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Grid,
   styled,
@@ -10,17 +11,19 @@ import {
   withStyles,
   withTheme,
   TextareaAutosize,
-  MenuItem
+  CircularProgress
 } from "@material-ui/core"
 import { UploadAvatar } from "./components/UploadAvatar"
 import { BackButton } from "../common/BackButton"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
-import { Select, TextField as FormikTextField } from "formik-material-ui"
+import { TextField as FormikTextField } from "formik-material-ui"
 import { Community } from "models/Community"
 import { useHistory } from "react-router"
 import { validateContractAddress } from "@taquito/utils"
 import { useTokenMetadata } from "services/hooks/useTokenMetadata"
-import { Dropdown } from "modules/common/Dropdown"
+import { useNotification } from "modules/common/hooks/useNotification"
+import { useTezos } from "services/beacon/hooks/useTezos"
+import { getSignature } from "services/utils"
 
 const CommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
@@ -33,7 +36,7 @@ const CommunityContainer = styled(Grid)(({ theme }) => ({
 const AvatarCommunityContainer = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
-  [theme.breakpoints.down("md")]: {
+  [theme.breakpoints.down("sm")]: {
     marginTop: 30
   }
 }))
@@ -41,7 +44,7 @@ const AvatarCommunityContainer = styled(Grid)(({ theme }) => ({
 const CommunityContainerBottom = styled(Grid)(({ theme }) => ({
   boxSizing: "border-box",
   padding: "0px 15px",
-  [theme.breakpoints.down("md")]: {
+  [theme.breakpoints.down("sm")]: {
     marginTop: 30,
     gap: 12
   },
@@ -169,38 +172,35 @@ const validateForm = (values: Community) => {
     errors.name = "Required"
   }
 
-  if (!values.token_address) {
-    errors.token_address = "Required"
+  if (!values.tokenAddress) {
+    errors.tokenAddress = "Required"
   }
 
-  if (values.token_address && validateContractAddress(values.token_address) !== 3) {
-    errors.token_address = "Invalid address"
+  if (values.tokenAddress && validateContractAddress(values.tokenAddress) !== 3) {
+    errors.tokenAddress = "Invalid address"
   }
 
   return errors
 }
 
-const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched }: any) => {
+const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, setFieldTouched, isSubmitting }: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
 
-  const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.token_address)
+  const { data: tokenMetadata, isLoading: loading, error } = useTokenMetadata(values?.tokenAddress)
 
   useEffect(() => {
     if (tokenMetadata) {
-      setFieldValue("token_id", tokenMetadata.token_id)
+      setFieldValue("tokenID", tokenMetadata.tokenId)
+      setFieldValue("tokenType", tokenMetadata.standard)
+      setFieldValue("symbol", tokenMetadata.metadata.symbol)
+      setFieldValue("decimals", tokenMetadata.metadata.decimals)
     }
 
     if (error) {
-      setFieldValue("token_id", undefined)
-    }
-
-    if (tokenMetadata) {
-      setFieldValue("token_symbol", tokenMetadata.symbol)
-    }
-
-    if (error) {
-      setFieldValue("token_symbol", undefined)
+      setFieldValue("tokenID", undefined)
+      setFieldValue("tokenType", undefined)
+      setFieldValue("symbol", undefined)
     }
   }, [error, setFieldValue, tokenMetadata])
 
@@ -220,6 +220,7 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           <Field name="description">
             {() => (
               <CustomTextarea
+                disabled={isSubmitting}
                 maxLength={1500}
                 aria-label="empty textarea"
                 placeholder="Short description"
@@ -232,12 +233,12 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           </Field>
         </Grid>
         <Grid item>
-          <Field name="link" type="text" placeholder="Link to Terms" component={CustomFormikTextField} />
+          <Field name="linkToTerms" type="text" placeholder="Link to Terms" component={CustomFormikTextField} />
         </Grid>
         <Grid item>
           <Field
-            onClick={() => setFieldTouched("token_address")}
-            name="token_address"
+            onClick={() => setFieldTouched("tokenAddress")}
+            name="tokenAddress"
             type="text"
             placeholder="Token Contract Address*"
             component={CustomFormikTextField}
@@ -245,39 +246,40 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           {tokenMetadata && !loading && (
             <MetadataContainer item xs={12}>
               <Typography variant="subtitle2" color="secondary">
-                {tokenMetadata.name}
+                {tokenMetadata.metadata.name}
               </Typography>
             </MetadataContainer>
           )}
-          {errors?.token_address && touched.token_address ? <ErrorText>{errors.token_address}</ErrorText> : null}
+          {errors?.tokenAddress && touched.tokenAddress ? <ErrorText>{errors.tokenAddress}</ErrorText> : null}
         </Grid>
       </CommunityContainer>
       <AvatarCommunityContainer container direction={"column"} style={{ gap: 30 }} item xs={12} md={6} lg={3}>
         <AvatarContainer container item>
-          <UploadAvatar url={values.avatar_url} setFieldValue={setFieldValue} />
+          <UploadAvatar url={values.picUri} setFieldValue={setFieldValue} disabled={isSubmitting} />
         </AvatarContainer>
       </AvatarCommunityContainer>
 
       <CommunityContainerBottom container justifyContent="space-between" spacing={isMobileSmall ? 4 : 1}>
         <Grid item container xs={12} md={4}>
-          <Field name="token_symbol" type="text" placeholder="Token Symbol" component={CustomFormikTextField} />
+          <Field name="symbol" type="text" placeholder="Token Symbol" component={CustomFormikTextField} />
         </Grid>
         <Grid item container xs={12} md={4}>
-          <Field name="token_id" type="text" placeholder="Token ID" component={CustomFormikTextField} />
+          <Field name="tokenID" type="text" placeholder="Token ID" component={CustomFormikTextField} />
         </Grid>
         <Grid item container xs={12} md={4}>
-          <Field name="token_standard">
+          <Field name="tokenType">
             {() => (
               <CustomSelect
+                disabled={isSubmitting}
                 as="select"
-                name={getIn(values, "token_standard")}
+                name={getIn(values, "tokenType")}
                 label="Token Standard"
                 onChange={(newValue: any) => {
-                  setFieldValue("token_standard", newValue.target.value)
+                  setFieldValue("tokenType", newValue.target.value)
                 }}
               >
-                <option value={"FA2"}>FA2</option>
-                <option value={"NFT"}>NFT</option>
+                <option value={"fa2"}>FA2</option>
+                <option value={"nft"}>NFT</option>
               </CustomSelect>
             )}
           </Field>
@@ -287,17 +289,17 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
       <CommunityContainerBottom container direction="column">
         <Grid container direction="row" alignItems="center">
           <CheckboxContainer item xs={2}>
-            <Field name="required_token">
+            <Field name="requiredTokenOwnership">
               {() => (
                 <Checkbox
                   disableRipple
-                  checked={values.required_token}
-                  value={getIn(values, "required_token")}
+                  checked={values.requiredTokenOwnership}
+                  value={getIn(values, "requiredTokenOwnership")}
                   inputProps={{
                     "aria-label": "Checkbox A"
                   }}
                   onChange={() => {
-                    setFieldValue("required_token", !values.required_token)
+                    setFieldValue("requiredTokenOwnership", !values.requiredTokenOwnership)
                   }}
                 />
               )}
@@ -311,17 +313,17 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
         </Grid>
         <Grid container direction="row" alignItems="center">
           <CheckboxContainer item xs={2}>
-            <Field name="allow_access">
+            <Field name="allowPublicAccess">
               {() => (
                 <Checkbox
                   disableRipple
-                  checked={values.allow_access}
-                  value={getIn(values, "allow_access")}
+                  checked={values.allowPublicAccess}
+                  value={getIn(values, "allowPublicAccess")}
                   inputProps={{
                     "aria-label": "Checkbox B"
                   }}
                   onChange={() => {
-                    setFieldValue("allow_access", !values.allow_access)
+                    setFieldValue("allowPublicAccess", !values.allowPublicAccess)
                   }}
                 />
               )}
@@ -334,10 +336,14 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
           </Grid>
         </Grid>
       </CommunityContainerBottom>
-      <CommunityContainerBottom>
-        <Button variant="contained" color="secondary" onClick={() => submitForm(values)}>
-          Create Community
-        </Button>
+      <CommunityContainerBottom container direction="row">
+        {isSubmitting ? (
+          <CircularProgress color="secondary" />
+        ) : (
+          <Button variant="contained" color="secondary" onClick={() => submitForm(values)}>
+            Create Community
+          </Button>
+        )}
       </CommunityContainerBottom>
     </Grid>
   )
@@ -345,25 +351,83 @@ const CommunityForm = ({ submitForm, values, setFieldValue, errors, touched, set
 
 export const CommunityCreator: React.FC = () => {
   const navigate = useHistory()
+  const { network, account, wallet } = useTezos()
+  const openNotification = useNotification()
 
   const initialState: Community = {
     name: "",
     description: "",
-    link: "",
-    token_address: "",
-    token_symbol: "",
-    token_id: "",
-    token_standard: "FA2",
-    avatar_url: "",
-    required_token: false,
-    allow_access: false
+    linkToTerms: "",
+    picUri: "",
+    members: [],
+    polls: [],
+    tokenAddress: "",
+    symbol: "",
+    tokenID: "",
+    tokenType: "FA2",
+    requiredTokenOwnership: false,
+    allowPublicAccess: false,
+    network
   }
 
-  const saveCommunity = (values: Community, { setSubmitting }: { setSubmitting: (b: boolean) => void }) => {
-    setSubmitting(true)
+  const saveCommunity = useCallback(
+    async (values: Community) => {
+      if (!wallet) {
+        return
+      }
+      
+      values.members.push(account)
 
-    navigate.push("/explore/communities")
-  }
+      const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(values))
+      const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
+      if (!signature) {
+        openNotification({
+          message: `Issue with Signature`,
+          autoHideDuration: 3000,
+          variant: "error"
+        })
+        return
+      }
+
+      await fetch(`${process.env.REACT_APP_API_URL}/dao/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          signature,
+          publicKey,
+          payloadBytes
+        })
+      })
+        .then(async res => {
+          if (res.ok) {
+            openNotification({
+              message: "Community created!",
+              autoHideDuration: 3000,
+              variant: "success"
+            })
+            navigate.push("/explorer/communities")
+          } else {
+            openNotification({
+              message: "Community could not be created!",
+              autoHideDuration: 3000,
+              variant: "error"
+            })
+            return
+          }
+        })
+        .catch(error => {
+          openNotification({
+            message: "Community could not be created!",
+            autoHideDuration: 3000,
+            variant: "error"
+          })
+          return
+        })
+    },
+    [navigate]
+  )
 
   return (
     <PageContainer>
