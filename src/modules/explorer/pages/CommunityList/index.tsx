@@ -6,6 +6,7 @@ import { Button, Grid, styled, Theme, Typography, useMediaQuery, useTheme, Circu
 import { Community } from "models/Community"
 import axios from "axios"
 import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
+import { useTezos } from "services/beacon/hooks/useTezos"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -59,6 +60,7 @@ export const CommunityList: React.FC = () => {
   const [isUpdated, setIsUpdated] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const { isConnected } = useContext(DashboardContext)
+  const { network } = useTezos()
 
   const filterData = (list: Community[]) => {
     if (!isConnected) {
@@ -78,10 +80,12 @@ export const CommunityList: React.FC = () => {
     }
   }
 
-  const getCommunities = () => {
+  const getCommunities = (network: string) => {
     setIsLoading(true)
     axios
-      .get(`${process.env.REACT_APP_API_URL}/daos/`)
+      .post(`${process.env.REACT_APP_API_URL}/daos/`, {
+        network
+      })
       .then(response => {
         if (!response.status) {
           setError(true)
@@ -98,12 +102,8 @@ export const CommunityList: React.FC = () => {
   }
 
   useEffect(() => {
-    getCommunities()
-  }, [])
-
-  useEffect(() => {
-    getCommunities()
-  }, [isUpdated])
+    getCommunities(network)
+  }, [isUpdated, network])
 
   useEffect(() => {
     if (!isConnected) {
