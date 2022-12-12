@@ -8,7 +8,7 @@ export interface Poll {
   referenceBlock?: string
   startTime: string
   endTime: string
-  totalSupplyAtReferenceBlock?: string
+  totalSupplyAtReferenceBlock?: any
   choices: string[]
   externalLink: ""
   author: string

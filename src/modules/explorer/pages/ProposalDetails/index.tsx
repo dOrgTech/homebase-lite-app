@@ -46,7 +46,7 @@ const PageContainer = styled("div")({
 
 export const ProposalDetails: React.FC = () => {
   const { id, proposalId } = useParams<{
-    id: string,
+    id: string
     proposalId: string
   }>()
 
@@ -202,30 +202,29 @@ export const ProposalDetails: React.FC = () => {
         </Grid>
         <Grid container item xs={12}>
           {choices && choices.length > 0 ? (
-          <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
-          <Grid
-            container
-            item
-            justifyContent={isMobileSmall ? "center" : "space-between"}
-            direction="row"
-            style={{ gap: 30 }}
-          >
-            {choices.map((choice, index) => {
-              return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
-            })}
-          </Grid>
-          {isMember ? (
-            <Button variant="contained" color="secondary" onClick={() => saveVote()}>
-              Cast your vote
-            </Button>
+            <GridContainer container style={{ gap: 32 }} direction="row" justifyContent="center">
+              <Grid
+                container
+                item
+                justifyContent={isMobileSmall ? "center" : "space-between"}
+                direction="row"
+                style={{ gap: 30 }}
+              >
+                {choices.map((choice, index) => {
+                  return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
+                })}
+              </Grid>
+              {isMember ? (
+                <Button variant="contained" color="secondary" onClick={() => saveVote()}>
+                  Cast your vote
+                </Button>
+              ) : null}
+            </GridContainer>
           ) : null}
-        </GridContainer>
-          ) : null}
-
         </Grid>
         <Grid item xs={12}>
           {poll && poll !== undefined ? (
-            <VoteDetails poll={poll} choices={choices}  token={community?.tokenAddress} communityId={community?._id} />
+            <VoteDetails poll={poll} choices={choices} token={community?.tokenAddress} communityId={community?._id} />
           ) : null}
         </Grid>
       </Grid>

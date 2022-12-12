@@ -114,9 +114,9 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                     color="secondary"
                     value={calculateWeight(
                       poll?.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals)),
+                      calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals),
                       tokenData?.decimals
-                    )}
+                    ).toNumber()}
                     variant="determinate"
                   />
                 </Grid>
@@ -124,7 +124,7 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                   <Typography color="textPrimary" variant="body2">
                     {calculateWeight(
                       poll?.totalSupplyAtReferenceBlock!,
-                      String(calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals)),
+                      calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals),
                       tokenData?.decimals
                     ).toFixed(1)}
                     %
@@ -168,9 +168,10 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
               (
               {getTreasuryPercentage(
                 calculateProposalTotal(choices, tokenData?.decimals),
-                Number(poll?.totalSupplyAtReferenceBlock) / Number(tokenData?.decimals) ** 10
-              ).toFixed(2)}
-              % of Treasury)
+                poll?.totalSupplyAtReferenceBlock,
+                tokenData?.decimals
+              ).toNumber()}
+              % of Total Supply)
             </Typography>
           </Grid>
         </LegendContainer>

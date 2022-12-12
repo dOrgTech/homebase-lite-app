@@ -10,14 +10,14 @@ const LightText = styled(Typography)({
 })
 
 export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll }> = ({ choice, index, poll }) => {
-  const balance = calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals);
+  const balance = calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, String(balance), poll.tokenDecimals)
-  const [, updateState] = React.useState<any>();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
+  const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, balance, poll.tokenDecimals)
+  const [, updateState] = React.useState<any>()
+  const forceUpdate = React.useCallback(() => updateState({}), [])
 
-  setTimeout(()=> {
-    forceUpdate();
+  setTimeout(() => {
+    forceUpdate()
   }, 500)
 
   return (
@@ -50,14 +50,12 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll
             <LinearProgress
               style={{ width: "100%", marginRight: "4px" }}
               color={index & 1 ? "primary" : "secondary"}
-              value={individualBalance}
+              value={individualBalance.toNumber()}
               variant="determinate"
             />
           </Grid>
           <Grid item xs>
-            <Typography color="textPrimary">
-              {individualBalance.toFixed(1)}%
-            </Typography>
+            <Typography color="textPrimary">{individualBalance.toFixed(1)}%</Typography>
           </Grid>
         </Grid>
       </Grid>

@@ -7,6 +7,7 @@ import { networkNameMap } from "./bakingBad"
 import { Network } from "./beacon"
 import { BeaconWallet } from "@taquito/beacon-wallet"
 import { RequestSignPayloadInput, SigningType } from "@airgap/beacon-sdk"
+import BigNumber from "bignumber.js"
 
 export const getCurrentBlock = async (network: Network) => {
   const url = `https://api.${networkNameMap[network]}.tzkt.io/v1/head`
@@ -126,30 +127,30 @@ export const isProposalActive = (date: number) => {
   return remainingDate
 }
 
-export const calculateWeight = (totalSupply: string, balance: string, decimals: any) => {
-  const formattedTotalSupply = Number(totalSupply) / Number(decimals) ** 10
-  return (Number(balance) * 100) / formattedTotalSupply
+export const calculateWeight = (totalSupply: any, balance: any, decimals: any) => {
+  const formattedTotalSupply = new BigNumber(totalSupply).div(new BigNumber(10).pow(decimals))
+  const percent = balance.div(formattedTotalSupply).multipliedBy(100)
+  return percent
 }
 
-export const calculateChoiceTotal = (choices: any[], decimals: any) => {
-  let total = 0
-  choices.map((choice: any) => {
-    total += Number(choice.balanceAtReferenceBlock)
+export const calculateChoiceTotal = (choice_voters: any[], decimals: any) => {
+  let total = new BigNumber(0)
+  choice_voters.map(voter => {
+    total = new BigNumber(voter.balanceAtReferenceBlock).plus(total)
   })
-  const result = total / Number(decimals) ** 10
+  const result = new BigNumber(total).div(new BigNumber(10).pow(decimals))
 
   return result
 }
 
 export const calculateProposalTotal = (choices: Choice[], decimals: any) => {
-  let total = 0
+  let total = new BigNumber(0)
   choices.map((choice: any) => {
     choice.walletAddresses.map((elem: any) => {
-      total += Number(elem.balanceAtReferenceBlock)
+      total = new BigNumber(elem.balanceAtReferenceBlock).plus(total)
     })
   })
-  const result = total / Number(decimals) ** 10
-
+  const result = total.div(new BigNumber(10).pow(decimals))
   return result
 }
 
@@ -161,9 +162,9 @@ export const getTotalVoters = (choices: Choice[]) => {
   return votersTotal
 }
 
-export const getTreasuryPercentage = (proposalTotal: number, totalSupply: number) => {
-  const value = (Number(proposalTotal) * 100) / Number(totalSupply)
-
+export const getTreasuryPercentage = (proposalTotal: BigNumber, totalSupply: number, decimals: any) => {
+  const formattedTotalSupply = new BigNumber(totalSupply).div(new BigNumber(10).pow(decimals))
+  const value = proposalTotal.multipliedBy(100).div(new BigNumber(formattedTotalSupply))
   return value
 }
 
@@ -173,26 +174,12 @@ export const numberWithCommas = (x: number) => {
 
 const SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"]
 
-export const nFormatter = (num: number, digits: number) => {
-  // what tier? (determines SI symbol)
-  const tier = (Math.log10(Math.abs(num)) / 3) | 0
-
-  // if zero, we don't need a suffix
-  if (tier == 0) return num.toFixed(1)
-
-  // get suffix and determine scale
-  const suffix = SI_SYMBOL[tier]
-  const scale = Math.pow(10, tier * 3)
-
-  // scale the number
-  const scaled = num / scale
-
-  // format number and add suffix
-  return scaled.toFixed(1) + suffix
+export const nFormatter = (num: any, digits: number) => {
+  return num.toString()
 }
 
 export const formatByDecimals = (value: string, decimals: string) => {
-  return nFormatter(Number(value) / Number(decimals) ** 10, 1)
+  return nFormatter(new BigNumber(value).div(new BigNumber(10).pow(decimals)), 1)
 }
 
 export const getSignature = async (userAddress: string, wallet: BeaconWallet, data?: string) => {
