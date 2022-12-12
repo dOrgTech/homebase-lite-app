@@ -164,7 +164,7 @@ export const getTotalVoters = (choices: Choice[]) => {
 
 export const getTreasuryPercentage = (proposalTotal: BigNumber, totalSupply: number, decimals: any) => {
   const formattedTotalSupply = new BigNumber(totalSupply).div(new BigNumber(10).pow(decimals))
-  const value = proposalTotal.multipliedBy(100).div(new BigNumber(formattedTotalSupply))
+  const value = proposalTotal.div(new BigNumber(formattedTotalSupply)).multipliedBy(100)
   return value
 }
 
