@@ -116,7 +116,9 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                       poll?.totalSupplyAtReferenceBlock!,
                       calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals),
                       tokenData?.decimals
-                    ).toNumber()}
+                    )
+                      .dp(2, 1)
+                      .toString()}
                     variant="determinate"
                   />
                 </Grid>
@@ -126,7 +128,9 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                       poll?.totalSupplyAtReferenceBlock!,
                       calculateChoiceTotal(choice.walletAddresses, tokenData?.decimals),
                       tokenData?.decimals
-                    ).toFixed(1)}
+                    )
+                      .dp(2, 1)
+                      .toString()}
                     %
                   </Typography>
                 </Grid>
@@ -170,7 +174,9 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                 calculateProposalTotal(choices, tokenData?.decimals),
                 poll?.totalSupplyAtReferenceBlock,
                 tokenData?.decimals
-              ).toNumber()}
+              )
+                .dp(5, 1)
+                .toString()}
               % of Total Supply)
             </Typography>
           </Grid>

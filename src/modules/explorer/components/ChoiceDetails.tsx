@@ -13,6 +13,7 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll
   const balance = calculateChoiceTotal(choice.walletAddresses, poll.tokenDecimals)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const individualBalance = calculateWeight(poll.totalSupplyAtReferenceBlock!, balance, poll.tokenDecimals)
+
   const [, updateState] = React.useState<any>()
   const forceUpdate = React.useCallback(() => updateState({}), [])
 
@@ -55,7 +56,7 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll
             />
           </Grid>
           <Grid item xs>
-            <Typography color="textPrimary">{individualBalance.toFixed(1)}%</Typography>
+            <Typography color="textPrimary">{individualBalance.dp(3, 1).toString()}%</Typography>
           </Grid>
         </Grid>
       </Grid>
