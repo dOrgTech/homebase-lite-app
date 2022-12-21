@@ -7,6 +7,7 @@ import { Community } from "models/Community"
 import axios from "axios"
 import { DashboardContext } from "modules/explorer/context/ActionSheets/explorer"
 import { useTezos } from "services/beacon/hooks/useTezos"
+import { LaunchOutlined } from "@material-ui/icons"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -48,6 +49,30 @@ const CommunitiesContainer = styled(Grid)(({ theme }) => ({
     marginBottom: 24
   }
 }))
+
+const BannerContainer = styled(Grid)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  marginBottom: 40,
+  padding: "30px 48px",
+  borderRadius: 8,
+  display: "inline-block",
+  [theme.breakpoints.down("md")] : {
+    padding: "28px 38px",
+  }
+}))
+
+const ExternalLink = styled(Typography)({
+  display: "inline",
+  cursor: "pointer",
+  '&:hover': {
+    textDecoration: "underline"
+  }
+})
+
+const ExternalLinkIcon = styled(LaunchOutlined)({
+  fontSize: 14,
+  marginBottom: 2
+})
 
 export const CommunityList: React.FC = () => {
   const theme: Theme = useTheme()
@@ -114,9 +139,19 @@ export const CommunityList: React.FC = () => {
     }
   }, [isConnected, communitiesList])
 
+  const goToHomebase = () => {
+    window.open("https://tezos-homebase.io/")
+  }
+
   return (
     <PageContainer>
       <Grid container direction="column">
+      <Grid item>
+          <BannerContainer container alignItems="center" direction="row">
+            <Typography variant="h2" color="textPrimary" style={{  display: "inline"}}>Need on-chain execution? Set up a DAO contract </Typography>{" "}
+            <ExternalLink variant="h2" color="secondary" onClick={goToHomebase}> here<ExternalLinkIcon color="secondary"/> </ExternalLink> 
+          </BannerContainer>
+        </Grid>
         <Grid item>
           <Grid container justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
             <Grid item xs={12} sm={6}>
