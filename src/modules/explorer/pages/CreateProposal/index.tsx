@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Grid,
   styled,
@@ -154,9 +154,9 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
 const CommunityLabel = styled(Grid)({
   width: 212,
   height: 54,
-  background: '#2F3438',
+  background: "#2F3438",
   borderRadius: 4,
-  display: 'inline-grid',
+  display: "inline-grid",
   marginBottom: 25
 })
 
@@ -175,8 +175,8 @@ const ErrorTextChoices = styled(Typography)({
 })
 
 const hasDuplicates = (options: string[]) => {
-  const trimOptions = options.map(option => option.trim());
-  return (new Set(trimOptions)).size !== trimOptions.length;
+  const trimOptions = options.map(option => option.trim())
+  return new Set(trimOptions).size !== trimOptions.length
 }
 
 const validateForm = (values: Poll) => {
@@ -203,7 +203,7 @@ const validateForm = (values: Poll) => {
   }
 
   if (values.startTime && dayjs().diff(values.startTime) > 0) {
-    errors.startTime = "Start date can't be a past date"
+    values.startTime = dayjs().toISOString()
   }
 
   if (!values.endTime) {
@@ -278,11 +278,13 @@ export const ProposalForm = ({
                     {() => (
                       <DateTimePicker
                         inputFormat="MM/DD/YYYY hh:mm a"
-                        label={getIn(values, "startTime") ? "" : "Start date"}
+                        // label={getIn(values, "startTime") ? "" : "Start date"}
                         value={getIn(values, "startTime")}
                         onChange={(newValue: any) => {
-                          setFieldValue("startTime", newValue.$d)
-                          setFieldTouched("startTime")
+                          if (newValue) {
+                            setFieldValue("startTime", newValue.$d)
+                            setFieldTouched("startTime")
+                          }
                         }}
                         components={{
                           OpenPickerIcon: DateRange
@@ -304,8 +306,10 @@ export const ProposalForm = ({
                         label={getIn(values, "endTime") ? "" : "End date"}
                         value={getIn(values, "endTime")}
                         onChange={(newValue: any) => {
-                          setFieldValue("endTime", newValue.$d)
-                          setFieldTouched("endTime")
+                          if (newValue) {
+                            setFieldValue("endTime", newValue.$d)
+                            setFieldTouched("endTime")
+                          }
                         }}
                         components={{
                           OpenPickerIcon: DateRange
@@ -338,8 +342,10 @@ export const ProposalForm = ({
                       label={getIn(values, "startTime") ? "" : "Start date"}
                       value={getIn(values, "startTime")}
                       onChange={(newValue: any) => {
-                        setFieldValue("startTime", newValue.$d)
-                        setFieldTouched("startTime")
+                        if (newValue) {
+                          setFieldValue("startTime", newValue.$d)
+                          setFieldTouched("startTime")
+                        }
                       }}
                       components={{
                         OpenPickerIcon: DateRange
@@ -349,7 +355,6 @@ export const ProposalForm = ({
                       minDateTime={dayjs()}
                       maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
                       disableIgnoringDatePartForTimeValidation={true}
-
                     />
                   )}
                 </Field>
@@ -363,8 +368,10 @@ export const ProposalForm = ({
                       label={getIn(values, "endTime") ? "" : "End date"}
                       value={getIn(values, "endTime")}
                       onChange={(newValue: any) => {
-                        setFieldValue("endTime", newValue.$d)
-                        setFieldTouched("endTime")
+                        if (newValue) {
+                          setFieldValue("endTime", newValue.$d)
+                          setFieldTouched("endTime")
+                        }
                       }}
                       components={{
                         OpenPickerIcon: DateRange
@@ -428,7 +435,7 @@ export const ProposalCreator: React.FC = () => {
     description: "",
     externalLink: "",
     choices: [""],
-    startTime: "",
+    startTime: dayjs().toISOString(),
     endTime: "",
     daoID: "",
     author: account
@@ -443,8 +450,8 @@ export const ProposalCreator: React.FC = () => {
 
       const data = values
       data.daoID = id
-      data.startTime = String(dayjs(values.startTime).valueOf())
       data.endTime = String(dayjs(values.endTime).valueOf())
+      data.startTime = String(dayjs().valueOf())
 
       const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(data))
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey

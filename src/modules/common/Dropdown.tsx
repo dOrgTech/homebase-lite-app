@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Select, SelectProps, MenuItem, makeStyles } from "@material-ui/core"
 import { KeyboardArrowDown } from "@material-ui/icons"
-import { Theme } from "@mui/material";
+import { Theme } from "@mui/material"
 
 interface DropdownProps extends SelectProps {
   options: { name: string; value: string | undefined }[]
   value?: string | undefined
   onSelected?: (item: string | undefined) => void
+  isFirst?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,9 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("sm")]: {
       fontSize: 16
     },
-    paddingLeft: 40,
+    paddingLeft: 10,
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
+    minHeight: 24
   }
 }))
 
@@ -40,21 +42,23 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }
   }
 
   return (
-    <Select
-      value={selected}
-      IconComponent={() => <KeyboardArrowDown color="inherit" />}
-      onChange={handleSelected}
-      classes={{
-        icon: classes.icon,
-        iconOpen: classes.iconOpen,
-        select: classes.selectSelect
-      }}
-    >
-      {options.map(({ name, value }, index) => (
-        <MenuItem value={value} key={`${name}-${index}`}>
-          {name}
-        </MenuItem>
-      ))}
-    </Select>
+    <React.StrictMode>
+      <Select 
+        native
+        value={selected}
+        onChange={handleSelected}
+        classes={{
+          // icon: classes.icon,
+          // iconOpen: classes.iconOpen,
+          select: classes.selectSelect
+        }}
+      >
+        {options.map(({ name, value }, index) => (
+          <option value={value} key={`${name}-${index}`}>
+            {name}
+          </option>
+        ))}
+      </Select>
+    </React.StrictMode>
   )
 }

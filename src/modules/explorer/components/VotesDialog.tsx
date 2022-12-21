@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
   Dialog,
   DialogActions,
@@ -13,7 +13,7 @@ import {
 import { toShortAddress } from "services/contracts/utils"
 import { FileCopyOutlined } from "@material-ui/icons"
 import { Choice } from "models/Choice"
-import { formatByDecimals } from "services/utils"
+import { formatByDecimals, getTotalVoters } from "services/utils"
 import { useNotification } from "modules/common/hooks/useNotification"
 
 const CustomContent = styled(DialogContent)({
@@ -71,7 +71,7 @@ export const VotesDialog: React.FC<{
         <DialogTitle id="scroll-dialog-title">
           {" "}
           <CustomTitle color="textPrimary" variant="body2">
-            {choices.length} Votes:
+            {getTotalVoters(choices)} Votes:
           </CustomTitle>
         </DialogTitle>
         <CustomContent>

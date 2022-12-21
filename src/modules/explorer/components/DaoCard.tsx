@@ -26,8 +26,16 @@ const DaoCardContainer = styled(Grid)(({ theme }) => ({
   flexDirection: "column",
   height: 245,
   marginBottom: 15,
-  cursor: "pointer"
+  cursor: "pointer",
+  padding: "inherit"
 }))
+
+const CommunityName = styled(Typography)({
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  textAlign: "center"
+})
 
 const CustomButton = styled(Button)(({ theme }) => ({
   "width": 67,
@@ -51,10 +59,10 @@ export const DaoCard: React.FC<{ community: Community; setIsUpdated: any }> = ({
       <Grid item>
         <StyledAvatar src={community.picUri}> </StyledAvatar>
       </Grid>
-      <Grid item style={{ cursor: "pointer" }}>
-        <Typography variant={"body1"} color="textPrimary">
+      <Grid item style={{ cursor: "pointer", width: "inherit"}}>
+        <CommunityName variant={"body1"} color="textPrimary">
           {community.name}
-        </Typography>
+        </CommunityName>
       </Grid>
       <Grid item>
         <MembersText variant={"body2"} color="textPrimary">

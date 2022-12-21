@@ -75,6 +75,7 @@ export const theme = createTheme({
       fontSize: 18,
       fontWeight: 200,
       lineHeight: "146.3%",
+      cursor: "default",
       [breakpoints.down("sm")]: {
         fontSize: 16
       },
@@ -538,6 +539,10 @@ export const theme = createTheme({
     MuiSelect: {
       select: {
         textAlign: "right"
+      },
+      icon: {
+        top: 'calc(50% - 8px)',
+        color: 'hsl(240deg 8% 93%)'
       }
     },
     MuiDialogContentText: {
