@@ -153,12 +153,6 @@ export const CommunityList: React.FC = () => {
           </BannerContainer>
         </Grid>
         <Grid item>
-          <BannerContainer container alignItems="center" direction="row">
-            <Typography variant="h2" color="textPrimary" style={{  display: "inline"}}>Need on-chain execution? Set up a DAO contract </Typography>{" "}
-            <ExternalLink variant="h2" color="secondary" onClick={goToHomebase}> here<ExternalLinkIcon color="secondary"/> </ExternalLink> 
-          </BannerContainer>
-        </Grid>
-        <Grid item>
           <Grid container justifyContent={isMobile ? "center" : "space-between"} alignItems="center">
             <Grid item xs={12} sm={6}>
               <SearchInput search={search} />

@@ -12,8 +12,7 @@ export const usePolls = (pollList: string[] | undefined, id?: any, community?: a
     useEffect(() => {
         async function fetchPoll() {
           if (pollList && pollList.length > 0) {
-            pollList.forEach(async elem => {
-              await fetch(`${process.env.REACT_APP_API_URL}/polls/${elem}/polls`).then(async response => {
+              await fetch(`${process.env.REACT_APP_API_URL}/polls/list`).then(async response => {
                 if (!response.ok) {
                   openNotification({
                     message: "An error has occurred",
@@ -23,18 +22,20 @@ export const usePolls = (pollList: string[] | undefined, id?: any, community?: a
                   return
                 }
     
-                const record: Poll = await response.json()
+                const record: Poll[] = await response.json()
                 if (!record) {
                   return
                 }
 
-                record.timeFormatted = isProposalActive(Number(record.endTime))
-                record.isActive = !record.timeFormatted.includes("ago") ? ProposalStatus.ACTIVE : ProposalStatus.CLOSED
-
-                setPolls(p => [...p, record])
+                const communityPolls = record.filter((rec) => rec.daoID === id)
+                communityPolls.map((community) => {
+                  community.timeFormatted = isProposalActive(Number(community.endTime))
+                  community.isActive = !community.timeFormatted.includes("ago") ? ProposalStatus.ACTIVE : ProposalStatus.CLOSED
+                })
+                
+                setPolls(communityPolls)
                 return
               })
-            })
           }
         }
         fetchPoll()

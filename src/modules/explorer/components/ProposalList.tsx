@@ -8,7 +8,6 @@ import { Poll } from "models/Polls"
 import { useParams } from "react-router-dom"
 import { CommunityToken } from "models/Community"
 import { useNotification } from "modules/common/hooks/useNotification"
-import dayjs from "dayjs"
 
 export enum ProposalPopularity {
   RECENT = "recent",
@@ -41,25 +40,13 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
   const communityId = id.toString()
   const openNotification = useNotification()
   const [communityPolls, setCommunityPolls] = useState<Poll[]>()
-
-  const sortByRecent = () => {
-    return polls.sort((a, b) => (dayjs(a.startTime).isAfter(dayjs(b.startTime)) ? 1 : -1))
-    // return polls.sort((a,b)=>(new Date(b.startTime).getTime()) - (new Date(a.startTime).getTime()));
-  }
-
-  const sortByPopularity = () => {
-    // polls.map((poll) => !poll.votes ? poll.votes = [] : null)
-    return polls.sort((a, b) =>
-      (a.votes && a.votes.length > 0 ? a.votes.length : (a.votes = [])) >
-      (b.votes && b.votes.length > 0 ? b.votes.length : (b.votes = []))
-        ? -1
-        : 1
-    )
-  }
+  const [isFilter, setIsFilter] = useState(false)
+  const [isFilterByStatus, setIsFilterByStatus] = useState(1)
+  const [statusFilter, setStatusFilter] = useState("")
+  const [shouldFilter, setShowFilter] = useState(false)
 
   useEffect(() => {
-    setCommunityPolls(sortByRecent())
-    console.log(polls)
+    setCommunityPolls(polls)
   }, [polls])
 
   useMemo(() => {
@@ -92,17 +79,87 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
   }, [polls, communityId])
 
   const filterProposals = (status: any) => {
+    setStatusFilter(status)
     if (status === "all") {
+      setIsFilterByStatus(Math.random())
+      if (isFilter) {
+        sortByPopularity
+        return
+      }
       setCommunityPolls(polls)
       return
     }
-    const formatted = polls.filter((poll: Poll) => poll.isActive === status)
-    setCommunityPolls(formatted)
+    if (status !== "all") {
+      setIsFilterByStatus(Math.random())
+
+      if (isFilter) {
+        sortByPopularity
+        return
+      }
+      const formatted = polls.filter((poll: Poll) => poll.isActive === status)
+      setCommunityPolls(formatted)
+    }
   }
 
   const filterProposalByPopularity = (status: string | undefined) => {
-    status === ProposalPopularity.RECENT ? sortByRecent() : sortByPopularity()
+    status === ProposalPopularity.RECENT ? setIsFilter(false) : setIsFilter(true)
   }
+
+  const sortByRecent = useMemo(() => {
+    if (!isFilter) {
+      if (!isFilterByStatus || statusFilter === "") {
+        setCommunityPolls(polls)
+        setIsFilter(false)
+      } else {
+        if (statusFilter !== 'all') {
+          const formatted = polls.filter((poll: Poll) => poll.isActive === statusFilter)
+          setCommunityPolls(formatted)
+        } else {
+          setCommunityPolls(polls)
+        }
+
+        setIsFilter(false)
+      }
+    }
+  }, [isFilter, statusFilter])
+
+  const sortByPopularity = useMemo(
+    (status?: string) => {
+      if (isFilter) {
+        if (status !== ProposalStatus.ACTIVE && status !== ProposalStatus.CLOSED && status !== undefined) {
+          const formatted = polls
+            .slice()
+            .sort((a, b) =>
+              (a.votes && a.votes.length > 0 ? a.votes.length : 0) >
+              (b.votes && b.votes.length > 0 ? b.votes.length : 0)
+                ? -1
+                : 1
+            )
+          setCommunityPolls(formatted)
+          setIsFilter(true)
+        } else {
+          let formatted
+          if (statusFilter === "all" || statusFilter === "") {
+            formatted = polls
+          } else {
+            formatted = polls.filter((poll: Poll) => poll.isActive === statusFilter)
+          }
+          setCommunityPolls(formatted)
+          const formattedByPopularity = formatted
+            .slice()
+            .sort((a, b) =>
+              (a.votes && a.votes.length > 0 ? a.votes.length : 0) >
+              (b.votes && b.votes.length > 0 ? b.votes.length : 0)
+                ? -1
+                : 1
+            )
+          setCommunityPolls(formattedByPopularity)
+          setIsFilter(true)
+        }
+      }
+    },
+    [isFilter, statusFilter]
+  )
 
   return (
     <ProposalListContainer container direction="column">
@@ -112,7 +169,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
             Proposals
           </Typography>
         </Grid>
-        {/* <Grid item xs={4} container direction="row" justifyContent="flex-end">
+        <Grid item xs={4} container direction="row" justifyContent="flex-end">
           <Dropdown
             options={[
               { name: "Most recent", value: "recent" },
@@ -121,7 +178,7 @@ export const ProposalList: React.FC<{ polls: Poll[] }> = ({ polls }) => {
             value={"recent"}
             onSelected={filterProposalByPopularity}
           />
-        </Grid> */}
+        </Grid>
         <Grid item xs={3} container direction="row" justifyContent="flex-end">
           <Dropdown
             options={[
