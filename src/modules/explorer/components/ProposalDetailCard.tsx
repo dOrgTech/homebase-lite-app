@@ -157,7 +157,7 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                 </TextContainer>
                 <Typography variant="body2" color="textPrimary">
                   {" "}
-                  {dayjs(Number(poll?.startTime)).format("ll")}
+                  {dayjs(Number(poll?.startTime)).format("lll")}
                 </Typography>
                 <Divider color="textPrimary">-</Divider>
                 <TextContainer color="textPrimary" variant="body1">
@@ -166,7 +166,7 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                 </TextContainer>
                 <Typography variant="body2" color="textPrimary">
                   {" "}
-                  {dayjs(Number(poll?.endTime)).format("ll")}
+                  {dayjs(Number(poll?.endTime)).format("lll")}
                 </Typography>
               </Grid>
             </Grid>

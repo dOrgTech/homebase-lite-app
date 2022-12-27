@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react"
 import { Poll } from "models/Polls"
 import { useNotification } from "modules/common/hooks/useNotification"
+import { isProposalActive } from "services/utils"
+import { ProposalStatus } from "../components/ProposalTableRowStatusBadge"
 
 export const useSinglePoll = (pollId: string | undefined, id?: any, community?: any) => {
   const [poll, setPoll] = useState<Poll>()
@@ -24,6 +26,9 @@ export const useSinglePoll = (pollId: string | undefined, id?: any, community?: 
           if (!record) {
             return
           }
+
+          record.timeFormatted = isProposalActive(Number(record.endTime))
+          record.isActive = record.timeFormatted && !record.timeFormatted.includes("ago") ? ProposalStatus.ACTIVE : ProposalStatus.CLOSED
           setPoll(record)
           return
         })

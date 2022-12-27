@@ -118,7 +118,7 @@ export const VoteDetails: React.FC<{ poll: Poll | undefined; choices: Choice[]; 
                       tokenData?.decimals
                     )
                       .dp(2, 1)
-                      .toString()}
+                      .toNumber()}
                     variant="determinate"
                   />
                 </Grid>

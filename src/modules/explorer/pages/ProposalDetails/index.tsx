@@ -17,6 +17,7 @@ import { usePollChoices } from "modules/explorer/hooks/usePollChoices"
 import { useCommunity } from "modules/explorer/hooks/useCommunity"
 import { useIsMembers } from "modules/explorer/hooks/useIsMember"
 import { useSinglePoll } from "modules/explorer/hooks/usePoll"
+import { ProposalStatus } from "modules/explorer/components/ProposalTableRowStatusBadge"
 
 const PageContainer = styled("div")({
   marginBottom: 50,
@@ -214,7 +215,7 @@ export const ProposalDetails: React.FC = () => {
                   return <ChoiceItemSelected key={index} choice={choice} setSelectedVote={setSelectedVote} />
                 })}
               </Grid>
-              {isMember ? (
+              {isMember && poll?.isActive === ProposalStatus.ACTIVE ? (
                 <Button variant="contained" color="secondary" onClick={() => saveVote()}>
                   Cast your vote
                 </Button>
