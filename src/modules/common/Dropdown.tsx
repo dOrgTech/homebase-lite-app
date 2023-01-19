@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Select, SelectProps, MenuItem, makeStyles } from "@material-ui/core"
+import { Select, SelectProps, MenuItem, makeStyles, styled } from "@material-ui/core"
 import { KeyboardArrowDown } from "@material-ui/icons"
 import { Theme } from "@mui/material"
 
@@ -25,12 +25,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     minHeight: 24
+  },
+  option: {
+    padding: 8, 
+    fontFamily: "Roboto Mono", 
+    cursor: "pointer",
+    "&:hover" : {
+     background: "rgba(129, 254, 183, .4)"
+    }
   }
 }))
 
 export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }) => {
   const classes = useStyles()
   const [selected, setSelected] = useState<string | undefined>(value)
+
 
   useEffect(() => {
     setSelected(value)
@@ -42,9 +51,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }
   }
 
   return (
-    <React.StrictMode>
       <Select 
-        native
+        // native
         value={selected}
         onChange={handleSelected}
         classes={{
@@ -54,11 +62,10 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelected }
         }}
       >
         {options.map(({ name, value }, index) => (
-          <option value={value} key={`${name}-${index}`}>
+          <option value={value} key={`${name}-${index}`} className={classes.option}>
             {name}
           </option>
         ))}
       </Select>
-    </React.StrictMode>
   )
 }

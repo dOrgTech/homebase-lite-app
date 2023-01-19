@@ -186,21 +186,27 @@ export const theme = createTheme({
           backgroundColor: '#81FEB7 !important'
         },
         '& .MuiClock-amButton' :{
-          backgroundColor: '#81FEB7 !important'
+          backgroundColor: '#81FEB7 !important',
+          '& span' : {
+            color: "black !important"
+          }
         },
         '& .MuiPickersPopper-paper': {
           background: 'rgb(47, 52, 56) !important'
         },
         '& .MuiClock-pmButton':{
-          backgroundColor: '#81FEB7 !important'
+          backgroundColor: '#81FEB7 !important',
+          '& span' : {
+            color: "black !important"
+          }
         },
         '& .MuiPickersDay-root.Mui-disabled': {
           color: 'rgba(0, 0, 0, 0.38)',
           opacity: 0.5,
-          border: '3px solid rgb(0 0 0 / 87%) !important'
+          border: '2px solid rgb(0 0 0 / 87%) !important'
         },
         '& .MuiPickersDay-root:not(.Mui-selected)' : {
-          border: '3px solid #81FEB7',
+          border: '2px solid #81FEB7',
           '&:hover': {
             color: 'white'
           },
