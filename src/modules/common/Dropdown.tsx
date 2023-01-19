@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { Select, SelectProps, MenuItem, makeStyles } from "@material-ui/core"
-import { KeyboardArrowDown } from "@material-ui/icons"
 import { Theme } from "@mui/material"
 
 interface DropdownProps extends SelectProps {
