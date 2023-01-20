@@ -152,12 +152,14 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
 }))
 
 const CommunityLabel = styled(Grid)({
-  width: 212,
+  minWidth: 212,
   height: 54,
   background: "#2F3438",
   borderRadius: 4,
   display: "inline-grid",
-  marginBottom: 25
+  marginBottom: 25,
+  width: "fit-content",
+  padding: 12
 })
 
 const ErrorText = styled(Typography)({
