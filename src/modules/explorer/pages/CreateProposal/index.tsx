@@ -148,7 +148,8 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   "fontFamily": "Roboto Mono",
   "&:focus-visible": {
     outline: "none"
-  }
+  },
+  resize: "none"
 }))
 
 const CommunityLabel = styled(Grid)({
@@ -329,7 +330,7 @@ export const ProposalForm = ({
               </>
             ) : null}
             <ProposalChoices>
-              <Choices choices={getIn(values, "choices")} isLoading={isSubmitting} submitForm={submitForm} />
+              <Choices choices={getIn(values, "choices")} isLoading={isSubmitting} submitForm={submitForm} votingStrategy={getIn(values, "votingStrategy")} setFieldValue={setFieldValue} />
               {errors?.choices && touched.choices ? <ErrorTextChoices>{errors.choices}</ErrorTextChoices> : null}
             </ProposalChoices>
           </ProposalContainer>
@@ -440,7 +441,8 @@ export const ProposalCreator: React.FC = () => {
     startTime: dayjs().toISOString(),
     endTime: "",
     daoID: "",
-    author: account
+    author: account,
+    votingStrategy: 0
   }
 
   const saveProposal = useCallback(
