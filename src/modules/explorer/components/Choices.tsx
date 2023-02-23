@@ -8,6 +8,7 @@ import {
   Radio,
   styled,
   Typography,
+  useMediaQuery,
   withStyles
 } from "@material-ui/core"
 import { theme } from "theme"
@@ -49,7 +50,10 @@ const VotingContainer = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.main,
   borderRadius: 4,
   padding: "19px 26px",
-  paddingBottom: 0
+  paddingBottom: 0,
+  [theme.breakpoints.down("sm")]: {
+    paddingBottom: 14
+  }
 }))
 
 const CustomFormikTextField = withStyles({
@@ -77,6 +81,8 @@ const CustomFormikTextField = withStyles({
 })(FormikTextField)
 
 export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingStrategy, setFieldValue }) => {
+  const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("sm"))
+
   return (
     <Grid container direction="column" style={{ gap: 30 }}>
       <VotingContainer container direction="column">
@@ -86,8 +92,8 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
           </StrategyText>
         </Grid>
         <Grid item>
-          <Grid container direction="row">
-            <Grid item container direction="row" xs={6} alignItems="center">
+          <Grid container direction={isMobileExtraSmall ? "column" : "row"}>
+            <Grid item container direction="row" xs={isMobileExtraSmall ? 12 : 6} alignItems="center">
               <Field name="votingStrategy">
                 {() => (
                   <Radio
@@ -102,7 +108,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
               <ChoiceText color="textPrimary">Single choice</ChoiceText>
             </Grid>
 
-            <Grid item container direction="row" xs={6} alignItems="center">
+            <Grid item container direction="row" xs={isMobileExtraSmall ? 12 : 6} alignItems="center">
               <Field name="votingStrategy">
                 {() => (
                   <Radio
