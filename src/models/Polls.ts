@@ -19,6 +19,9 @@ export interface Poll {
   tokenDecimals?: string
   votes?: Vote[],
   votingStrategy: number
+  endTimeMinutes?: number | null
+  endTimeHours?: number | null
+  endTimeDays?: number | null
 }
 
 export interface Vote {
