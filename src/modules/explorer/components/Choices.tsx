@@ -147,7 +147,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
                         component={CustomFormikTextField}
                         InputProps={{
                           endAdornment:
-                            index + 1 === choices.length ? (
+                            index + 1 === choices.length && index !== 0 ? (
                               <InputAdornment position="start">
                                 <RemoveCircle
                                   onClick={() => {

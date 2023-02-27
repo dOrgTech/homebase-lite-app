@@ -182,7 +182,7 @@ const ErrorTextChoices = styled(Typography)({
   fontSize: 14,
   color: "red",
   marginBottom: -21,
-  marginTop: -66
+  marginTop: -86
 })
 
 const TimeBox = styled(Grid)(({ theme }) => ({
