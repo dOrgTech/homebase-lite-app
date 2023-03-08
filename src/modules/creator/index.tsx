@@ -128,7 +128,8 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   "fontFamily": "Roboto Mono",
   "&:focus-visible": {
     outline: "none"
-  }
+  },
+  resize: "none"
 }))
 
 const CustomSelect = styled(Field)(({ theme }) => ({

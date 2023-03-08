@@ -5,8 +5,10 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Radio,
   styled,
   Typography,
+  useMediaQuery,
   withStyles
 } from "@material-ui/core"
 import { theme } from "theme"
@@ -18,7 +20,7 @@ import { TextField as FormikTextField } from "formik-material-ui"
 const ChoicesContainer = styled(Grid)(({ theme }) => ({
   paddingBottom: 19,
   background: theme.palette.primary.main,
-  borderRadius: 8
+  borderRadius: 4
 }))
 
 const RemoveCircle = styled(RemoveCircleOutline)(({ theme }) => ({
@@ -33,6 +35,25 @@ const Title = styled(Grid)(({ theme }) => ({
   paddingBottom: 19,
   borderBottom: `0.3px solid ${theme.palette.primary.light}`,
   marginTop: "0px !important"
+}))
+
+const ChoiceText = styled(Typography)({
+  fontWeight: 300,
+  fontSize: 17
+})
+
+const StrategyText = styled(Typography)({
+  marginBottom: 10
+})
+
+const VotingContainer = styled(Grid)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  borderRadius: 4,
+  padding: "19px 26px",
+  paddingBottom: 0,
+  [theme.breakpoints.down("sm")]: {
+    paddingBottom: 14
+  }
 }))
 
 const CustomFormikTextField = withStyles({
@@ -59,9 +80,52 @@ const CustomFormikTextField = withStyles({
   }
 })(FormikTextField)
 
-export const Choices: React.FC<any> = ({ choices, submitForm, isLoading }) => {
+export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingStrategy, setFieldValue }) => {
+  const isMobileExtraSmall = useMediaQuery(theme.breakpoints.down("sm"))
+
   return (
-    <>
+    <Grid container direction="column" style={{ gap: 30 }}>
+      <VotingContainer container direction="column">
+        <Grid item>
+          <StrategyText color="textPrimary" variant={"body2"}>
+            Voting strategy{" "}
+          </StrategyText>
+        </Grid>
+        <Grid item>
+          <Grid container direction={isMobileExtraSmall ? "column" : "row"}>
+            <Grid item container direction="row" xs={isMobileExtraSmall ? 12 : 6} alignItems="center">
+              <Field name="votingStrategy">
+                {() => (
+                  <Radio
+                    checked={Number(votingStrategy) === 0}
+                    value={0}
+                    name="radio-buttons"
+                    inputProps={{ "aria-label": "A" }}
+                    onClick={() => setFieldValue("votingStrategy", 0)}
+                  />
+                )}
+              </Field>
+              <ChoiceText color="textPrimary">Single choice</ChoiceText>
+            </Grid>
+
+            <Grid item container direction="row" xs={isMobileExtraSmall ? 12 : 6} alignItems="center">
+              <Field name="votingStrategy">
+                {() => (
+                  <Radio
+                    checked={Number(votingStrategy) === 1}
+                    value={1}
+                    name="radio-buttons"
+                    inputProps={{ "aria-label": "A" }}
+                    onClick={() => setFieldValue("votingStrategy", 1)}
+                  />
+                )}
+              </Field>
+              <ChoiceText color="textPrimary">Multiple choice</ChoiceText>
+            </Grid>
+          </Grid>
+        </Grid>
+      </VotingContainer>
+
       <ChoicesContainer container direction="column">
         <Title item>
           <Typography variant={"body2"} color="textPrimary">
@@ -83,7 +147,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading }) => {
                         component={CustomFormikTextField}
                         InputProps={{
                           endAdornment:
-                            index + 1 === choices.length ? (
+                            index + 1 === choices.length && index !== 0 ? (
                               <InputAdornment position="start">
                                 <RemoveCircle
                                   onClick={() => {
@@ -127,6 +191,6 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading }) => {
           <CircularProgress color="secondary" />
         )}
       </Grid>
-    </>
+    </Grid>
   )
 }
