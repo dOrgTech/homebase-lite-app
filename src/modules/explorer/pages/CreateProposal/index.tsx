@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
@@ -148,16 +149,19 @@ const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   "fontFamily": "Roboto Mono",
   "&:focus-visible": {
     outline: "none"
-  }
+  },
+  "resize": "none"
 }))
 
 const CommunityLabel = styled(Grid)({
-  width: 212,
+  minWidth: 212,
   height: 54,
   background: "#2F3438",
   borderRadius: 4,
   display: "inline-grid",
-  marginBottom: 25
+  marginBottom: 25,
+  width: "fit-content",
+  padding: 12
 })
 
 const ErrorText = styled(Typography)({
@@ -167,11 +171,38 @@ const ErrorText = styled(Typography)({
   marginTop: 2
 })
 
+const ErrorTextTime = styled(Typography)({
+  marginTop: -18,
+  marginBottom: 0,
+  fontSize: 14,
+  color: "red"
+})
+
 const ErrorTextChoices = styled(Typography)({
   fontSize: 14,
   color: "red",
   marginBottom: -21,
-  marginTop: -66
+  marginTop: -86
+})
+
+const TimeBox = styled(Grid)(({ theme }) => ({
+  background: theme.palette.primary.dark,
+  borderRadius: 8,
+  width: 72,
+  minHeight: 59,
+  marginBottom: 16,
+  display: "grid",
+  [theme.breakpoints.down("sm")]: {
+    "width": 172,
+    "& input": {
+      marginLeft: "30%"
+    }
+  }
+}))
+
+const TimeText = styled(Typography)({
+  marginTop: -20,
+  marginLeft: 16
 })
 
 const hasDuplicates = (options: string[]) => {
@@ -198,28 +229,25 @@ const validateForm = (values: Poll) => {
     errors.choices = "Duplicate options are not allowed"
   }
 
-  if (!values.startTime) {
-    errors.startTime = "Required"
-  }
-
-  if (values.startTime && dayjs().diff(values.startTime) > 0) {
-    values.startTime = dayjs().toISOString()
-  }
-
-  if (!values.endTime) {
-    errors.endTime = "Required"
-  }
-
-  if (values.startTime && values.endTime) {
-    if (dayjs(values.startTime).isAfter(dayjs(values.endTime))) {
-      errors.startTime = "Start date must be before end date"
-    }
-
-    if (dayjs(values.startTime).isBefore(dayjs(values.endTime))) {
-      const result = dayjs(values.endTime).diff(dayjs(values.startTime), "minute")
-      result < 5 ? (errors.startTime = `Can't allow less than 5 minutes for voting`) : null
+  if (values.endTimeMinutes !== undefined && values.endTimeDays !== undefined && values.endTimeHours !== undefined) {
+    if (values.endTimeMinutes !== null && values.endTimeDays !== null && values.endTimeHours !== null) {
+      if (values.endTimeMinutes < 5 && values.endTimeDays === 0 && values.endTimeHours === 0) {
+        errors.endTimeMinutes = `Can't allow less than 5 minutes for voting`
+      }
     }
   }
+  if (values.endTimeDays === null || values.endTimeDays === undefined) {
+    errors.endTimeDays = "Required"
+  }
+
+  if (values.endTimeHours === null || values.endTimeHours === undefined) {
+    errors.endTimeHours = "Required"
+  }
+
+  if (values.endTimeMinutes === null || values.endTimeMinutes === undefined) {
+    errors.endTimeMinutes = "Required"
+  }
+
   return errors
 }
 
@@ -246,7 +274,7 @@ export const ProposalForm = ({
             New Proposal
           </Typography>
         </Header>
-        <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 30 }}>
+        <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 90 }}>
           <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
             <Grid item>
               <Field name="name" type="text" placeholder="Proposal Title*" component={CustomFormikTextField} />
@@ -272,126 +300,214 @@ export const ProposalForm = ({
             </Grid>
 
             {isMobileSmall ? (
-              <>
-                <Grid item>
-                  <Field name="startTime">
-                    {() => (
-                      <DateTimePicker
-                        inputFormat="MM/DD/YYYY hh:mm a"
-                        // label={getIn(values, "startTime") ? "" : "Start date"}
-                        value={getIn(values, "startTime")}
-                        onChange={(newValue: any) => {
-                          if (newValue) {
-                            setFieldValue("startTime", newValue.$d)
-                            setFieldTouched("startTime")
-                          }
-                        }}
-                        components={{
-                          OpenPickerIcon: DateRange
-                        }}
-                        renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                        minDateTime={dayjs()}
-                        maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
-                        disableIgnoringDatePartForTimeValidation={true}
-                      />
-                    )}
-                  </Field>
-                  {errors?.startTime && touched.startTime ? <ErrorText>{errors.startTime}</ErrorText> : null}
+              <Grid item>
+                <Typography color="textSecondary" variant={"body2"} style={{ marginBottom: 20 }}>
+                  Voting Duration:{" "}
+                </Typography>
+                <Grid item container direction="row" alignItems="center">
+                  <TimeBox item>
+                    <Field
+                      style={{ margin: "auto" }}
+                      id="outlined-basic"
+                      name="endTimeDays"
+                      type="number"
+                      placeholder="0"
+                      component={CustomFormikTextField}
+                      inputProps={{ min: 0 }}
+                      onClick={() => {
+                        if (getIn(values, "endTimeDays") === 0) {
+                          setFieldValue("endTimeDays", "")
+                          setFieldTouched("endTimeDays")
+                        }
+                      }}
+                      onChange={(newValue: any) => {
+                        if (newValue.target.value === "") {
+                          setFieldValue("endTimeDays", "")
+                        } else {
+                          setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
+                        }
+                      }}
+                    />
+                  </TimeBox>
+                  <TimeText color="textSecondary">days</TimeText>
                 </Grid>
-                <Grid item>
-                  <Field name="endTime">
-                    {() => (
-                      <DateTimePicker
-                        inputFormat="MM/DD/YYYY hh:mm a"
-                        label={getIn(values, "endTime") ? "" : "End date"}
-                        value={getIn(values, "endTime")}
-                        onChange={(newValue: any) => {
-                          if (newValue) {
-                            setFieldValue("endTime", newValue.$d)
-                            setFieldTouched("endTime")
-                          }
-                        }}
-                        components={{
-                          OpenPickerIcon: DateRange
-                        }}
-                        renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                        minDate={getIn(values, "startTime")}
-                        maxDateTime={dayjs().add(2, "w")}
-                        disablePast
-                        disableIgnoringDatePartForTimeValidation={true}
-                      />
-                    )}
-                  </Field>
-                  {errors?.endTime && touched.endTime ? <ErrorText>{errors.endTime}</ErrorText> : null}
+                {errors?.endTimeDays && touched.endTimeDays ? (
+                  <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime>
+                ) : null}
+                <Grid item container direction="row" alignItems="center">
+                  <TimeBox item>
+                    <Field
+                      style={{ margin: "auto" }}
+                      id="outlined-basic"
+                      name="endTimeHours"
+                      type="number"
+                      placeholder="0"
+                      component={CustomFormikTextField}
+                      inputProps={{ min: 0 }}
+                      onClick={() => {
+                        if (getIn(values, "endTimeHours") === 0) {
+                          setFieldValue("endTimeHours", "")
+                        }
+                      }}
+                      onChange={(newValue: any) => {
+                        if (newValue.target.value === "") {
+                          setFieldValue("endTimeHours", "")
+                        } else {
+                          setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
+                        }
+                      }}
+                    />
+                  </TimeBox>
+                  <TimeText color="textSecondary">hours</TimeText>
                 </Grid>
-              </>
+                {errors?.endTimeHours && touched.endTimeHours ? (
+                  <ErrorTextTime>{errors.endTimeHours}</ErrorTextTime>
+                ) : null}
+                <Grid item container direction="row" alignItems="center">
+                  <TimeBox item>
+                    <Field
+                      style={{ margin: "auto" }}
+                      id="outlined-basic"
+                      name="endTimeMinutes"
+                      type="number"
+                      placeholder="0"
+                      component={CustomFormikTextField}
+                      inputProps={{ min: 0 }}
+                      onClick={() => {
+                        if (getIn(values, "endTimeMinutes") === 0) {
+                          setFieldValue("endTimeMinutes", "")
+                        }
+                      }}
+                      onChange={(newValue: any) => {
+                        if (newValue.target.value === "") {
+                          setFieldValue("endTimeMinutes", "")
+                        } else {
+                          setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
+                        }
+                      }}
+                    />
+                  </TimeBox>
+                  <TimeText color="textSecondary">minutes</TimeText>
+                </Grid>
+                {errors?.endTimeMinutes && touched.endTimeMinutes ? (
+                  <ErrorTextTime>{errors.endTimeMinutes}</ErrorTextTime>
+                ) : null}
+              </Grid>
             ) : null}
             <ProposalChoices>
-              <Choices choices={getIn(values, "choices")} isLoading={isSubmitting} submitForm={submitForm} />
+              <Choices
+                choices={getIn(values, "choices")}
+                isLoading={isSubmitting}
+                submitForm={submitForm}
+                votingStrategy={getIn(values, "votingStrategy")}
+                setFieldValue={setFieldValue}
+              />
               {errors?.choices && touched.choices ? <ErrorTextChoices>{errors.choices}</ErrorTextChoices> : null}
             </ProposalChoices>
           </ProposalContainer>
 
           {!isMobileSmall ? (
-            <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={4}>
-              <Grid item>
-                <Field name="startTime">
-                  {() => (
-                    <DateTimePicker
-                      inputFormat="MM/DD/YYYY hh:mm a"
-                      label={getIn(values, "startTime") ? "" : "Start date"}
-                      value={getIn(values, "startTime")}
-                      onChange={(newValue: any) => {
-                        if (newValue) {
-                          setFieldValue("startTime", newValue.$d)
-                          setFieldTouched("startTime")
-                        }
-                      }}
-                      components={{
-                        OpenPickerIcon: DateRange
-                      }}
-                      renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                      minTime={dayjs()}
-                      minDateTime={dayjs()}
-                      maxDateTime={getIn(values, "endTime") ? getIn(values, "endTime") : dayjs().add(2, "w")}
-                      disableIgnoringDatePartForTimeValidation={true}
-                    />
-                  )}
-                </Field>
-                {errors?.startTime && touched.startTime ? <ErrorText>{errors.startTime}</ErrorText> : null}
+            <Grid container item direction={"column"} style={{ gap: 10 }} xs={12} md={6} lg={4}>
+              <Typography color="textSecondary" variant={"body2"} style={{ marginBottom: 20 }}>
+                Voting Duration:{" "}
+              </Typography>
+              <Grid item container direction="row" alignItems="center">
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeDays"
+                    type="number"
+                    placeholder="0"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeDays") === 0) {
+                        setFieldValue("endTimeDays", "")
+                        setFieldTouched("endTimeDays")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeDays", "")
+                      } else {
+                        setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+                <TimeText color="textSecondary">days</TimeText>
               </Grid>
-              <Grid item>
-                <Field name="endTime">
-                  {() => (
-                    <DateTimePicker
-                      inputFormat="MM/DD/YYYY hh:mm a"
-                      label={getIn(values, "endTime") ? "" : "End date"}
-                      value={getIn(values, "endTime")}
-                      onChange={(newValue: any) => {
-                        if (newValue) {
-                          setFieldValue("endTime", newValue.$d)
-                          setFieldTouched("endTime")
-                        }
-                      }}
-                      components={{
-                        OpenPickerIcon: DateRange
-                      }}
-                      renderInput={params => <CustomPicker InputLabelProps={{ shrink: false }} {...params} />}
-                      minDate={getIn(values, "startTime")}
-                      maxDateTime={dayjs().add(2, "w")}
-                      disablePast
-                      disableIgnoringDatePartForTimeValidation={true}
-                    />
-                  )}
-                </Field>
-                {errors?.endTime && touched.endTime ? <ErrorText>{errors.endTime}</ErrorText> : null}
+              {errors?.endTimeDays && touched.endTimeDays ? <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime> : null}
+              <Grid item container direction="row" alignItems="center">
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeHours"
+                    type="number"
+                    placeholder="0"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeHours") === 0) {
+                        setFieldValue("endTimeHours", "")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeHours", "")
+                      } else {
+                        setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+                <TimeText color="textSecondary">hours</TimeText>
               </Grid>
-            </ProposalContainer>
+              {errors?.endTimeHours && touched.endTimeHours ? (
+                <ErrorTextTime>{errors.endTimeHours}</ErrorTextTime>
+              ) : null}
+              <Grid item container direction="row" alignItems="center">
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeMinutes"
+                    type="number"
+                    placeholder="0"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeMinutes") === 0) {
+                        setFieldValue("endTimeMinutes", "")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeMinutes", "")
+                      } else {
+                        setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+                <TimeText color="textSecondary">minutes</TimeText>
+              </Grid>
+              {errors?.endTimeMinutes && touched.endTimeMinutes ? (
+                <ErrorTextTime>{errors.endTimeMinutes}</ErrorTextTime>
+              ) : null}
+            </Grid>
           ) : null}
         </Grid>
       </Grid>
     </PageContainer>
   )
+}
+
+const calculateEndTime = (days: number, hours: number, minutes: number) => {
+  const time = dayjs().add(days, "days").add(hours, "hours").add(minutes, "minutes")
+  return String(time.valueOf())
 }
 
 export const ProposalCreator: React.FC = () => {
@@ -438,7 +554,11 @@ export const ProposalCreator: React.FC = () => {
     startTime: dayjs().toISOString(),
     endTime: "",
     daoID: "",
-    author: account
+    author: account,
+    votingStrategy: 0,
+    endTimeDays: 3,
+    endTimeHours: 0,
+    endTimeMinutes: 0
   }
 
   const saveProposal = useCallback(
@@ -450,8 +570,8 @@ export const ProposalCreator: React.FC = () => {
 
       const data = values
       data.daoID = id
-      data.endTime = String(dayjs(values.endTime).valueOf())
       data.startTime = String(dayjs().valueOf())
+      data.endTime = calculateEndTime(values.endTimeDays!, values.endTimeHours!, values.endTimeMinutes!)
 
       const { signature, payloadBytes } = await getSignature(account, wallet, JSON.stringify(data))
       const publicKey = (await wallet?.client.getActiveAccount())?.publicKey
