@@ -17,11 +17,7 @@ export interface Poll {
   tokenSymbol?: string
   tokenAddress?: string
   tokenDecimals?: string
-  votes?: Vote[],
-  votingStrategy: number
-  endTimeMinutes?: number | null
-  endTimeHours?: number | null
-  endTimeDays?: number | null
+  votes?: Vote[]
 }
 
 export interface Vote {
