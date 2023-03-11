@@ -29,11 +29,10 @@ export const getTezosNetwork = (): Network => {
   return envNetwork
 }
 
-export const createWallet = (network: Network) =>
+export const createWallet = () =>
   new BeaconWallet({
     name: "Homebase",
-    iconUrl: "https://tezostaquito.io/img/favicon.png",
-    preferredNetwork: network as NetworkType
+    iconUrl: "https://tezostaquito.io/img/favicon.png"
   })
 
 export const createTezos = (network: Network) => {
@@ -63,7 +62,7 @@ export const connectWithBeacon = async (
   wallet: BeaconWallet
 }> => {
   const networkType = getNetworkTypeByEnvNetwork(envNetwork)
-  const wallet = createWallet(envNetwork)
+  const wallet = createWallet()
 
   await wallet.requestPermissions({
     network: {
