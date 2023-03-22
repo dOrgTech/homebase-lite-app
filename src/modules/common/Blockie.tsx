@@ -1,5 +1,5 @@
-import { styled, Box, BoxProps } from "@material-ui/core";
 import React from "react"
+import { styled, Box, BoxProps } from "@material-ui/core";
 import { getBlockie } from "services/contracts/utils"
 
 const StyledBox = styled(Box)(({ address, size }: { address: string; size?: number }) => ({

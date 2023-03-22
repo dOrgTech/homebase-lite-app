@@ -56,7 +56,7 @@ export const ChoiceDetails: React.FC<{ choice: Choice; index: number; poll: Poll
             />
           </Grid>
           <Grid item xs>
-            <Typography color="textPrimary">{individualBalance.dp(3, 1).toString()}%</Typography>
+            <Typography style={{ textAlign: "end" }} color="textPrimary">{individualBalance.dp(3, 1).toString()}%</Typography>
           </Grid>
         </Grid>
       </Grid>

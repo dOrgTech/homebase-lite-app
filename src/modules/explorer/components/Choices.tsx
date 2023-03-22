@@ -42,17 +42,12 @@ const ChoiceText = styled(Typography)({
   fontSize: 17
 })
 
-const StrategyText = styled(Typography)({
-  marginBottom: 10
-})
-
 const VotingContainer = styled(Grid)(({ theme }) => ({
-  background: theme.palette.primary.main,
-  borderRadius: 4,
-  padding: "19px 26px",
-  paddingBottom: 0,
-  [theme.breakpoints.down("sm")]: {
-    paddingBottom: 14
+  padding: "19px 26px 0px",
+  borderBottom: `0.3px solid ${theme.palette.primary.light}`,
+  height: 80,
+  [theme.breakpoints.down("sm")] : {
+    height: 120
   }
 }))
 
@@ -63,7 +58,7 @@ const CustomFormikTextField = withStyles({
       textAlign: "initial",
       borderBottom: `0.3px solid ${theme.palette.primary.light} !important`,
       marginTop: "0px !important",
-      paddingRight: 24
+      paddingRight: 26
     },
     "& .MuiInputBase-input": {
       textAlign: "initial"
@@ -85,18 +80,20 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
 
   return (
     <Grid container direction="column" style={{ gap: 30 }}>
-      <VotingContainer container direction="column">
-        <Grid item>
-          <StrategyText color="textPrimary" variant={"body2"}>
-            Voting strategy{" "}
-          </StrategyText>
-        </Grid>
-        <Grid item>
+      <ChoicesContainer container direction="column">
+        <Title item>
+          <Typography variant={"body2"} color="textPrimary">
+            Set Poll Options
+          </Typography>
+        </Title>
+
+        <VotingContainer item>
           <Grid container direction={isMobileExtraSmall ? "column" : "row"}>
             <Grid item container direction="row" xs={isMobileExtraSmall ? 12 : 6} alignItems="center">
               <Field name="votingStrategy">
                 {() => (
                   <Radio
+                    style={{ paddingLeft: 0 }}
                     checked={Number(votingStrategy) === 0}
                     value={0}
                     name="radio-buttons"
@@ -112,6 +109,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
               <Field name="votingStrategy">
                 {() => (
                   <Radio
+                    style={{ paddingLeft: 0 }}
                     checked={Number(votingStrategy) === 1}
                     value={1}
                     name="radio-buttons"
@@ -123,15 +121,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
               <ChoiceText color="textPrimary">Multiple choice</ChoiceText>
             </Grid>
           </Grid>
-        </Grid>
-      </VotingContainer>
-
-      <ChoicesContainer container direction="column">
-        <Title item>
-          <Typography variant={"body2"} color="textPrimary">
-            Set Poll Options
-          </Typography>
-        </Title>
+        </VotingContainer>
 
         <FieldArray
           name="choices"
@@ -147,7 +137,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
                         component={CustomFormikTextField}
                         InputProps={{
                           endAdornment:
-                            index + 1 === choices.length && index !== 0 ? (
+                             index !== 0 ? (
                               <InputAdornment position="start">
                                 <RemoveCircle
                                   onClick={() => {
@@ -167,7 +157,7 @@ export const Choices: React.FC<any> = ({ choices, submitForm, isLoading, votingS
                 <Grid
                   container
                   alignItems={"center"}
-                  style={{ gap: 10, cursor: "pointer", paddingLeft: 16, paddingTop: 12 }}
+                  style={{ gap: 10, cursor: "pointer", paddingLeft: 26, paddingTop: 12 }}
                   onClick={() => arrayHelpers.insert(choices.length, "")}
                 >
                   <IconButton size="small">

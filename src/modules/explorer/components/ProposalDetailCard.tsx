@@ -23,10 +23,29 @@ const TextContainer = styled(Typography)({
   marginRight: 8
 })
 
-const Divider = styled(Typography)({
+const EndTextContainer = styled(Typography)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  marginRight: 8,
+  [theme.breakpoints.down("sm")]: {
+    marginTop: 20
+  }
+}))
+
+const EndText = styled(Typography)(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    marginTop: 20
+  }
+}))
+
+const Divider = styled(Typography)(({ theme }) => ({
   marginLeft: 8,
-  marginRight: 8
-})
+  marginRight: 8,
+  [theme.breakpoints.down("sm")]: {
+    marginTop: 20
+  }
+}))
 
 const StyledLink = styled(Link)({
   fontFamily: "Roboto Mono",
@@ -99,9 +118,6 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
               </Grid>
               <Grid item>
                 <Grid container style={{ gap: 18 }} direction="row">
-                  <Grid style={{ cursor: "pointer", visibility: "hidden" }}>
-                    <MoreHoriz color="secondary" />
-                  </Grid>
                   <Grid item>
                     <Grid
                       container
@@ -155,19 +171,19 @@ export const ProposalDetailCard: React.FC<{ poll: Poll | undefined }> = ({ poll 
                 <TextContainer color="textPrimary" variant="body1">
                   Start date:{" "}
                 </TextContainer>
-                <Typography variant="body2" color="textPrimary">
+                <EndText variant="body2" color="textPrimary">
                   {" "}
                   {dayjs(Number(poll?.startTime)).format("lll")}
-                </Typography>
+                </EndText>
                 <Divider color="textPrimary">-</Divider>
-                <TextContainer color="textPrimary" variant="body1">
+                <EndTextContainer color="textPrimary" variant="body1">
                   {" "}
                   End date:{" "}
-                </TextContainer>
-                <Typography variant="body2" color="textPrimary">
+                </EndTextContainer>
+                <EndText variant="body2" color="textPrimary">
                   {" "}
                   {dayjs(Number(poll?.endTime)).format("lll")}
-                </Typography>
+                </EndText>
               </Grid>
             </Grid>
 

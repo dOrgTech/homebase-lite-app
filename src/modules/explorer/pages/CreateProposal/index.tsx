@@ -8,19 +8,14 @@ import {
   withStyles,
   withTheme,
   TextareaAutosize,
-  Theme,
   useTheme,
-  useMediaQuery,
-  Avatar
+  useMediaQuery
 } from "@material-ui/core"
 import { BackButton } from "modules/common/BackButton"
 import { Choices } from "modules/explorer/components/Choices"
 import { useHistory, useParams } from "react-router-dom"
 import { Field, Form, Formik, FormikErrors, getIn } from "formik"
 import { TextField as FormikTextField } from "formik-material-ui"
-import { DateTimePicker } from "@mui/x-date-pickers"
-import TextField from "@mui/material/TextField"
-import { DateRange } from "@material-ui/icons"
 import { Poll } from "models/Polls"
 import { useTezos } from "services/beacon/hooks/useTezos"
 import { getSignature } from "services/utils"
@@ -95,43 +90,6 @@ const ProposalChoices = styled(Grid)({
   flexGrow: 1
 })
 
-const CustomPicker = withStyles((theme: Theme) => ({
-  root: {
-    "& .MuiInput-root": {
-      fontWeight: 300
-    },
-    "& .MuiInputBase-root": {
-      "paddingRight": 26,
-      "height": 72,
-
-      "& fieldset": {
-        border: "none !important"
-      }
-    },
-    "& .MuiFormControl-root": {
-      "& label": {
-        color: `${theme.palette.text.primary} !important`
-      }
-    },
-    "& label": {
-      color: `${theme.palette.text.primary} !important`,
-      fontFamily: "Roboto Mono",
-      fontWeight: 300,
-      fontSize: 18,
-      marginTop: 8,
-      marginLeft: 19
-    },
-    "& button": {
-      color: theme.palette.secondary.main
-    },
-    "& input": {
-      color: theme.palette.text.primary,
-      fontFamily: "Roboto Mono",
-      fontWeight: 300
-    }
-  }
-}))(TextField)
-
 const CustomTextarea = styled(withTheme(TextareaAutosize))(props => ({
   "minHeight": 117,
   "boxSizing": "border-box",
@@ -200,10 +158,24 @@ const TimeBox = styled(Grid)(({ theme }) => ({
   }
 }))
 
-const TimeText = styled(Typography)({
-  marginTop: -20,
-  marginLeft: 16
-})
+const TimeContainer = styled(Grid)(({ theme }) => ({
+  alignItems: "baseline",
+  marginTop: 0,
+  gap: 10,
+  [theme.breakpoints.down("md")]: {
+    marginTop: 30
+  }
+}))
+
+const TimeContainerMobile = styled(Grid)(({ theme }) => ({
+  alignItems: "baseline",
+  marginTop: 0,
+  gap: 10,
+  [theme.breakpoints.down("md")]: {
+    marginTop: 30,
+    display: "grid"
+  }
+}))
 
 const hasDuplicates = (options: string[]) => {
   const trimOptions = options.map(option => option.trim())
@@ -240,12 +212,24 @@ const validateForm = (values: Poll) => {
     errors.endTimeDays = "Required"
   }
 
+  if (values.endTimeDays && values.endTimeDays < 0) {
+    errors.endTimeDays = "Most be greater than zero"
+  }
+
   if (values.endTimeHours === null || values.endTimeHours === undefined) {
-    errors.endTimeHours = "Required"
+    errors.endTimeDays = "Required"
+  }
+
+  if (values.endTimeHours && values.endTimeHours < 0) {
+    errors.endTimeDays = "Most be greater than zero"
   }
 
   if (values.endTimeMinutes === null || values.endTimeMinutes === undefined) {
-    errors.endTimeMinutes = "Required"
+    errors.endTimeDays = "Required"
+  }
+
+  if (values.endTimeMinutes && values.endTimeMinutes < 0) {
+    errors.endTimeDays = "Most be greater than zero"
   }
 
   return errors
@@ -262,7 +246,13 @@ export const ProposalForm = ({
 }: any) => {
   const theme = useTheme()
   const isMobileSmall = useMediaQuery(theme.breakpoints.down("sm"))
+  const finalDate = calculateEndTime(
+    getIn(values, "endTimeDays"),
+    getIn(values, "endTimeHours"),
+    getIn(values, "endTimeMinutes")
+  )
 
+  const hasErrors = errors.endTimeDays || errors.endTimeHours || errors.endTimeMinutes
   return (
     <PageContainer>
       <Grid container>
@@ -274,8 +264,8 @@ export const ProposalForm = ({
             New Proposal
           </Typography>
         </Header>
-        <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 90 }}>
-          <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={6} lg={8}>
+        <Grid container direction={isMobileSmall ? "row" : "column"} style={{ gap: 40 }}>
+          <ProposalContainer container item direction={"column"} style={{ gap: 30 }} xs={12} md={7} lg={8}>
             <Grid item>
               <Field name="name" type="text" placeholder="Proposal Title*" component={CustomFormikTextField} />
               {errors?.name && touched.name ? <ErrorText>{errors.name}</ErrorText> : null}
@@ -300,99 +290,98 @@ export const ProposalForm = ({
             </Grid>
 
             {isMobileSmall ? (
-              <Grid item>
-                <Typography color="textSecondary" variant={"body2"} style={{ marginBottom: 20 }}>
-                  Voting Duration:{" "}
-                </Typography>
-                <Grid item container direction="row" alignItems="center">
-                  <TimeBox item>
-                    <Field
-                      style={{ margin: "auto" }}
-                      id="outlined-basic"
-                      name="endTimeDays"
-                      type="number"
-                      placeholder="0"
-                      component={CustomFormikTextField}
-                      inputProps={{ min: 0 }}
-                      onClick={() => {
-                        if (getIn(values, "endTimeDays") === 0) {
-                          setFieldValue("endTimeDays", "")
-                          setFieldTouched("endTimeDays")
-                        }
-                      }}
-                      onChange={(newValue: any) => {
-                        if (newValue.target.value === "") {
-                          setFieldValue("endTimeDays", "")
-                        } else {
-                          setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
-                        }
-                      }}
-                    />
-                  </TimeBox>
-                  <TimeText color="textSecondary">days</TimeText>
-                </Grid>
-                {errors?.endTimeDays && touched.endTimeDays ? (
-                  <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime>
+              <TimeContainerMobile direction="row">
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeDays"
+                    type="number"
+                    placeholder="DD"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeDays") === 0) {
+                        setFieldValue("endTimeDays", "")
+                        setFieldTouched("endTimeDays")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeDays", null)
+                      } else {
+                        setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeHours"
+                    type="number"
+                    placeholder="HH"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeHours") === 0) {
+                        setFieldValue("endTimeHours", "")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeHours", null)
+                      } else {
+                        setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+
+                <TimeBox item>
+                  <Field
+                    style={{ margin: "auto" }}
+                    id="outlined-basic"
+                    name="endTimeMinutes"
+                    type="number"
+                    placeholder="MM"
+                    component={CustomFormikTextField}
+                    inputProps={{ min: 0 }}
+                    onClick={() => {
+                      if (getIn(values, "endTimeMinutes") === 0) {
+                        setFieldValue("endTimeMinutes", "")
+                      }
+                    }}
+                    onChange={(newValue: any) => {
+                      if (newValue.target.value === "") {
+                        setFieldValue("endTimeMinutes", null)
+                      } else {
+                        setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
+                      }
+                    }}
+                  />
+                </TimeBox>
+                {getIn(values, "endTimeDays") !== null &&
+                getIn(values, "endTimeHours") !== null &&
+                getIn(values, "endTimeMinutes") !== null && !hasErrors ? (
+                  <Grid container direction="row">
+                    <Typography color="textSecondary" variant={"body2"}>
+                      End date:
+                    </Typography>
+                    <Typography color="secondary" variant="body2" style={{ marginLeft: 10 }}>
+                      {" "}
+                      {dayjs(Number(finalDate)).format("MM/DD/YYYY h:mm A")}
+                    </Typography>
+                  </Grid>
                 ) : null}
-                <Grid item container direction="row" alignItems="center">
-                  <TimeBox item>
-                    <Field
-                      style={{ margin: "auto" }}
-                      id="outlined-basic"
-                      name="endTimeHours"
-                      type="number"
-                      placeholder="0"
-                      component={CustomFormikTextField}
-                      inputProps={{ min: 0 }}
-                      onClick={() => {
-                        if (getIn(values, "endTimeHours") === 0) {
-                          setFieldValue("endTimeHours", "")
-                        }
-                      }}
-                      onChange={(newValue: any) => {
-                        if (newValue.target.value === "") {
-                          setFieldValue("endTimeHours", "")
-                        } else {
-                          setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
-                        }
-                      }}
-                    />
-                  </TimeBox>
-                  <TimeText color="textSecondary">hours</TimeText>
+
+                <Grid container direction="row">
+                  {errors?.endTimeDays && touched.endTimeDays ? (
+                    <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime>
+                  ) : null}
                 </Grid>
-                {errors?.endTimeHours && touched.endTimeHours ? (
-                  <ErrorTextTime>{errors.endTimeHours}</ErrorTextTime>
-                ) : null}
-                <Grid item container direction="row" alignItems="center">
-                  <TimeBox item>
-                    <Field
-                      style={{ margin: "auto" }}
-                      id="outlined-basic"
-                      name="endTimeMinutes"
-                      type="number"
-                      placeholder="0"
-                      component={CustomFormikTextField}
-                      inputProps={{ min: 0 }}
-                      onClick={() => {
-                        if (getIn(values, "endTimeMinutes") === 0) {
-                          setFieldValue("endTimeMinutes", "")
-                        }
-                      }}
-                      onChange={(newValue: any) => {
-                        if (newValue.target.value === "") {
-                          setFieldValue("endTimeMinutes", "")
-                        } else {
-                          setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
-                        }
-                      }}
-                    />
-                  </TimeBox>
-                  <TimeText color="textSecondary">minutes</TimeText>
-                </Grid>
-                {errors?.endTimeMinutes && touched.endTimeMinutes ? (
-                  <ErrorTextTime>{errors.endTimeMinutes}</ErrorTextTime>
-                ) : null}
-              </Grid>
+              </TimeContainerMobile>
             ) : null}
             <ProposalChoices>
               <Choices
@@ -407,97 +396,98 @@ export const ProposalForm = ({
           </ProposalContainer>
 
           {!isMobileSmall ? (
-            <Grid container item direction={"column"} style={{ gap: 10 }} xs={12} md={6} lg={4}>
-              <Typography color="textSecondary" variant={"body2"} style={{ marginBottom: 20 }}>
-                Voting Duration:{" "}
-              </Typography>
-              <Grid item container direction="row" alignItems="center">
-                <TimeBox item>
-                  <Field
-                    style={{ margin: "auto" }}
-                    id="outlined-basic"
-                    name="endTimeDays"
-                    type="number"
-                    placeholder="0"
-                    component={CustomFormikTextField}
-                    inputProps={{ min: 0 }}
-                    onClick={() => {
-                      if (getIn(values, "endTimeDays") === 0) {
-                        setFieldValue("endTimeDays", "")
-                        setFieldTouched("endTimeDays")
-                      }
-                    }}
-                    onChange={(newValue: any) => {
-                      if (newValue.target.value === "") {
-                        setFieldValue("endTimeDays", "")
-                      } else {
-                        setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
-                      }
-                    }}
-                  />
-                </TimeBox>
-                <TimeText color="textSecondary">days</TimeText>
-              </Grid>
-              {errors?.endTimeDays && touched.endTimeDays ? <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime> : null}
-              <Grid item container direction="row" alignItems="center">
-                <TimeBox item>
-                  <Field
-                    style={{ margin: "auto" }}
-                    id="outlined-basic"
-                    name="endTimeHours"
-                    type="number"
-                    placeholder="0"
-                    component={CustomFormikTextField}
-                    inputProps={{ min: 0 }}
-                    onClick={() => {
-                      if (getIn(values, "endTimeHours") === 0) {
-                        setFieldValue("endTimeHours", "")
-                      }
-                    }}
-                    onChange={(newValue: any) => {
-                      if (newValue.target.value === "") {
-                        setFieldValue("endTimeHours", "")
-                      } else {
-                        setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
-                      }
-                    }}
-                  />
-                </TimeBox>
-                <TimeText color="textSecondary">hours</TimeText>
-              </Grid>
-              {errors?.endTimeHours && touched.endTimeHours ? (
-                <ErrorTextTime>{errors.endTimeHours}</ErrorTextTime>
+            <TimeContainer container item direction={"row"} style={{ gap: 10 }} xs={12} md={4} lg={4}>
+              <TimeBox item>
+                <Field
+                  style={{ margin: "auto" }}
+                  id="outlined-basic"
+                  name="endTimeDays"
+                  type="number"
+                  placeholder="DD"
+                  component={CustomFormikTextField}
+                  inputProps={{ min: 0 }}
+                  onClick={() => {
+                    if (getIn(values, "endTimeDays") === 0) {
+                      setFieldValue("endTimeDays", "")
+                      setFieldTouched("endTimeDays")
+                    }
+                  }}
+                  onChange={(newValue: any) => {
+                    if (newValue.target.value === "") {
+                      setFieldValue("endTimeDays", null)
+                    } else {
+                      setFieldValue("endTimeDays", parseInt(newValue.target.value, 10))
+                    }
+                  }}
+                />
+              </TimeBox>
+              <TimeBox item>
+                <Field
+                  style={{ margin: "auto" }}
+                  id="outlined-basic"
+                  name="endTimeHours"
+                  type="number"
+                  placeholder="HH"
+                  component={CustomFormikTextField}
+                  inputProps={{ min: 0 }}
+                  onClick={() => {
+                    if (getIn(values, "endTimeHours") === 0) {
+                      setFieldValue("endTimeHours", "")
+                    }
+                  }}
+                  onChange={(newValue: any) => {
+                    if (newValue.target.value === "") {
+                      setFieldValue("endTimeHours", null)
+                    } else {
+                      setFieldValue("endTimeHours", parseInt(newValue.target.value, 10))
+                    }
+                  }}
+                />
+              </TimeBox>
+
+              <TimeBox item>
+                <Field
+                  style={{ margin: "auto" }}
+                  id="outlined-basic"
+                  name="endTimeMinutes"
+                  type="number"
+                  placeholder="MM"
+                  component={CustomFormikTextField}
+                  inputProps={{ min: 0 }}
+                  onClick={() => {
+                    if (getIn(values, "endTimeMinutes") === 0) {
+                      setFieldValue("endTimeMinutes", "")
+                    }
+                  }}
+                  onChange={(newValue: any) => {
+                    if (newValue.target.value === "") {
+                      setFieldValue("endTimeMinutes", null)
+                    } else {
+                      setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
+                    }
+                  }}
+                />
+              </TimeBox>
+              {getIn(values, "endTimeDays") !== null &&
+              getIn(values, "endTimeHours") !== null &&
+              getIn(values, "endTimeMinutes") !== null && !hasErrors ? (
+                <Grid container direction="row" style={{ marginTop: -70 }}>
+                  <Typography color="textSecondary" variant={"body2"}>
+                    End date:
+                  </Typography>
+                  <Typography color="secondary" variant="body2" style={{ marginLeft: 10 }}>
+                    {" "}
+                    {dayjs(Number(finalDate)).format("MM/DD/YYYY h:mm A")}
+                  </Typography>
+                </Grid>
               ) : null}
-              <Grid item container direction="row" alignItems="center">
-                <TimeBox item>
-                  <Field
-                    style={{ margin: "auto" }}
-                    id="outlined-basic"
-                    name="endTimeMinutes"
-                    type="number"
-                    placeholder="0"
-                    component={CustomFormikTextField}
-                    inputProps={{ min: 0 }}
-                    onClick={() => {
-                      if (getIn(values, "endTimeMinutes") === 0) {
-                        setFieldValue("endTimeMinutes", "")
-                      }
-                    }}
-                    onChange={(newValue: any) => {
-                      if (newValue.target.value === "") {
-                        setFieldValue("endTimeMinutes", "")
-                      } else {
-                        setFieldValue("endTimeMinutes", parseInt(newValue.target.value, 10))
-                      }
-                    }}
-                  />
-                </TimeBox>
-                <TimeText color="textSecondary">minutes</TimeText>
+
+              <Grid container direction="row" style={{ marginTop: -80 }}>
+                {errors?.endTimeDays && touched.endTimeDays ? (
+                  <ErrorTextTime>{errors.endTimeDays}</ErrorTextTime>
+                ) : null}
               </Grid>
-              {errors?.endTimeMinutes && touched.endTimeMinutes ? (
-                <ErrorTextTime>{errors.endTimeMinutes}</ErrorTextTime>
-              ) : null}
-            </Grid>
+            </TimeContainer>
           ) : null}
         </Grid>
       </Grid>
@@ -556,9 +546,9 @@ export const ProposalCreator: React.FC = () => {
     daoID: "",
     author: account,
     votingStrategy: 0,
-    endTimeDays: 3,
-    endTimeHours: 0,
-    endTimeMinutes: 0
+    endTimeDays: null,
+    endTimeHours: null,
+    endTimeMinutes: null
   }
 
   const saveProposal = useCallback(
@@ -641,7 +631,7 @@ export const ProposalCreator: React.FC = () => {
         onSubmit={saveProposal}
         initialValues={initialState}
       >
-        {({ submitForm, isSubmitting, setFieldValue, values, errors, touched, setFieldTouched }) => {
+        {({ submitForm, setFieldValue, values, errors, touched, setFieldTouched }) => {
           return (
             <Form style={{ width: "100%" }}>
               <ProposalForm
