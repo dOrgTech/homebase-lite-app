@@ -12,7 +12,7 @@ export const usePolls = (pollList: string[] | undefined, id?: any, community?: a
     useEffect(() => {
         async function fetchPoll() {
           if (pollList && pollList.length > 0) {
-              await fetch(`${process.env.REACT_APP_API_URL}/polls/list`).then(async response => {
+              await fetch(`${process.env.REACT_APP_API_URL}/polls/${id}/list`).then(async response => {
                 if (!response.ok) {
                   openNotification({
                     message: "An error has occurred",
